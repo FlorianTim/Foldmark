@@ -1,0 +1,45 @@
+schemaVersion: 1
+locale: de
+
+# One source, two renderings: published on the public site AND bundled
+# into the app. Edit this file, not the generated Markdown.
+
+categories:
+  - id: daten
+    title: Deine Daten
+    entries:
+      - id: wo-werden-meine-daten
+        question: Wo werden meine Daten gespeichert?
+        answerMarkdown: |
+          In diesem Browser: IndexedDB für die Inhalte, Local Storage für die Einstellungen. Es gibt kein
+          Konto, keinen Server und keinen Upload im Hintergrund.
+      - id: funktioniert-die-anwendung-offline
+        question: Funktioniert die Anwendung offline?
+        answerMarkdown: |
+          Ja. Die Anleitung und diese Fragen sind in der Anwendung enthalten.
+      - id: was-passiert-wenn-ich
+        question: Was passiert, wenn ich meine Browserdaten lösche?
+        answerMarkdown: |
+          Dann ist alles weg, was diese Anwendung gespeichert hat — Inhalte und Einstellungen. Es gibt keine
+          Kopie an anderer Stelle, und genau das ist der Sinn.
+      - id: wie-loesche-ich-alles
+        question: Wie lösche ich alles?
+        answerMarkdown: |
+          **Einstellungen → Datenschutz und Daten → Lokale Daten löschen.** Das löscht die Inhalte und behält
+          die Einstellungen. Wenn auch die Einstellungen wieder auf Standard sollen, nimm **Einstellungen
+          zurücksetzen** — das behält umgekehrt die Inhalte.
+      - id: wird-etwas-an-dritte
+        question: Wird etwas an Dritte gesendet?
+        answerMarkdown: |
+          Nein. Keine Analyse, keine externen Schriften, keine CDN-Skripte, keine fremden Schnittstellen. Der
+          Produktions-Build wird vor jeder Veröffentlichung auf unbeabsichtigte Fremdanfragen geprüft.
+      - id: was-bedeutet-pro-muss
+        question: Was bedeutet „Pro"? Muss ich zahlen?
+        answerMarkdown: |
+          Nein. Alle Funktionen sind derzeit kostenlos. Die Pro-Ansicht zeigt nur den Berechtigungsstatus;
+          Käufe sind in dieser Version nicht aktiviert.
+      - id: kann-ich-die-anwendung
+        question: Kann ich die Anwendung auf einem anderen Gerät nutzen?
+        answerMarkdown: |
+          Nicht automatisch — die Daten liegen in diesem Browser. Ein Umzug bräuchte einen Export, den diese
+          Version nicht hat.

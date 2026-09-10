@@ -1,0 +1,31 @@
+name: Specification change
+description: Propose a non-trivial application or template change
+title: '[Spec]: '
+labels:
+  - spec
+  - triage
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: 'What user or technical problem should be solved?'
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected behavior
+      description: 'Describe observable acceptance criteria.'
+    validations:
+      required: true
+  - type: checkboxes
+    id: impact
+    attributes:
+      label: Impact areas
+      options:
+        - label: Domain/application
+        - label: UI/accessibility/i18n
+        - label: Persistence/data migration
+        - label: Privacy/security
+        - label: Architecture/documentation

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumbrecode.de/schemas/entitlement/v1/entitlement.schema.json",
+  "title": "Cached entitlement",
+  "description": "The vocabulary every LumbreCode app writes when it stores what a user has paid for. Shared so an entitlement stays readable across apps and across stacks: a Flutter app and a web app that both belong to one product must not disagree on how 'lifetime Pro' is spelled.",
+  "type": "object",
+  "required": ["schemaVersion", "entitlement"],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "entitlement": {
+      "description": "Kebab-case, like every other stable identifier in these schemas. Never an enum index: reordering the enum in code must not change what a stored value means.",
+      "enum": ["free", "pro-lifetime", "pro-subscription"]
+    },
+    "checkedAt": {
+      "description": "When the entitlement was last verified against whatever grants it, in UTC. Absent means never verified.",
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false,
+  "$comment": "Decoding rules that belong to the contract but cannot be expressed in JSON Schema:\n\n1. An unknown, empty or corrupted value decodes to 'free'. This is a cache of a paid state, and the safe direction is downward: whatever granted the entitlement can grant it again on the next restore, while an entitlement handed out by mistake cannot be taken back without an angry user.\n\n2. Decoding must never throw. A stored preference must not be able to stop an app from starting.\n\n3. The cache is never proof of payment. Whatever sells the entitlement is the source of truth; app code asks 'is this feature unlocked?' and nothing else.\n\n4. Feature gates fail open: a feature key absent from the catalogue is unlocked. A typo must never lock somebody out of a core feature - the worst case of failing open is a paid feature staying free until the catalogue is corrected, which is recoverable. The opposite is not."
+}

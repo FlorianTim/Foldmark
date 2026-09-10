@@ -1,0 +1,30 @@
+{
+  "@type": "Task",
+  "uid": "2a6c9f38-5b14-4e7d-8f03-6c9d1a4b7e52",
+  "prodId": "-//LumbreCode//WasThereSomething 1.5//EN",
+  "created": "2026-08-25T09:12:00Z",
+  "updated": "2026-08-25T09:12:00Z",
+  "title": "Wocheneinkauf",
+  "start": "2027-03-06T10:00:00",
+  "recurrenceRules": [
+    {
+      "@type": "RecurrenceRule",
+      "frequency": "weekly",
+      "byDay": [
+        {
+          "@type": "NDay",
+          "day": "sa"
+        }
+      ]
+    }
+  ],
+  "recurrenceOverrides": {
+    "2027-03-13T10:00:00": {
+      "progress": "completed",
+      "progressUpdated": "2027-03-13T11:20:00Z"
+    },
+    "2027-03-20T10:00:00": {
+      "excluded": true
+    }
+  }
+}

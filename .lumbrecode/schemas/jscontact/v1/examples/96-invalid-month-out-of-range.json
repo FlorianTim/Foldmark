@@ -1,0 +1,19 @@
+{
+  "@type": "Card",
+  "version": "1.0",
+  "uid": "7c1f0a35-2d84-4b6e-9a17-5f3c8e0d2b41",
+  "prodId": "-//LumbreCode//WasThereSomething 1.6//EN",
+  "created": "2026-08-25T09:12:00Z",
+  "updated": "2026-08-25T09:12:00Z",
+  "anniversaries": {
+    "1": {
+      "@type": "Anniversary",
+      "kind": "birth",
+      "date": {
+        "@type": "PartialDate",
+        "month": 13,
+        "day": 1
+      }
+    }
+  }
+}

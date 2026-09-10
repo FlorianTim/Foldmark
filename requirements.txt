@@ -1,0 +1,13 @@
+# Python packages the documentation renderer needs.
+#
+# Deliberately the only Python dependencies in this repository: every
+# `scripts/check-*.py` uses the standard library alone, so the repo stays
+# bootstrappable with nothing but a Python interpreter.
+#
+# The exception is the shared help renderer synchronized into
+# `.lumbrecode/tooling/docs/`. It validates YAML against JSON Schema, and
+# hand-rolling either of those would be worse than depending on them.
+#
+# `npm run workflow:prepare` installs this file, so CI and a local run agree.
+PyYAML>=6.0,<7
+jsonschema>=4.20,<5

@@ -1,0 +1,25 @@
+{
+  "name": "Lambro Code Web App Template",
+  "build": { "dockerfile": "Dockerfile", "context": ".." },
+  "mounts": [
+    "source=${localWorkspaceFolderBasename}-node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
+  ],
+  "forwardPorts": [5173, 4173],
+  "portsAttributes": {
+    "5173": { "label": "Vite development server", "onAutoForward": "openPreview" },
+    "4173": { "label": "Vite production preview", "onAutoForward": "silent" }
+  },
+  "postCreateCommand": "sudo mkdir -p node_modules && sudo chown -R pwuser:pwuser node_modules && npm ci --ignore-scripts && npm run hooks:install && npm run verify:fast",
+  "remoteUser": "pwuser",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Vue.volar",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "GitHub.copilot",
+        "GitHub.copilot-chat"
+      ]
+    }
+  }
+}

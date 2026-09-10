@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumbrecode.de/schemas/repository-feedback/v1/report.schema.json",
+  "type": "object",
+  "required": [
+    "repository",
+    "repositoryType",
+    "qualityCommands",
+    "existingAutomation",
+    "publicSite",
+    "recommendedProfile",
+    "conflicts",
+    "recommendations"
+  ],
+  "properties": {
+    "repository": {
+      "type": "string"
+    },
+    "repositoryType": {
+      "enum": [
+        "flutter",
+        "webapp",
+        "astro",
+        "library",
+        "automation",
+        "other"
+      ]
+    },
+    "qualityCommands": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "existingAutomation": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "publicSite": {
+      "type": "object"
+    },
+    "recommendedProfile": {
+      "enum": [
+        "common",
+        "flutter",
+        "webapp",
+        "astro",
+        "custom"
+      ]
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

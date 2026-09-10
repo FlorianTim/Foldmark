@@ -1,0 +1,11 @@
+schemaVersion: 1
+locale: de
+
+categories:
+  - id: general
+    title: Allgemein
+    entries:
+      - id: what-is-the-app
+        question: Was macht die App?
+        answerMarkdown: |
+          Beschreibe hier den belegten Nutzen der App.

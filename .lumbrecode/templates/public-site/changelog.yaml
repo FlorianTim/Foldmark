@@ -1,0 +1,12 @@
+schemaVersion: 1
+appSlug: example-app
+
+releases:
+  - version: 0.1.0
+    date: "2026-01-01"
+    channel: stable
+    changes:
+      de:
+        - Erste öffentliche Version.
+      en:
+        - First public version.

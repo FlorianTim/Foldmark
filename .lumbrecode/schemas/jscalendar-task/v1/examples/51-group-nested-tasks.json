@@ -1,0 +1,78 @@
+{
+  "@type": "Group",
+  "uid": "a17d9e83-4c26-4b5f-90a8-3e7c1d64b2f0",
+  "prodId": "-//LumbreCode//WasThereSomething 1.5//EN",
+  "updated": "2026-08-25T09:12:00Z",
+  "title": "Geburtstag von Mia - 14.03.2027",
+  "entries": [
+    {
+      "@type": "Task",
+      "uid": "018f7d8c-7f5b-4be7-91a8-08cdb8216a11",
+      "prodId": "-//LumbreCode//WasThereSomething 1.5//EN",
+      "created": "2026-08-25T09:12:00Z",
+      "updated": "2026-08-25T09:12:00Z",
+      "title": "Schokokuchen backen",
+      "description": "Bitte **dunkle Schokolade** verwenden.",
+      "descriptionContentType": "text/markdown; charset=utf-8",
+      "due": "2027-03-14T10:00:00",
+      "priority": 1,
+      "relatedTo": {
+        "3f2a1c04-9d6e-4b2f-8a71-5c0e2d9b4a63": {
+          "@type": "Relation",
+          "relation": {
+            "child": true
+          }
+        },
+        "7b91e2d5-3c48-4f0a-9e26-1d5b7a03c8f4": {
+          "@type": "Relation",
+          "relation": {
+            "child": true
+          }
+        }
+      }
+    },
+    {
+      "@type": "Task",
+      "uid": "3f2a1c04-9d6e-4b2f-8a71-5c0e2d9b4a63",
+      "prodId": "-//LumbreCode//WasThereSomething 1.5//EN",
+      "created": "2026-08-25T09:12:00Z",
+      "updated": "2026-08-25T09:12:00Z",
+      "title": "Schokolade kaufen",
+      "relatedTo": {
+        "018f7d8c-7f5b-4be7-91a8-08cdb8216a11": {
+          "@type": "Relation",
+          "relation": {
+            "parent": true
+          }
+        }
+      }
+    },
+    {
+      "@type": "Task",
+      "uid": "7b91e2d5-3c48-4f0a-9e26-1d5b7a03c8f4",
+      "prodId": "-//LumbreCode//WasThereSomething 1.5//EN",
+      "created": "2026-08-25T09:12:00Z",
+      "updated": "2026-08-25T09:12:00Z",
+      "title": "Sahne kaufen",
+      "progress": "completed",
+      "percentComplete": 100,
+      "progressUpdated": "2027-03-12T08:03:00Z",
+      "relatedTo": {
+        "018f7d8c-7f5b-4be7-91a8-08cdb8216a11": {
+          "@type": "Relation",
+          "relation": {
+            "parent": true
+          }
+        }
+      }
+    },
+    {
+      "@type": "Task",
+      "uid": "c4d80a17-6e35-4c9b-83f2-9a1e07b5d264",
+      "prodId": "-//LumbreCode//WasThereSomething 1.5//EN",
+      "created": "2026-08-25T09:12:00Z",
+      "updated": "2026-08-25T09:12:00Z",
+      "title": "Pappteller mitbringen"
+    }
+  ]
+}

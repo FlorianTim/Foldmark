@@ -1,0 +1,23 @@
+{
+  "@type": "Task",
+  "uid": "018f7d8c-7f5b-4be7-91a8-08cdb8216a11",
+  "prodId": "-//LumbreCode//WasThereSomething 1.5//EN",
+  "created": "2026-08-25T09:12:00Z",
+  "updated": "2026-08-25T09:12:00Z",
+  "title": "Schokokuchen backen",
+  "due": "2027-03-14T10:00:00",
+  "relatedTo": {
+    "3f2a1c04-9d6e-4b2f-8a71-5c0e2d9b4a63": {
+      "@type": "Relation",
+      "relation": {
+        "child": true
+      }
+    },
+    "7b91e2d5-3c48-4f0a-9e26-1d5b7a03c8f4": {
+      "@type": "Relation",
+      "relation": {
+        "child": true
+      }
+    }
+  }
+}

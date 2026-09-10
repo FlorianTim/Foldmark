@@ -1,0 +1,30 @@
+{
+  "specversion": "1.0",
+  "id": "1a2b3c4d-0001-4a5e-9f8d-1b2c3d4e5f60-1",
+  "source": "https://lumbrecode.de/apps/vacation-planner",
+  "type": "de.lumbrecode.exchange.jscalendar.upsert.v1",
+  "time": "2026-08-20T09:00:00Z",
+  "datacontenttype": "application/jscalendar+json;type=event",
+  "dataschema": "https://lumbrecode.de/schemas/jscalendar-event/v1/jscalendar-event-v1.schema.json",
+  "subject": "550e8400-e29b-41d4-a716-446655440001",
+  "sourceappid": "de.lumbre.code.vacation_planner",
+  "sourceversion": "1.0.0",
+  "data": {
+    "@type": "Event",
+    "uid": "550e8400-e29b-41d4-a716-446655440001",
+    "prodId": "-//LumbreCode//Vacation Planner 1.0.0//EN",
+    "created": "2026-08-20T08:59:12Z",
+    "updated": "2026-08-20T08:59:12Z",
+    "title": "Brueckentag Mai",
+    "description": "Noch nicht eingereicht.",
+    "start": "2027-05-14T00:00:00",
+    "duration": "P1D",
+    "showWithoutTime": true,
+    "status": "tentative",
+    "lumbrecode.de:statusCategory": "tentative",
+    "lumbrecode.de:statusCode": "planned",
+    "categories": {
+      "https://lumbrecode.de/ns/event-type/time_off": true
+    }
+  }
+}

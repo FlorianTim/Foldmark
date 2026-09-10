@@ -1,0 +1,25 @@
+dist
+coverage
+playwright-report
+test-results
+drafts
+public/THIRD-PARTY-NOTICES.generated.*
+
+# Synchronized baseline from lumbrecode-engineering. Owned upstream: local
+# reformatting would create a diff against the source and turn the next
+# baseline sync into a conflict.
+.lumbrecode/
+
+# Same reason, different directories: the baseline profile copies `.github/agents`
+# and `.github/skills` in whole, so everything under them is upstream territory
+# even where this repository keeps skills of its own. Two of the incoming files
+# are not prettier-clean, and reformatting them here would be reverted by the
+# next sync -- or worse, reported as a local modification and block it.
+.github/agents/
+.github/skills/
+
+# `.github/renovate.json5` is delivered by the baseline's common profile too.
+# Prettier disagrees with its formatting, and reformatting it here would be
+# a local modification of an upstream file: the next sync reports it as
+# CONFLICT and refuses to update it.
+.github/renovate.json5

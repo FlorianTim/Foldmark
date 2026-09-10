@@ -1,0 +1,30 @@
+{
+  "name": "Web App Template",
+  "shortName": "Web App Template",
+  "slug": "web-app-template",
+  "description": "Secure, privacy-first, local-first Vue web application template for agentic development.",
+  "packageName": "web-app-template",
+  "version": "0.1.0",
+  "defaultLocale": "de",
+  "supportedLocales": ["de", "en"],
+  "repositoryOwner": "CHANGE_ME",
+  "repositoryName": "web-app-template",
+  "githubPagesBase": "auto",
+  "customDomain": "web-app-template.webapps.lumbrecode.de",
+  "theme": "system",
+  "license": "MIT",
+  "organization": {
+    "name": "LumbreCode",
+    "domain": "lumbrecode.de",
+    "url": "https://lumbrecode.de",
+    "webAppsDomain": "webapps.lumbrecode.de",
+    "contactLocalParts": {
+      "contact": "Y29udGFjdA==",
+      "support": "c3VwcG9ydA==",
+      "feedback": "ZmVlZGJhY2s=",
+      "bugs": "YnVncw==",
+      "privacy": "cHJpdmFjeQ==",
+      "security": "c2VjdXJpdHk="
+    }
+  }
+}

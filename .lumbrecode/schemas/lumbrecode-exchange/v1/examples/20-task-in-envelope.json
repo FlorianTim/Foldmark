@@ -1,0 +1,25 @@
+{
+  "specversion": "1.0",
+  "id": "0f6a2b19-task-1",
+  "source": "https://lumbrecode.de/apps/was-there-something",
+  "type": "de.lumbrecode.exchange.jscalendar.upsert.v1",
+  "time": "2026-08-25T09:12:00Z",
+  "datacontenttype": "application/jscalendar+json;type=task",
+  "dataschema": "https://lumbrecode.de/schemas/jscalendar-task/v1/jscalendar-task-v1.schema.json",
+  "subject": "018f7d8c-7f5b-4be7-91a8-08cdb8216a11",
+  "sourceappid": "de.lumbre.code.was_there_something",
+  "sourceversion": "1.5.0",
+  "data": {
+    "@type": "Task",
+    "uid": "018f7d8c-7f5b-4be7-91a8-08cdb8216a11",
+    "prodId": "-//LumbreCode//WasThereSomething 1.5//EN",
+    "created": "2026-08-25T09:12:00Z",
+    "updated": "2026-08-25T09:12:00Z",
+    "sequence": 1,
+    "title": "Schokokuchen backen",
+    "description": "Bitte **dunkle Schokolade** verwenden.",
+    "descriptionContentType": "text/markdown; charset=utf-8",
+    "due": "2027-03-14T10:00:00",
+    "timeZone": "Europe/Berlin"
+  }
+}

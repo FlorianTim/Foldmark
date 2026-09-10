@@ -1,0 +1,11 @@
+schemaVersion: 1
+locale: en
+
+categories:
+  - id: general
+    title: General
+    entries:
+      - id: what-is-the-app
+        question: What does the app do?
+        answerMarkdown: |
+          Describe the verified purpose of the app here.

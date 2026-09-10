@@ -1,0 +1,31 @@
+{
+  "allowed": [
+    "MIT",
+    "MIT-0",
+    "Apache-2.0",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "ISC",
+    "0BSD",
+    "CC0-1.0",
+    "BlueOak-1.0.0",
+    "Python-2.0"
+  ],
+  "reviewRequired": [
+    "MPL-2.0",
+    "EPL-2.0",
+    "LGPL-2.1-only",
+    "LGPL-3.0-only",
+    "OFL-1.1",
+    "Unicode-3.0"
+  ],
+  "forbidden": [
+    "AGPL-3.0-only",
+    "AGPL-3.0-or-later",
+    "GPL-2.0-only",
+    "GPL-3.0-only",
+    "SSPL-1.0",
+    "BUSL-1.1",
+    "UNKNOWN"
+  ]
+}

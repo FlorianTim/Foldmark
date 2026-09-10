@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+set -eu
+printf '%s\n' 'Running full CI gate before push...'
+npm run workflow:ci

@@ -1,0 +1,20 @@
+schemaVersion: 1
+appSlug: example-app
+updatedAt: "2026-01-01"
+
+disclaimer:
+  de: Geplante Funktionen können sich ändern oder verschoben werden.
+  en: Planned features may change or be postponed.
+
+items:
+  - id: first-public-item
+    title:
+      de: Erstes öffentliches Vorhaben
+      en: First public roadmap item
+    description:
+      de: Sachliche Beschreibung ohne verbindliches Lieferdatum.
+      en: Factual description without a binding delivery date.
+    status: considering
+    targetRelease: null
+    category: general
+    public: true

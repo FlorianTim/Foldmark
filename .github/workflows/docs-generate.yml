@@ -1,0 +1,72 @@
+name: Generate documentation
+run-name: 'Generate documentation'
+
+# The documentation is generated here, not on a developer machine.
+#
+# Two outputs, one source: the screenshots come from the Playwright capture
+# project, and the bundled in-app help is rendered from docs/public-site/ —
+# the same content the public website publishes. Both are committed back, so
+# the repository always holds what the build ships.
+#
+# The local `npm run help:check` runs the same renderer and is fast feedback
+# on a branch, not a second source of truth: if the two disagree, this
+# workflow is what lands on main.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/public-site/**'
+      - 'tests/e2e/screenshots.spec.ts'
+      - '.lumbrecode/tooling/docs/**'
+      # The captured screens follow the UI, so a shell change re-captures.
+      - 'src/presentation/components/**'
+      - 'src/App.vue'
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with: { node-version-file: .nvmrc, cache: npm }
+      - uses: actions/setup-python@v6
+        with: { python-version-file: .python-version }
+
+      # One preparation path for CI and a local run: it installs the npm
+      # packages, the Playwright browser and the renderer's Python
+      # dependencies from requirements.txt.
+      - run: npm run workflow:prepare
+      - run: npm run licenses:generate
+
+      - name: Capture documentation screenshots
+        run: npm run screenshots:capture
+
+      - name: Render the bundled help
+        run: npm run help:render
+
+      - name: Commit generated documentation
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add design/screenshots src/presentation/help
+          if git diff --cached --quiet; then
+            echo "Generated documentation already up to date."
+          else
+            git commit -m "docs: regenerate screenshots and bundled help"
+            git pull --rebase
+            git push
+          fi
+
+      - name: Upload the screenshots as an artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: documentation-screenshots
+          path: design/screenshots/
+          if-no-files-found: error
+          retention-days: 30

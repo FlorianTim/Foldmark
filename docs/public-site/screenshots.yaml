@@ -1,0 +1,29 @@
+# Screenshots the documentation may reference.
+#
+# The capturing spec (tests/e2e/screenshots.spec.ts) writes the files; this
+# manifest declares which of them the guides and the FAQ are allowed to point
+# at, and what they show.
+#
+# A guide referencing an id missing here fails the render. An id declared
+# here whose image is missing fails too, unless it is marked `optional`.
+#
+# Captions double as image alt text on the published site and as the plain
+# text that replaces the image in the bundled in-app help — `parseMarkdown`
+# deliberately does not resolve images. Describe the screen, do not repeat
+# the file name.
+
+schemaVersion: 1
+
+shots:
+  - id: 01-intro
+    caption:
+      de: Die Einleitung beim ersten Besuch
+      en: The first-visit intro
+  - id: 02-settings
+    caption:
+      de: Die Einstellungen mit Sprache, Darstellung und den Bereichen darunter
+      en: The settings hub with language, appearance and the sections below
+  - id: 03-privacy
+    caption:
+      de: Datenschutz und Daten mit dem Gefahrenbereich
+      en: Privacy and data, showing the danger zone

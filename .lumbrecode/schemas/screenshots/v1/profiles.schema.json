@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumbrecode.de/schemas/screenshots/v1/profiles.schema.json",
+  "title": "Screen profiles for automated screenshot capture",
+  "description": "One rendering surface per profile. Shared by every LumbreCode stack so a Flutter integration test and a Playwright spec produce comparable images that documentation can reference by the same name.",
+  "type": "object",
+  "required": ["schemaVersion", "profiles"],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "profiles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "label", "width", "height"],
+        "properties": {
+          "name": {
+            "description": "Directory name under design/screenshots/. Stable: documentation references it.",
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "label": {
+            "description": "Human-readable name for report headings.",
+            "type": "string",
+            "minLength": 1
+          },
+          "width": {
+            "description": "Logical pixels. Capture uses a device pixel ratio of 1 so the image is 1:1.",
+            "type": "integer",
+            "minimum": 240,
+            "maximum": 4096
+          },
+          "height": {
+            "type": "integer",
+            "minimum": 240,
+            "maximum": 4096
+          },
+          "primary": {
+            "description": "The profile documentation uses when a page references a screenshot without naming one. Exactly one profile should set it.",
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

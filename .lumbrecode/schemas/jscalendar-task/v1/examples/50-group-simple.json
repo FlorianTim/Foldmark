@@ -1,0 +1,40 @@
+{
+  "@type": "Group",
+  "uid": "e3b0c442-98fc-4c14-9afe-1c2d0b3a7f51",
+  "prodId": "-//LumbreCode//WasThereSomething 1.5//EN",
+  "updated": "2026-08-25T09:12:00Z",
+  "title": "Geburtstag von Mia - 14.03.2027",
+  "entries": [
+    {
+      "@type": "Task",
+      "uid": "018f7d8c-7f5b-4be7-91a8-08cdb8216a11",
+      "prodId": "-//LumbreCode//WasThereSomething 1.5//EN",
+      "created": "2026-08-25T09:12:00Z",
+      "updated": "2026-08-25T09:12:00Z",
+      "title": "Schokokuchen backen",
+      "due": "2027-03-14T10:00:00",
+      "timeZone": "Europe/Berlin"
+    },
+    {
+      "@type": "Task",
+      "uid": "c4d80a17-6e35-4c9b-83f2-9a1e07b5d264",
+      "prodId": "-//LumbreCode//WasThereSomething 1.5//EN",
+      "created": "2026-08-25T09:12:00Z",
+      "updated": "2026-08-25T09:12:00Z",
+      "title": "Pappteller mitbringen"
+    },
+    {
+      "@type": "Task",
+      "uid": "9e5b3f21-0a7c-4d68-b4e9-2f8c6a17d035",
+      "prodId": "-//LumbreCode//WasThereSomething 1.5//EN",
+      "created": "2026-08-25T09:12:00Z",
+      "updated": "2026-08-25T09:12:00Z",
+      "title": "Kerzen kaufen",
+      "due": "2027-03-14T00:00:00",
+      "showWithoutTime": true,
+      "progress": "completed",
+      "percentComplete": 100,
+      "progressUpdated": "2027-03-10T16:41:00Z"
+    }
+  ]
+}

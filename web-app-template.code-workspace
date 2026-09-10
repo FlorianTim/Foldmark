@@ -1,0 +1,24 @@
+{
+  "folders": [
+    {
+      "path": ".",
+    },
+  ],
+  "settings": {
+    "editor.formatOnSave": true,
+    "files.exclude": {
+      "**/dist": true,
+      "**/coverage": true,
+    },
+    "js/ts.tsdk.path": "de_modules/typescript/lib",
+    "chat.useCustomizationsInParentRepositories": true,
+  },
+  "extensions": {
+    "recommendations": [
+      "Vue.volar",
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode",
+      "ms-vscode-remote.remote-containers",
+    ],
+  },
+}

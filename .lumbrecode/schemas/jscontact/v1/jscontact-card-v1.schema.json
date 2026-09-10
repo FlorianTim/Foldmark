@@ -1,0 +1,311 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumbrecode.de/schemas/jscontact/v1/jscontact-card-v1.schema.json",
+  "title": "LumbreCode JSContact Card subset v1",
+  "description": "Validates the subset of RFC 9553 JSContact Card that LumbreCode apps emit. JSContact is the sibling standard of JSCalendar (RFC 8984) from the same IETF working group, and is the contact-side answer to the same question. Stricter than RFC 9553 on what may be EMITTED; receivers read tolerantly and keep unknown properties. STATUS: planned. No LumbreCode app implements this yet - it is standardized in advance so the first one that needs it does not invent a format.",
+
+  "$ref": "#/$defs/Card",
+
+  "$defs": {
+
+    "UTCDateTime": {
+      "type": "string",
+      "description": "RFC 3339 date-time in UTC, second precision, always ending in Z.",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+
+    "Uid": {
+      "type": "string",
+      "description": "RFC 4122 version 4 UUID, canonical lowercase form. RFC 9553 allows any unique string; this profile narrows it to a v4 UUID, matching the JSCalendar profile.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+
+    "Contexts": {
+      "type": "object",
+      "minProperties": 1,
+      "description": "Usage contexts. RFC 9553 registers work and private; this profile emits only those two.",
+      "propertyNames": { "enum": ["work", "private"] },
+      "additionalProperties": { "const": true }
+    },
+
+    "Pref": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100,
+      "description": "Preference ranking, 1 = most preferred."
+    },
+
+    "NameComponent": {
+      "type": "object",
+      "properties": {
+        "@type": { "const": "NameComponent" },
+        "kind": {
+          "enum": ["title", "given", "given2", "surname", "surname2",
+                   "credential", "generation", "separator"],
+          "description": "RFC 9553 registered component kinds. `given` is the first name, `surname` the family name."
+        },
+        "value": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "phonetic": { "type": "string", "maxLength": 200 }
+      },
+      "required": ["kind", "value"],
+      "additionalProperties": false
+    },
+
+    "Name": {
+      "type": "object",
+      "properties": {
+        "@type": { "const": "Name" },
+        "full": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300,
+          "description": "The complete name as one string. RFC 9553 requires it when `components` is absent. This profile ALWAYS emits it, because a receiver that cannot assemble components still has something to display."
+        },
+        "components": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/NameComponent" }
+        },
+        "isOrdered": { "type": "boolean" },
+        "defaultSeparator": { "type": "string", "maxLength": 10 },
+        "sortAs": {
+          "type": "object",
+          "propertyNames": { "type": "string" },
+          "additionalProperties": { "type": "string" }
+        }
+      },
+      "required": ["full"],
+      "additionalProperties": false
+    },
+
+    "Nickname": {
+      "type": "object",
+      "properties": {
+        "@type": { "const": "Nickname" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "contexts": { "$ref": "#/$defs/Contexts" },
+        "pref": { "$ref": "#/$defs/Pref" }
+      },
+      "required": ["name"],
+      "additionalProperties": false
+    },
+
+    "EmailAddress": {
+      "type": "object",
+      "properties": {
+        "@type": { "const": "EmailAddress" },
+        "address": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 320,
+          "description": "RFC 5322 addr-spec."
+        },
+        "contexts": { "$ref": "#/$defs/Contexts" },
+        "pref": { "$ref": "#/$defs/Pref" },
+        "label": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["address"],
+      "additionalProperties": false
+    },
+
+    "Phone": {
+      "type": "object",
+      "properties": {
+        "@type": { "const": "Phone" },
+        "number": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "features": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "enum": ["mobile", "voice", "text", "video", "fax", "main-number", "textphone"]
+          },
+          "additionalProperties": { "const": true }
+        },
+        "contexts": { "$ref": "#/$defs/Contexts" },
+        "pref": { "$ref": "#/$defs/Pref" },
+        "label": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["number"],
+      "additionalProperties": false
+    },
+
+    "Organization": {
+      "type": "object",
+      "properties": {
+        "@type": { "const": "Organization" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "contexts": { "$ref": "#/$defs/Contexts" },
+        "sortAs": { "type": "string", "maxLength": 300 }
+      },
+      "required": ["name"],
+      "additionalProperties": false
+    },
+
+    "PartialDate": {
+      "type": "object",
+      "description": "RFC 9553 PartialDate: every component is OPTIONAL. This is the standard's own answer to a birthday whose year is unknown, and it matches the LumbreCode year-optional date model exactly.",
+      "properties": {
+        "@type": { "const": "PartialDate" },
+        "year": { "type": "integer", "minimum": 1, "maximum": 9999 },
+        "month": { "type": "integer", "minimum": 1, "maximum": 12 },
+        "day": { "type": "integer", "minimum": 1, "maximum": 31 },
+        "calendarScale": {
+          "const": "gregorian",
+          "description": "RFC 9553 default. This profile emits only gregorian."
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "Anniversary": {
+      "type": "object",
+      "properties": {
+        "@type": { "const": "Anniversary" },
+        "kind": {
+          "enum": ["birth", "death", "wedding"],
+          "description": "The three kinds RFC 9553 registers. Two LumbreCode event types have no registered equivalent - engagement day and the generic anniversary. How they travel is an OPEN QUESTION, deliberately deferred on 2026-08-25 until a real consumer exists; four options are compared in docs/JSCONTACT_INTEROP.md, and none of them is foreclosed by this schema."
+        },
+        "date": {
+          "oneOf": [
+            { "$ref": "#/$defs/PartialDate" },
+            { "$ref": "#/$defs/UTCDateTime" }
+          ],
+          "description": "A PartialDate when only day/month (and optionally year) are known, which is the normal LumbreCode case. A UTCDateTime only when the exact instant is genuinely known."
+        }
+      },
+      "required": ["kind", "date"],
+      "additionalProperties": false
+    },
+
+    "Relation": {
+      "type": "object",
+      "description": "RFC 9553 Relation between Cards, keyed by the other Card's uid.",
+      "properties": {
+        "@type": { "const": "Relation" },
+        "relation": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "enum": ["contact", "acquaintance", "friend", "met", "co-worker",
+                     "colleague", "co-resident", "neighbor", "child", "parent",
+                     "sibling", "spouse", "kin", "muse", "crush", "date",
+                     "sweetheart", "me", "agent", "emergency"]
+          },
+          "additionalProperties": { "const": true }
+        }
+      },
+      "required": ["relation"],
+      "additionalProperties": false
+    },
+
+    "Pronouns": {
+      "type": "object",
+      "properties": {
+        "@type": { "const": "Pronouns" },
+        "pronouns": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "contexts": { "$ref": "#/$defs/Contexts" },
+        "pref": { "$ref": "#/$defs/Pref" }
+      },
+      "required": ["pronouns"],
+      "additionalProperties": false
+    },
+
+    "SpeakToAs": {
+      "type": "object",
+      "description": "RFC 9553 speakToAs. The standard's home for pronouns and grammatical gender - LumbreCode does NOT need a proprietary field for either.",
+      "properties": {
+        "@type": { "const": "SpeakToAs" },
+        "grammaticalGender": {
+          "enum": ["animate", "common", "feminine", "inanimate", "masculine", "neuter"]
+        },
+        "pronouns": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "$ref": "#/$defs/Pronouns" }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "Note": {
+      "type": "object",
+      "properties": {
+        "@type": { "const": "Note" },
+        "note": { "type": "string", "maxLength": 20000 },
+        "created": { "$ref": "#/$defs/UTCDateTime" }
+      },
+      "required": ["note"],
+      "additionalProperties": false
+    },
+
+    "Card": {
+      "type": "object",
+      "properties": {
+        "@type": { "const": "Card" },
+        "version": {
+          "const": "1.0",
+          "description": "The JSContact version of this Card. Mandatory in RFC 9553."
+        },
+        "uid": { "$ref": "#/$defs/Uid" },
+        "prodId": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "created": { "$ref": "#/$defs/UTCDateTime" },
+        "updated": { "$ref": "#/$defs/UTCDateTime" },
+
+        "kind": {
+          "enum": ["individual", "group", "org", "location", "device", "application"],
+          "description": "RFC 9553 registered kinds. LumbreCode maps its own contact kinds onto individual / org / location - no proprietary vocabulary needed."
+        },
+        "language": {
+          "type": "string",
+          "maxLength": 35,
+          "description": "RFC 5646 language tag."
+        },
+
+        "name": { "$ref": "#/$defs/Name" },
+        "nicknames": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "$ref": "#/$defs/Nickname" }
+        },
+        "organizations": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "$ref": "#/$defs/Organization" }
+        },
+        "emails": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "$ref": "#/$defs/EmailAddress" }
+        },
+        "phones": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "$ref": "#/$defs/Phone" }
+        },
+        "anniversaries": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "$ref": "#/$defs/Anniversary" }
+        },
+        "speakToAs": { "$ref": "#/$defs/SpeakToAs" },
+        "relatedTo": {
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/Uid" },
+          "additionalProperties": { "$ref": "#/$defs/Relation" }
+        },
+        "notes": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "$ref": "#/$defs/Note" }
+        }
+      },
+      "required": ["@type", "version", "uid"],
+      "patternProperties": {
+        "^[a-z0-9][a-z0-9.-]*\\.[a-z]{2,}:[A-Za-z0-9_]+$": {
+          "$comment": "RFC 9553 vendor-specific property: a domain under the vendor's control, a colon, then a name. e.g. lumbrecode.de:previousNames. A receiver that does not know it keeps it verbatim and ignores it for behaviour."
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

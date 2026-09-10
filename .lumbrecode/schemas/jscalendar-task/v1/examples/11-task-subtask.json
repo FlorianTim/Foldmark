@@ -1,0 +1,16 @@
+{
+  "@type": "Task",
+  "uid": "3f2a1c04-9d6e-4b2f-8a71-5c0e2d9b4a63",
+  "prodId": "-//LumbreCode//WasThereSomething 1.5//EN",
+  "created": "2026-08-25T09:12:00Z",
+  "updated": "2026-08-25T09:12:00Z",
+  "title": "Schokolade kaufen",
+  "relatedTo": {
+    "018f7d8c-7f5b-4be7-91a8-08cdb8216a11": {
+      "@type": "Relation",
+      "relation": {
+        "parent": true
+      }
+    }
+  }
+}

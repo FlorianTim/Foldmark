@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumbrecode.de/schemas/public-site/v1/changelog.schema.json",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "appSlug",
+    "releases"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "appSlug": {
+      "type": "string"
+    },
+    "releases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "version",
+          "date",
+          "channel",
+          "changes"
+        ],
+        "properties": {
+          "version": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "channel": {
+            "enum": [
+              "development",
+              "beta",
+              "stable"
+            ]
+          },
+          "changes": {
+            "type": "object",
+            "required": [
+              "de",
+              "en"
+            ],
+            "properties": {
+              "de": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "en": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

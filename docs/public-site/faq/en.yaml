@@ -1,0 +1,45 @@
+schemaVersion: 1
+locale: en
+
+# One source, two renderings: published on the public site AND bundled
+# into the app. Edit this file, not the generated Markdown.
+
+categories:
+  - id: data
+    title: Your data
+    entries:
+      - id: where-is-my-data
+        question: Where is my data stored?
+        answerMarkdown: |
+          In this browser: IndexedDB for content, local storage for preferences. There is no account, no
+          server and no background upload.
+      - id: does-the-app-work
+        question: Does the app work offline?
+        answerMarkdown: |
+          Yes. The manual and this FAQ are bundled with the application.
+      - id: what-happens-if-i
+        question: What happens if I clear my browser data?
+        answerMarkdown: |
+          Everything this app stored is gone — content and preferences. There is no copy anywhere else, which
+          is the point.
+      - id: how-do-i-delete
+        question: How do I delete everything?
+        answerMarkdown: |
+          **Settings → Privacy and data → Delete local data.** It clears the content and keeps your
+          preferences. To put the preferences back to their defaults too, use **Reset settings** — that one
+          keeps your content.
+      - id: is-anything-sent-to
+        question: Is anything sent to a third party?
+        answerMarkdown: |
+          No. No analytics, no remote fonts, no CDN scripts, no external APIs. The production build is checked
+          for unintended third-party requests before every release.
+      - id: what-does-pro-mean
+        question: What does "Pro" mean? Do I have to pay?
+        answerMarkdown: |
+          No. All features are currently free. The Pro view shows the entitlement status; purchases are not
+          enabled in this version.
+      - id: can-i-use-the
+        question: Can I use the app on another device?
+        answerMarkdown: |
+          Not automatically — the data lives in this browser. Moving it needs an export, which this version
+          does not have.

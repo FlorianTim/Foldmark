@@ -1,0 +1,67 @@
+@import 'tailwindcss';
+@plugin "daisyui";
+:root {
+  color-scheme: light dark;
+  --app-bg: #f3f5f7;
+  --app-surface: #fff;
+  --app-text: #18202a;
+  --app-muted: #5e6a78;
+  --app-border: #d9e0e7;
+  --app-accent: #3454d1;
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --app-bg: #10141b;
+  --app-surface: #1b222d;
+  --app-text: #f5f7fa;
+  --app-muted: #abb6c4;
+  --app-border: #344050;
+  --app-accent: #9fb1ff;
+}
+:root[data-theme='paper'] {
+  color-scheme: light;
+  --app-bg: #ece6da;
+  --app-surface: #fffdf7;
+  --app-text: #2b251c;
+  --app-muted: #756b5c;
+  --app-border: #d9cfbc;
+  --app-accent: #825b2f;
+}
+:root[data-theme='sepia'] {
+  color-scheme: light;
+  --app-bg: #efe4ca;
+  --app-surface: #f8efd9;
+  --app-text: #3e301e;
+  --app-muted: #796446;
+  --app-border: #cfbd95;
+  --app-accent: #8a4f22;
+}
+:root[data-theme='high-contrast'] {
+  color-scheme: dark;
+  --app-bg: #000;
+  --app-surface: #000;
+  --app-text: #fff;
+  --app-muted: #fff;
+  --app-border: #fff;
+  --app-accent: #ff0;
+}
+:root[data-theme='ocean'] {
+  color-scheme: dark;
+  --app-bg: #071c26;
+  --app-surface: #0d2b38;
+  --app-text: #e7fbff;
+  --app-muted: #a6d4de;
+  --app-border: #245263;
+  --app-accent: #55d6be;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-theme='system'] {
+    color-scheme: dark;
+    --app-bg: #10141b;
+    --app-surface: #1b222d;
+    --app-text: #f5f7fa;
+    --app-muted: #abb6c4;
+    --app-border: #344050;
+    --app-accent: #9fb1ff;
+  }
+}

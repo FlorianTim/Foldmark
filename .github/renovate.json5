@@ -1,0 +1,95 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+
+  // Shared dependency policy for every LumbreCode repository.
+  //
+  // The intent, in one line: stay continuously current on minor and patch,
+  // decide majors deliberately, and never adopt a version that CI has not
+  // built first.
+  //
+  // Renovate discovers package files on its own -- pub, npm, docker and
+  // github-actions all come from `config:recommended` without being declared.
+  // That is why one file serves every profile, unlike `dependabot.yml`, which
+  // needs an entry per ecosystem.
+  extends: ["config:recommended", ":dependencyDashboard"],
+
+  timezone: "Europe/Berlin",
+  schedule: ["before 6am on monday"],
+
+  // The reason this file exists at all.
+  //
+  // Flutter 3.47.2 shipped a new analyzer diagnostic as a *patch* release and
+  // turned an unrelated pull request red the same day. A short quarantine does
+  // not make a repository stale -- it moves the encounter with a broken
+  // release from "someone else's pull request" to "the update pull request
+  // that is about it".
+  minimumReleaseAge: "5 days",
+
+  // Keep the review surface small. The grouped non-major branch is the one
+  // that matters; majors queue on the dashboard until asked for.
+  prConcurrentLimit: 3,
+
+  packageRules: [
+    {
+      // Everything non-major in a single pull request: one branch, one CI run,
+      // one decision. This is what makes "raise it all, build once, commit if
+      // green" true rather than aspirational.
+      //
+      // Renovate performs the merge itself once the branch is green.
+      //
+      // `platformAutomerge: true` would hand that to GitHub's native
+      // auto-merge, which is faster -- but native auto-merge is not available
+      // for private repositories on GitHub Free, and every LumbreCode
+      // repository is private. Renovate's documentation describes no fallback
+      // for a platform that lacks it, so relying on one would be a guess about
+      // undocumented behaviour in the path that merges code.
+      //
+      // The cost is small: the merge happens on Renovate's next run rather
+      // than the instant the checks go green. In exchange the policy stops
+      // depending on the repository's billing plan, and `automergeSchedule`
+      // becomes usable again -- with platform automerge the merge is enqueued
+      // at pull-request creation, so that setting cannot be honoured at all.
+      matchUpdateTypes: ["minor", "patch", "digest"],
+      groupName: "all non-major dependencies",
+      automerge: true,
+      automergeType: "pr",
+      platformAutomerge: false,
+      addLabels: ["dependencies"],
+    },
+    {
+      // Majors are never automatic and never even open a pull request on their
+      // own. They appear as a checkbox on the dependency dashboard; ticking it
+      // is the "ask first" step.
+      matchUpdateTypes: ["major"],
+      dependencyDashboardApproval: true,
+      automerge: false,
+      addLabels: ["dependencies", "major-update"],
+    },
+  ],
+
+  customManagers: [
+    {
+      // Keeps the pinned Flutter SDK moving.
+      //
+      // This only works on an exact pin. A floating `flutter-version: "3.x"`
+      // cannot be managed by anything, because there is no commit to build:
+      // the version changes underneath the repository with no pull request and
+      // no gate. Pinning is what turns the SDK into a reviewable dependency;
+      // this manager is what stops the pin from going stale.
+      customType: "regex",
+      managerFilePatterns: ["/^\\.github/workflows/[^/]+\\.ya?ml$/"],
+      matchStrings: [
+        // `subosito/flutter-action` and the shared flutter-quality workflow.
+        "flutter-version:\\s*[\"']?(?<currentValue>\\d+\\.\\d+\\.\\d+)[\"']?",
+        // `flutter-actions/setup-flutter` takes the same value under a key
+        // named `version`, far too generic to match on its own — so it is
+        // anchored to the `uses:` line and bounded to the `with:` block that
+        // follows it.
+        "uses:\\s*flutter-actions/setup-flutter@[^\\s]+(?:[^\\n]*\\n){1,6}?\\s*version:\\s*[\"']?(?<currentValue>\\d+\\.\\d+\\.\\d+)[\"']?",
+      ],
+      depNameTemplate: "flutter",
+      datasourceTemplate: "flutter-version",
+      versioningTemplate: "semver",
+    },
+  ],
+}

@@ -1,0 +1,38 @@
+openapi: 3.1.0
+info:
+  title: Foldmark Optional API Contract
+  version: 0.1.0
+  description: >
+    Optional future API contract. GitHub Pages does not provide a runtime REST API; this file
+    documents a possible backend adapter for later synchronization or automation.
+servers:
+  - url: https://api.example.invalid
+paths:
+  /documents:
+    get:
+      summary: List documents
+      responses:
+        '200':
+          description: Documents
+    post:
+      summary: Create document
+      responses:
+        '201':
+          description: Created
+  /addresses:
+    get:
+      summary: Search addresses
+      parameters:
+        - name: q
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Addresses
+  /print-profiles:
+    get:
+      summary: List print profiles
+      responses:
+        '200':
+          description: Print profiles

@@ -1,0 +1,9 @@
+name: Security issue guidance
+description: Do not disclose vulnerabilities publicly
+title: 'Security report guidance'
+body:
+  - type: markdown
+    attributes:
+      value: |-
+        Please do not publish exploitable details or private documents in a public issue.
+        Follow the private reporting instructions in SECURITY.md. If private reporting is not enabled, contact the maintainer using the documented security contact.

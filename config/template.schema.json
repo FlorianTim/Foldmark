@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumbrecode.de/schemas/web-app-template-config.schema.json",
+  "title": "LumbreCode Web App Template configuration",
+  "type": "object",
+  "required": ["template", "organization", "application", "features"],
+  "additionalProperties": false,
+  "properties": {
+    "template": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "demo"],
+      "properties": {
+        "id": { "const": "lambro-web-app-template" },
+        "version": { "type": "string", "minLength": 1 },
+        "demo": { "enum": ["todo"] }
+      }
+    },
+    "organization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "domain", "url", "webAppsDomain", "contactLocalParts"],
+      "properties": {
+        "name": { "const": "LumbreCode" },
+        "domain": { "const": "lumbrecode.de" },
+        "url": { "const": "https://lumbrecode.de" },
+        "webAppsDomain": { "const": "webapps.lumbrecode.de" },
+        "contactLocalParts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["contact", "support", "feedback", "bugs", "privacy", "security"],
+          "properties": {
+            "contact": { "type": "string", "pattern": "^[A-Za-z0-9+/]+={0,2}$" },
+            "support": { "type": "string", "pattern": "^[A-Za-z0-9+/]+={0,2}$" },
+            "feedback": { "type": "string", "pattern": "^[A-Za-z0-9+/]+={0,2}$" },
+            "bugs": { "type": "string", "pattern": "^[A-Za-z0-9+/]+={0,2}$" },
+            "privacy": { "type": "string", "pattern": "^[A-Za-z0-9+/]+={0,2}$" },
+            "security": { "type": "string", "pattern": "^[A-Za-z0-9+/]+={0,2}$" }
+          }
+        }
+      }
+    },
+    "application": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "shortName",
+        "slug",
+        "description",
+        "packageName",
+        "version",
+        "defaultLocale",
+        "supportedLocales",
+        "repositoryOwner",
+        "repositoryName",
+        "githubPagesBase",
+        "customDomain",
+        "theme",
+        "license"
+      ],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "shortName": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "slug": { "type": "string", "maxLength": 100, "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "description": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "packageName": {
+          "type": "string",
+          "maxLength": 214,
+          "pattern": "^(?:@[a-z0-9._-]+/)?[a-z0-9._-]+$"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+        },
+        "defaultLocale": { "enum": ["de", "en"] },
+        "supportedLocales": {
+          "type": "array",
+          "items": { "enum": ["de", "en"] },
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true
+        },
+        "repositoryOwner": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "repositoryName": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "githubPagesBase": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "customDomain": { "type": "string", "maxLength": 253 },
+        "theme": {
+          "enum": ["system", "light", "dark", "paper", "sepia", "high-contrast", "ocean"]
+        },
+        "license": { "type": "string", "minLength": 1 }
+      }
+    },
+    "features": {
+      "type": "object",
+      "additionalProperties": { "type": "boolean" }
+    }
+  }
+}

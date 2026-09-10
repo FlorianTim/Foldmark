@@ -1,0 +1,139 @@
+{
+  "app": {
+    "demo": "Template demo",
+    "privacy": "Local and privacy-friendly by default"
+  },
+  "nav": {
+    "primary": "Primary navigation",
+    "todos": "Todos",
+    "settings": "Settings",
+    "about": "About"
+  },
+  "todo": {
+    "title": "Simple Todo demo",
+    "description": "Write a todo with a safe Markdown subset. This demo is replaced when a concrete application is initialized.",
+    "inputLabel": "New todo in Markdown",
+    "placeholder": "New todo — **bold**, _italic_, `code`, or - list items",
+    "markdownToolbar": "Markdown formatting",
+    "bold": "Bold",
+    "italic": "Italic",
+    "code": "Code",
+    "list": "List",
+    "preview": "Markdown preview",
+    "add": "Add",
+    "remaining": "{count} remaining",
+    "empty": "No todos yet.",
+    "delete": "Delete",
+    "clear": "Clear all",
+    "loading": "Loading todos…",
+    "errors": {
+      "invalid": "The todo must contain between 1 and 2,000 characters.",
+      "limit": "The local limit of 1,000 todos has been reached.",
+      "persistence": "Local storage is unavailable or contains invalid data. Check the browser privacy settings and reload the page."
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "theme": "Color theme",
+    "localData": "Local data",
+    "privacyText": "This demo stores todos in IndexedDB and preferences in localStorage in this browser. It sets no cookies and contacts no external service.",
+    "deleteData": "Delete my local data",
+    "confirmTitle": "Permanently delete local app data?",
+    "confirmText": "Todos and this app's saved preferences will be removed from this browser. This cannot be undone.",
+    "confirmDelete": "Delete now",
+    "cancel": "Cancel",
+    "deleted": "Local app data was deleted.",
+    "privacyAndHelp": "Privacy and help",
+    "privacyPolicy": "Privacy policy",
+    "deletionGuide": "Data deletion guide",
+    "faq": "FAQ",
+    "changelog": "Changelog",
+    "licenses": "Licenses",
+    "support": "Contact support",
+    "privacyContact": "Ask a privacy question",
+    "themes": {
+      "system": "System preference",
+      "light": "Light",
+      "dark": "Dark",
+      "paper": "Paper",
+      "sepia": "Sepia",
+      "high-contrast": "High contrast",
+      "ocean": "Ocean"
+    },
+    "sections": {
+      "help": "Help",
+      "data": "Data and privacy",
+      "pro": "Pro",
+      "support": "Support",
+      "development": "Development"
+    },
+    "privacyEntryHint": "What is stored, and how to delete it"
+  },
+  "privacy": {
+    "title": "Privacy-friendly start",
+    "body": "This app sets no cookies. It loads no analytics, remote fonts, or external connectors and only stores the local data described in Settings.",
+    "settings": "Open settings"
+  },
+  "about": {
+    "title": "About this template",
+    "application": "Application",
+    "version": "Version",
+    "organization": "Organization",
+    "license": "License",
+    "libraries": "Libraries and licenses",
+    "notices": "Open third-party notices",
+    "website": "Open app website"
+  },
+  "intro": {
+    "welcomeTitle": "Welcome",
+    "welcomeBody": "This application was built from the LumbreCode web template. Three short steps show what it does.",
+    "settingsTitle": "Language and appearance",
+    "settingsBody": "Both can be changed at any time in the settings, and are stored in this browser only.",
+    "next": "Next",
+    "finish": "Get started",
+    "skip": "Skip",
+    "showAgain": "Show the intro again",
+    "progress": "Step {step} of {total}"
+  },
+  "help": {
+    "manual": "User manual",
+    "faq": "Frequently asked questions"
+  },
+  "privacyPanel": {
+    "title": "Privacy and data",
+    "localTitle": "Your data stays in this browser",
+    "localBody": "The application stores its content in IndexedDB and its preferences in this browser’s local storage. There is no account, no server and no background transfer. What you delete here is gone.",
+    "documents": "Published documents",
+    "dangerZone": "Danger zone",
+    "deleteDataHint": "Clears all content. Your preferences are kept.",
+    "resetSettings": "Reset settings",
+    "resetSettingsHint": "Language, appearance and every other preference back to its default. Your content is kept.",
+    "resetConfirmTitle": "Reset settings?",
+    "resetConfirmText": "Every preference returns to its default. Your content is kept.",
+    "resetConfirm": "Reset",
+    "resetDone": "Settings reset"
+  },
+  "pro": {
+    "title": "Pro status",
+    "statusFree": "Free version",
+    "statusPro": "Pro version",
+    "allFree": "All features are currently free.",
+    "checking": "Checking availability …",
+    "available": "Purchase channel available",
+    "unavailable": "No purchase channel available",
+    "restore": "Restore purchases",
+    "restoring": "Checking …",
+    "restoreRestored": "Pro was restored.",
+    "restoreNothing": "No purchases found.",
+    "restoreUnavailable": "The purchase channel cannot be reached right now.",
+    "note": "This page shows the entitlement status. Purchases are not enabled in this version."
+  },
+  "diagnostics": {
+    "title": "Settings diagnostics",
+    "hint": "Visible in development builds only",
+    "intro": "Every registered preference with its raw stored value. Read-only.",
+    "unset": "not set",
+    "default": "Default: {value}"
+  }
+}

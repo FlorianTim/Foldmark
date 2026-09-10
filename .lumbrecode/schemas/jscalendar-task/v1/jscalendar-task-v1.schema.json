@@ -1,0 +1,235 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumbrecode.de/schemas/jscalendar-task/v1/jscalendar-task-v1.schema.json",
+  "title": "LumbreCode Task Interchange v1",
+  "description": "Validates the subset of RFC 8984 JSCalendar that LumbreCode apps emit for tasks and task lists. A document is either one Task or one Group of Tasks. This schema is intentionally stricter than RFC 8984 on what may be EMITTED; receivers must still read tolerantly and accept unknown properties (see interoperability-guide.md section 5).",
+
+  "oneOf": [
+    { "$ref": "#/$defs/Task" },
+    { "$ref": "#/$defs/Group" }
+  ],
+
+  "$defs": {
+
+    "UTCDateTime": {
+      "type": "string",
+      "description": "RFC 3339 date-time in UTC, second precision, always ending in Z. No fractional seconds.",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+
+    "LocalDateTime": {
+      "type": "string",
+      "description": "RFC 8984 LocalDateTime: a wall-clock date-time with NO offset and NO Z. Interpreted in timeZone when present, floating otherwise.",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}$"
+    },
+
+    "Duration": {
+      "type": "string",
+      "description": "ISO 8601 duration, non-negative, minute precision or coarser.",
+      "pattern": "^P(?!$)([0-9]+W)?([0-9]+D)?(T(?!$)([0-9]+H)?([0-9]+M)?([0-9]+S)?)?$"
+    },
+
+    "Uid": {
+      "type": "string",
+      "description": "RFC 4122 version 4 UUID, canonical lowercase form.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+
+    "Relation": {
+      "type": "object",
+      "description": "RFC 8984 Relation. v1 emits only parent and child.",
+      "properties": {
+        "@type": { "const": "Relation" },
+        "relation": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": { "enum": ["parent", "child", "first", "next"] },
+          "additionalProperties": { "const": true }
+        }
+      },
+      "required": ["@type", "relation"],
+      "additionalProperties": false
+    },
+
+    "Link": {
+      "type": "object",
+      "description": "RFC 8984 Link. rel=enclosure is the reserved attachment relation (WasThereSomething ~2.7, F-243).",
+      "properties": {
+        "@type": { "const": "Link" },
+        "href": { "type": "string", "minLength": 1, "maxLength": 2048 },
+        "cid": { "type": "string", "minLength": 1 },
+        "contentType": { "type": "string", "minLength": 1, "maxLength": 255 },
+        "size": { "type": "integer", "minimum": 0 },
+        "rel": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "display": { "enum": ["badge", "graphic", "fullsize", "thumbnail"] },
+        "title": { "type": "string", "maxLength": 200 }
+      },
+      "required": ["@type", "href"],
+      "additionalProperties": false
+    },
+
+    "NDay": {
+      "type": "object",
+      "properties": {
+        "@type": { "const": "NDay" },
+        "day": { "enum": ["mo", "tu", "we", "th", "fr", "sa", "su"] },
+        "nthOfPeriod": {
+          "type": "integer",
+          "description": "1..4 or -1 in the LumbreCode subset; never 0.",
+          "enum": [-1, 1, 2, 3, 4]
+        }
+      },
+      "required": ["@type", "day"],
+      "additionalProperties": false
+    },
+
+    "RecurrenceRule": {
+      "type": "object",
+      "description": "The LumbreCode subset of RFC 8984 RecurrenceRule. Mirrors the app's RFC 5545 subset: FREQ, INTERVAL, BYDAY, BYMONTHDAY. Everything else is unsupported in v1.",
+      "properties": {
+        "@type": { "const": "RecurrenceRule" },
+        "frequency": { "enum": ["daily", "weekly", "monthly", "yearly"] },
+        "interval": { "type": "integer", "minimum": 2 },
+        "byDay": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/NDay" }
+        },
+        "byMonthDay": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "integer", "minimum": 1, "maximum": 31 }
+        }
+      },
+      "required": ["@type", "frequency"],
+      "additionalProperties": false
+    },
+
+    "PatchObject": {
+      "type": "object",
+      "description": "RFC 8984 PatchObject for one recurrence instance. v1 emits only progress, progressUpdated, percentComplete and excluded.",
+      "properties": {
+        "progress": { "$ref": "#/$defs/Progress" },
+        "progressUpdated": { "$ref": "#/$defs/UTCDateTime" },
+        "percentComplete": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "excluded": { "const": true }
+      },
+      "minProperties": 1,
+      "additionalProperties": false
+    },
+
+    "Progress": {
+      "type": "string",
+      "description": "IANA JSCalendar Enum Values registry, property progress. Note: 'delegated' is NOT registered and must never be emitted.",
+      "enum": ["needs-action", "in-process", "completed", "failed", "cancelled"]
+    },
+
+    "Task": {
+      "type": "object",
+      "properties": {
+        "@type": { "const": "Task" },
+        "uid": { "$ref": "#/$defs/Uid" },
+        "prodId": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "created": { "$ref": "#/$defs/UTCDateTime" },
+        "updated": { "$ref": "#/$defs/UTCDateTime" },
+        "sequence": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "RFC 8984 revision counter. Optional for a plain share; REQUIRED when the object travels inside a LumbreCode Exchange envelope, where it is the revision half of the matching key."
+        },
+
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 20000 },
+        "descriptionContentType": {
+          "type": "string",
+          "pattern": "^text/[A-Za-z0-9!#$&^_.+-]+(;.*)?$"
+        },
+
+        "start": { "$ref": "#/$defs/LocalDateTime" },
+        "due": { "$ref": "#/$defs/LocalDateTime" },
+        "timeZone": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "showWithoutTime": { "type": "boolean" },
+        "estimatedDuration": { "$ref": "#/$defs/Duration" },
+
+        "priority": { "type": "integer", "minimum": 0, "maximum": 9 },
+        "progress": { "$ref": "#/$defs/Progress" },
+        "percentComplete": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "progressUpdated": { "$ref": "#/$defs/UTCDateTime" },
+
+        "recurrenceRules": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": { "$ref": "#/$defs/RecurrenceRule" }
+        },
+        "excludedRecurrenceRules": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": { "$ref": "#/$defs/RecurrenceRule" }
+        },
+        "recurrenceOverrides": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}$"
+          },
+          "additionalProperties": { "$ref": "#/$defs/PatchObject" }
+        },
+        "recurrenceId": { "$ref": "#/$defs/LocalDateTime" },
+
+        "relatedTo": {
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/Uid" },
+          "additionalProperties": { "$ref": "#/$defs/Relation" }
+        },
+        "keywords": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": { "type": "string", "minLength": 1, "maxLength": 100 },
+          "additionalProperties": { "const": true }
+        },
+        "links": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "$ref": "#/$defs/Link" }
+        }
+      },
+      "required": ["@type", "uid", "updated", "title"],
+      "patternProperties": {
+        "^[a-z0-9][a-z0-9.-]*\\.[a-z]{2,}:[A-Za-z0-9_]+$": {
+          "$comment": "RFC 8984 section 3.3 vendor-specific property, e.g. lumbrecode.de:statusCategory. A receiver that does not know it keeps it verbatim and ignores it for behaviour."
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "Group": {
+      "type": "object",
+      "properties": {
+        "@type": { "const": "Group" },
+        "uid": { "$ref": "#/$defs/Uid" },
+        "prodId": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "updated": { "$ref": "#/$defs/UTCDateTime" },
+        "sequence": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "RFC 8984 revision counter. Optional for a plain share; REQUIRED when the object travels inside a LumbreCode Exchange envelope, where it is the revision half of the matching key."
+        },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "entries": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 500,
+          "items": { "$ref": "#/$defs/Task" }
+        }
+      },
+      "required": ["@type", "uid", "updated", "entries"],
+      "patternProperties": {
+        "^[a-z0-9][a-z0-9.-]*\\.[a-z]{2,}:[A-Za-z0-9_]+$": {
+          "$comment": "RFC 8984 section 3.3 vendor-specific property, e.g. lumbrecode.de:statusCategory. A receiver that does not know it keeps it verbatim and ignores it for behaviour."
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

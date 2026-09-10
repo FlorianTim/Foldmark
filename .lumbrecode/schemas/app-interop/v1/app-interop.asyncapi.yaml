@@ -1,0 +1,305 @@
+asyncapi: 3.0.0
+
+info:
+  title: LumbreCode App Interoperability
+  version: '1.0.0'
+  description: |
+    Catalogue of the message-based hand-offs between LumbreCode apps on a
+    single Android device. No broker, no network, no account: the transport
+    is an Android `ACTION_SEND` intent carrying a `content://` URI.
+
+    ## What this document is
+
+    An **overview**: who sends what to whom, in which format, under which
+    rules. It exists so a new app can see the whole interoperability surface
+    on one page instead of reading three contract directories.
+
+    ## What this document is NOT
+
+    **Not normative for payloads.** The normative sources are the JSON
+    Schemas under `schemas/` and their golden fixtures, which are the test
+    inputs of the reference implementations. This file `$ref`s those schemas
+    rather than restating them, so it cannot drift from them.
+
+    If this document and a schema disagree, the schema wins.
+
+    ## Deviations from AsyncAPI
+
+    Two, both deliberate and both marked with `x-` extensions:
+
+    1. **There is no server.** `servers.androidDevice` describes the device
+       itself. `protocol: android-intent` is not a registered AsyncAPI
+       protocol, and no AsyncAPI binding exists for Android intents, so the
+       transport details live in `x-lumbrecode-android` extensions.
+    2. **An AsyncAPI document normally describes one application.** This one
+       describes an ecosystem, because the value is the overview. Each
+       operation names its actor in `x-lumbrecode-app`.
+
+  license:
+    name: Proprietary - LumbreCode internal
+  externalDocs:
+    description: Contract index, rules and the implementation guide
+    url: https://github.com/FlorianTim/lumbrecode-engineering/blob/main/docs/APP_INTEROP_OVERVIEW.md
+
+  x-lumbrecode-contract-versions:
+    lumbrecode-exchange: 1
+    jscalendar-task: 1
+    jscalendar-event: 1
+    jscontact: 1
+  x-lumbrecode-standards:
+    envelope: CloudEvents 1.0 (CNCF)
+    calendar-payload: RFC 8984 JSCalendar
+    contact-payload: RFC 9553 JSContact
+    note: >-
+      Nothing in this ecosystem is a proprietary format. The LumbreCode
+      contribution is the profile on top - which event types exist, which
+      payloads are allowed, and which fields are mandatory.
+
+defaultContentType: application/json
+
+servers:
+  androidDevice:
+    host: localhost
+    protocol: android-intent
+    title: The user's Android device
+    summary: On-device hand-off. Nothing leaves the device.
+    description: |
+      Not a server in the usual sense. Both apps run on the same device and
+      the "broker" is the Android intent system. There is no address to
+      connect to, no credentials, and no network hop.
+    x-lumbrecode-android:
+      action: android.intent.action.SEND
+      alsoSupported: android.intent.action.SEND_MULTIPLE
+      payloadCarrier: 'EXTRA_STREAM as a content:// URI'
+      uriPermission: FLAG_GRANT_READ_URI_PERMISSION
+      launchMode: singleTop
+      maxPayloadBytes: 262144
+      requestsRuntimePermission: false
+      network: none
+
+channels:
+  lumbrecodeExchange:
+    address: 'mime:application/cloudevents+json'
+    title: CloudEvents envelope (LumbreCode Exchange Profile)
+    summary: CloudEvents 1.0 carrying a JSCalendar payload between LumbreCode apps.
+    description: |
+      Used when both ends are LumbreCode apps and the transfer needs identity,
+      revision and producer provenance. The envelope is strippable: the `data`
+      payload alone is always valid JSCalendar.
+
+      For several INDEPENDENT messages use the CloudEvents JSON Batch,
+      application/cloudevents-batch+json. For objects that belong together as
+      a matter of meaning use ONE event with a JSCalendar Group payload.
+    servers:
+      - $ref: '#/servers/androidDevice'
+    messages:
+      exchangeEnvelope:
+        $ref: '#/components/messages/ExchangeEnvelope'
+    x-lumbrecode-android:
+      mimeType: application/cloudevents+json
+      batchMimeType: application/cloudevents-batch+json
+      fileExtension: .lcexchange.json
+
+  jscalendarTask:
+    address: 'mime:application/jscalendar+json;type=task'
+    title: A single JSCalendar Task
+    summary: Standard RFC 8984 Task, for any receiver including non-LumbreCode apps.
+    servers:
+      - $ref: '#/servers/androidDevice'
+    messages:
+      task:
+        $ref: '#/components/messages/JSCalendarTask'
+    x-lumbrecode-android:
+      mimeType: 'application/jscalendar+json;type=task'
+      fileExtension: .jscalendar.json
+
+  jscalendarGroup:
+    address: 'mime:application/jscalendar+json;type=group'
+    title: A JSCalendar Group of Tasks
+    summary: A whole task list as one self-contained standard document.
+    servers:
+      - $ref: '#/servers/androidDevice'
+    messages:
+      group:
+        $ref: '#/components/messages/JSCalendarGroup'
+    x-lumbrecode-android:
+      mimeType: 'application/jscalendar+json;type=group'
+      fileExtension: .jscalendar.json
+
+  jscontactCard:
+    address: 'mime:application/jscontact+json'
+    title: A JSContact Card
+    summary: RFC 9553 contact data. Standardized in advance; no app implements it yet.
+    description: |
+      The contact-side sibling of JSCalendar, from the same IETF working
+      group. Fixed now so the first app that needs contact exchange starts
+      from a decision rather than a blank page. See docs/JSCONTACT_INTEROP.md.
+    servers:
+      - $ref: '#/servers/androidDevice'
+    messages:
+      card:
+        $ref: '#/components/messages/JSContactCard'
+    x-lumbrecode-status: standardized, unimplemented
+    x-lumbrecode-android:
+      mimeType: application/jscontact+json
+      fileExtension: .jscontact.json
+
+operations:
+  vacationPlannerSendsEvents:
+    action: send
+    title: Vacation planner hands over trips and time off
+    channel:
+      $ref: '#/channels/lumbrecodeExchange'
+    messages:
+      - $ref: '#/channels/lumbrecodeExchange/messages/exchangeEnvelope'
+    summary: User-initiated, one-way. The producer never assumes the import happened.
+    x-lumbrecode-app: de.lumbre.code.vacation_planner
+    x-lumbrecode-spec: 'WasThereSomething spec 0034 (IAE-501..IAE-506)'
+
+  wasThereSomethingReceivesEvents:
+    action: receive
+    title: WasThereSomething imports events after an explicit review
+    channel:
+      $ref: '#/channels/lumbrecodeExchange'
+    messages:
+      - $ref: '#/channels/lumbrecodeExchange/messages/exchangeEnvelope'
+    summary: |
+      Validated totally, matched against origins and tombstones, and shown in
+      an import review the user must confirm. Nothing is ever written
+      automatically. There is no trusted-producer bypass.
+    x-lumbrecode-app: de.lumbre.code.was_there_something
+    x-lumbrecode-spec: 'WasThereSomething spec 0034 (IAE-001..IAE-406), ADR-0016'
+    x-lumbrecode-rules:
+      matchingKey: '(sourceappid, data.uid)'
+      revision: data.sequence
+      validation: total - fully valid or fully rejected, never partial
+      userConfirmation: mandatory, no bypass
+      sourceAppIdIsAuthentication: false
+
+  wasThereSomethingSendsTasks:
+    action: send
+    title: WasThereSomething shares a task or a task list
+    channel:
+      $ref: '#/channels/jscalendarGroup'
+    messages:
+      - $ref: '#/channels/jscalendarGroup/messages/group'
+    summary: |
+      Explicit, previewed, one-way snapshot. The user chooses the format:
+      plain JSCalendar for any receiver, or the CloudEvents envelope when the
+      receiver is a LumbreCode app and provenance should travel.
+    x-lumbrecode-app: de.lumbre.code.was_there_something
+    x-lumbrecode-spec: 'WasThereSomething spec 0037 (TSH-001..TSH-606), ADR-0020'
+    x-lumbrecode-alternative-channel: '#/channels/lumbrecodeExchange'
+
+  todoAppReceivesTasks:
+    action: receive
+    title: The To-do app imports a shared list
+    channel:
+      $ref: '#/channels/jscalendarGroup'
+    messages:
+      - $ref: '#/channels/jscalendarGroup/messages/group'
+    summary: |
+      A Group becomes a NEW local list - always, even if the uid is familiar.
+      An identical uid documents provenance, never a synchronization
+      relationship. There is no return channel.
+    x-lumbrecode-app: de.lumbre.code.todo
+    x-lumbrecode-spec: 'docs/JSCALENDAR_TASK_INTEROP.md, sections 9 and 10'
+    x-lumbrecode-rules:
+      importCreatesNewList: true
+      uidImpliesSync: false
+      unknownProperties: kept verbatim, ignored for behaviour, written back on re-export
+      lossReporting: mandatory, counted and typed
+      autoFetchOfLinks: never
+
+components:
+  messages:
+    ExchangeEnvelope:
+      name: ExchangeEnvelope
+      title: CloudEvents 1.0 envelope, LumbreCode Exchange Profile v1
+      contentType: application/cloudevents+json
+      summary: CloudEvents attributes plus one embedded JSCalendar payload.
+      description: |
+        The envelope carries ONLY transport and message metadata - id, source,
+        type, time, datacontenttype, dataschema, plus the sourceappid and
+        sourceversion extension attributes. Everything about the object lives
+        in data and nowhere else.
+
+        Domain data that JSCalendar has no property for - the producer's
+        five-value lifecycle, for instance - travels as an RFC 8984 vendor
+        extension ON THE PAYLOAD, not on the envelope, so it survives when a
+        receiver stores only the JSCalendar object.
+
+        Validation is two-stage: the envelope against this schema, then data
+        against the schema its datacontenttype names.
+      payload:
+        schemaFormat: 'application/schema+json;version=draft-2020-12'
+        schema:
+          $ref: '../../lumbrecode-exchange/v1/lumbrecode-exchange-v1.schema.json'
+      examples:
+        - name: tripBooked
+          summary: A booked trip, revision 4
+          externalValue: '../../lumbrecode-exchange/v1/examples/05-trip-booked-seq4-updated.json'
+        - name: taskList
+          summary: A whole task list travelling in the envelope
+          externalValue: '../../lumbrecode-exchange/v1/examples/21-task-group-in-envelope.json'
+        - name: batch
+          summary: Three independent events as a CloudEvents JSON Batch
+          externalValue: '../../lumbrecode-exchange/v1/examples/07-batch-three-events.json'
+
+    JSCalendarTask:
+      name: JSCalendarTask
+      title: RFC 8984 Task
+      contentType: 'application/jscalendar+json;type=task'
+      summary: One to-do, in the standard format, readable by any conforming app.
+      payload:
+        schemaFormat: 'application/schema+json;version=draft-2020-12'
+        schema:
+          $ref: '../../jscalendar-task/v1/jscalendar-task-v1.schema.json'
+      examples:
+        - name: minimal
+          externalValue: '../../jscalendar-task/v1/examples/01-task-minimal.json'
+        - name: markdownBody
+          externalValue: '../../jscalendar-task/v1/examples/02-task-markdown.json'
+
+    JSCalendarGroup:
+      name: JSCalendarGroup
+      title: RFC 8984 Group of Tasks
+      contentType: 'application/jscalendar+json;type=group'
+      summary: A whole task list, with parent/child relations preserved.
+      payload:
+        schemaFormat: 'application/schema+json;version=draft-2020-12'
+        schema:
+          $ref: '../../jscalendar-task/v1/jscalendar-task-v1.schema.json'
+      examples:
+        - name: nestedTasks
+          externalValue: '../../jscalendar-task/v1/examples/51-group-nested-tasks.json'
+
+    JSContactCard:
+      name: JSContactCard
+      title: RFC 9553 Card
+      contentType: application/jscontact+json
+      summary: One contact. Planned; no producer or consumer exists yet.
+      description: |
+        Notable fit with the existing product model: PartialDate makes the
+        year of a birthday optional, which is the app's own central date rule;
+        speakToAs is the registered home for pronouns and grammatical gender;
+        and kind covers individual, org and location without a proprietary
+        vocabulary.
+      payload:
+        schemaFormat: 'application/schema+json;version=draft-2020-12'
+        schema:
+          $ref: '../../jscontact/v1/jscontact-card-v1.schema.json'
+      examples:
+        - name: birthdayWithoutYear
+          summary: The case the whole product is built on
+          externalValue: '../../jscontact/v1/examples/03-card-birthday-without-year.json'
+        - name: pronouns
+          externalValue: '../../jscontact/v1/examples/07-card-pronouns.json'
+
+  tags:
+    - name: local-first
+      description: No backend, no cloud, no account. Nothing leaves the device.
+    - name: user-initiated
+      description: Every transfer starts and ends with an explicit user action.
+    - name: no-sync
+      description: Every hand-off is a snapshot. There is no return channel.

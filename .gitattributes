@@ -1,0 +1,30 @@
+# Line endings: normalize in the repository AND in the working tree.
+#
+# `eol=lf` rather than a plain `text=auto` on purpose. Prettier defaults to
+# `endOfLine: "lf"` and `.prettierrc` does not override it, so a CRLF working
+# tree makes `npm run format:prettier-check` fail on every checkable file on
+# Windows -- 160 of them -- no matter what the commit actually contains. The
+# attribute wins over `core.autocrlf`, so this needs no per-machine git config
+# and holds for everyone who clones the template.
+* text=auto eol=lf
+
+# Windows script formats are CRLF by convention and are not prettier-checked.
+*.ps1  text eol=crlf
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+
+# Binary formats -- never normalize.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.webp  binary
+*.pdf   binary
+*.psd   binary
+*.ai    binary
+*.ttf   binary
+*.otf   binary
+*.woff  binary
+*.woff2 binary
+*.zip   binary

@@ -1,0 +1,139 @@
+{
+  "app": {
+    "demo": "Template-Demo",
+    "privacy": "Lokal und datenschutzfreundlich voreingestellt"
+  },
+  "nav": {
+    "primary": "Hauptnavigation",
+    "todos": "Aufgaben",
+    "settings": "Einstellungen",
+    "about": "Über"
+  },
+  "todo": {
+    "title": "Einfache To-do-Demo",
+    "description": "Schreibe eine Aufgabe mit einem sicheren Markdown-Teilsatz. Diese Demo wird bei der Initialisierung einer konkreten App ersetzt.",
+    "inputLabel": "Neue Aufgabe in Markdown",
+    "placeholder": "Neue Aufgabe — **fett**, _kursiv_, `Code` oder - Listeneinträge",
+    "markdownToolbar": "Markdown-Formatierung",
+    "bold": "Fett",
+    "italic": "Kursiv",
+    "code": "Code",
+    "list": "Liste",
+    "preview": "Markdown-Vorschau",
+    "add": "Hinzufügen",
+    "remaining": "{count} offen",
+    "empty": "Noch keine Aufgaben.",
+    "delete": "Löschen",
+    "clear": "Alle löschen",
+    "loading": "Aufgaben werden geladen …",
+    "errors": {
+      "invalid": "Die Aufgabe muss zwischen 1 und 2.000 Zeichen lang sein.",
+      "limit": "Das lokale Limit von 1.000 Aufgaben ist erreicht.",
+      "persistence": "Der lokale Speicher ist nicht verfügbar oder enthält ungültige Daten. Prüfe die Browser-Datenschutzeinstellungen und lade die Seite neu."
+    }
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "language": "Sprache",
+    "theme": "Farbthema",
+    "localData": "Lokale Daten",
+    "privacyText": "Diese Demo speichert Aufgaben in IndexedDB und Einstellungen in localStorage in diesem Browser. Sie setzt keine Cookies und kontaktiert keine externen Dienste.",
+    "deleteData": "Meine lokalen Daten löschen",
+    "confirmTitle": "Lokale App-Daten endgültig löschen?",
+    "confirmText": "Aufgaben und gespeicherte Einstellungen dieser App werden aus diesem Browser entfernt. Dies kann nicht rückgängig gemacht werden.",
+    "confirmDelete": "Jetzt löschen",
+    "cancel": "Abbrechen",
+    "deleted": "Die lokalen App-Daten wurden gelöscht.",
+    "privacyAndHelp": "Datenschutz und Hilfe",
+    "privacyPolicy": "Datenschutzerklärung",
+    "deletionGuide": "Anleitung zur Datenlöschung",
+    "faq": "FAQ",
+    "changelog": "Änderungsprotokoll",
+    "licenses": "Lizenzen",
+    "support": "Support kontaktieren",
+    "privacyContact": "Datenschutzfrage stellen",
+    "themes": {
+      "system": "Systemeinstellung",
+      "light": "Hell",
+      "dark": "Dunkel",
+      "paper": "Papier",
+      "sepia": "Sepia",
+      "high-contrast": "Hoher Kontrast",
+      "ocean": "Ozean"
+    },
+    "sections": {
+      "help": "Hilfe",
+      "data": "Daten und Datenschutz",
+      "pro": "Pro",
+      "support": "Unterstützung",
+      "development": "Entwicklung"
+    },
+    "privacyEntryHint": "Was gespeichert wird, und wie du es löschst"
+  },
+  "privacy": {
+    "title": "Datenschutzfreundlicher Start",
+    "body": "Diese App setzt keine Cookies. Sie lädt keine Analytics, Remote-Fonts oder externen Connectoren und speichert nur die unter Einstellungen beschriebenen lokalen Daten.",
+    "settings": "Einstellungen öffnen"
+  },
+  "about": {
+    "title": "Über dieses Template",
+    "application": "Anwendung",
+    "version": "Version",
+    "organization": "Organisation",
+    "license": "Lizenz",
+    "libraries": "Bibliotheken und Lizenzen",
+    "notices": "Third-Party Notices öffnen",
+    "website": "App-Website öffnen"
+  },
+  "intro": {
+    "welcomeTitle": "Willkommen",
+    "welcomeBody": "Diese Anwendung ist aus dem LumbreCode Web-Template entstanden. Drei kurze Schritte zeigen, was sie tut.",
+    "settingsTitle": "Sprache und Darstellung",
+    "settingsBody": "Beides lässt sich jederzeit in den Einstellungen ändern und wird nur in diesem Browser gespeichert.",
+    "next": "Weiter",
+    "finish": "Los geht’s",
+    "skip": "Überspringen",
+    "showAgain": "Einleitung erneut anzeigen",
+    "progress": "Schritt {step} von {total}"
+  },
+  "help": {
+    "manual": "Anleitung",
+    "faq": "Häufige Fragen"
+  },
+  "privacyPanel": {
+    "title": "Datenschutz und Daten",
+    "localTitle": "Deine Daten bleiben in diesem Browser",
+    "localBody": "Die Anwendung speichert ihre Inhalte in IndexedDB und ihre Einstellungen im Local Storage dieses Browsers. Es gibt kein Konto, keinen Server und keine Übertragung im Hintergrund. Was du hier löschst, ist weg.",
+    "documents": "Veröffentlichte Dokumente",
+    "dangerZone": "Gefahrenbereich",
+    "deleteDataHint": "Löscht alle Inhalte. Deine Einstellungen bleiben erhalten.",
+    "resetSettings": "Einstellungen zurücksetzen",
+    "resetSettingsHint": "Sprache, Darstellung und alle weiteren Einstellungen zurück auf Standard. Deine Inhalte bleiben erhalten.",
+    "resetConfirmTitle": "Einstellungen zurücksetzen?",
+    "resetConfirmText": "Alle Einstellungen kehren auf ihre Standardwerte zurück. Deine Inhalte bleiben erhalten.",
+    "resetConfirm": "Zurücksetzen",
+    "resetDone": "Einstellungen zurückgesetzt"
+  },
+  "pro": {
+    "title": "Pro-Status",
+    "statusFree": "Kostenlose Version",
+    "statusPro": "Pro-Version",
+    "allFree": "Alle Funktionen sind derzeit kostenlos.",
+    "checking": "Verfügbarkeit wird geprüft …",
+    "available": "Kaufkanal verfügbar",
+    "unavailable": "Kein Kaufkanal verfügbar",
+    "restore": "Käufe wiederherstellen",
+    "restoring": "Wird geprüft …",
+    "restoreRestored": "Pro wurde wiederhergestellt.",
+    "restoreNothing": "Keine Käufe gefunden.",
+    "restoreUnavailable": "Der Kaufkanal ist derzeit nicht erreichbar.",
+    "note": "Diese Seite zeigt den Berechtigungsstatus. Käufe sind in dieser Version nicht aktiviert."
+  },
+  "diagnostics": {
+    "title": "Einstellungen-Diagnose",
+    "hint": "Nur in Entwicklungs-Builds sichtbar",
+    "intro": "Alle registrierten Einstellungen mit ihrem gespeicherten Rohwert. Nur lesend.",
+    "unset": "nicht gesetzt",
+    "default": "Standard: {value}"
+  }
+}

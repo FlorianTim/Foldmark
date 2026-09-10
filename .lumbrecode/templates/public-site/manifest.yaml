@@ -1,0 +1,29 @@
+schemaVersion: 1
+
+app:
+  slug: example-app
+  displayName: Example App
+  repository: FlorianTim/example-app
+
+release:
+  version: 0.1.0
+  channel: stable
+  gitTag: v0.1.0
+  sourceCommit: REPLACE_DURING_RELEASE
+
+locales:
+  default: de
+  supported:
+    - de
+    - en
+
+documents:
+  faq:
+    de: faq/de.yaml
+    en: faq/en.yaml
+  privacy:
+    de: privacy/de.md
+    en: privacy/en.md
+    requiresHumanApproval: true
+  roadmap: roadmap.yaml
+  changelog: changelog.yaml

@@ -1,0 +1,56 @@
+name: CI Gate
+run-name: 'CI gate'
+
+# Proves that the gating workflow actually produced a result for this PR.
+#
+# A workflow that fails to *start* produces no check run at all. That happened
+# in flutter-app-template PR #24: the call to a shared workflow could not be
+# resolved, the run failed after zero seconds with zero jobs, and the pull
+# request reported MERGEABLE / CLEAN with the gate never having run.
+#
+# This repository took on exactly that risk when ci.yml moved to
+# node-quality.yml@v1. Branch protection would catch it, but it needs GitHub
+# Pro or a public repository and this one is neither -- the API answers
+# 403 Upgrade to GitHub Pro.
+#
+# So: no path filters here, on purpose. This workflow runs on every pull
+# request and is the one check that is always present. It cannot block a
+# merge; it makes a missing gate visible.
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        # One entry per workflow that must not fail silently. Anything calling
+        # a reusable workflow from lumbrecode-engineering belongs here.
+        workflow: [ci.yml]
+    name: 'gate (${{ matrix.workflow }})'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      # --expect-always: ci.yml has no path filter and runs on every pull
+      # request, so a missing run is always a miss. The script refuses the flag
+      # if the workflow ever grows a filter, rather than quietly demanding runs
+      # that are correctly skipped.
+      - name: Verify the gate ran
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python3 scripts/verify_ci_gate.py \
+            --repo "${{ github.repository }}" \
+            --pr "${{ github.event.pull_request.number }}" \
+            --head-sha "${{ github.event.pull_request.head.sha }}" \
+            --workflow "${{ matrix.workflow }}" \
+            --expect-always

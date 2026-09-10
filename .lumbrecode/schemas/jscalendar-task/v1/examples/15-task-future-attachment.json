@@ -1,0 +1,29 @@
+{
+  "@type": "Task",
+  "uid": "5d1e8b47-2f96-4a03-95c7-8b2e4d0f6a19",
+  "prodId": "-//LumbreCode//WasThereSomething 1.5//EN",
+  "created": "2026-08-25T09:12:00Z",
+  "updated": "2026-08-25T09:12:00Z",
+  "title": "Rezept mitbringen",
+  "description": "Das eingescannte Rezept von Oma.",
+  "descriptionContentType": "text/markdown; charset=utf-8",
+  "links": {
+    "1": {
+      "@type": "Link",
+      "href": "https://example.invalid/files/rezept-oma.pdf",
+      "rel": "enclosure",
+      "contentType": "application/pdf",
+      "size": 284915,
+      "title": "Rezept Oma.pdf"
+    },
+    "2": {
+      "@type": "Link",
+      "href": "https://example.invalid/files/geschenk.jpg",
+      "rel": "enclosure",
+      "contentType": "image/jpeg",
+      "size": 1048576,
+      "display": "thumbnail",
+      "title": "Geschenkidee"
+    }
+  }
+}

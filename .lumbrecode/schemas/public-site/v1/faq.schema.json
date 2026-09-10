@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumbrecode.de/schemas/public-site/v1/faq.schema.json",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "locale",
+    "categories"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "locale": {
+      "type": "string",
+      "minLength": 2
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "entries"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "question",
+                "answerMarkdown"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+                },
+                "question": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "answerMarkdown": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

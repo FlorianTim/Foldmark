@@ -1,0 +1,13 @@
+{
+  "@type": "Task",
+  "uid": "c4d80a17-6e35-4c9b-83f2-9a1e07b5d264",
+  "prodId": "-//LumbreCode//WasThereSomething 1.5//EN",
+  "created": "2026-08-25T09:12:00Z",
+  "updated": "2026-08-25T09:12:00Z",
+  "title": "Pappteller mitbringen",
+  "priority": 1,
+  "keywords": {
+    "einkauf": true,
+    "party": true
+  }
+}

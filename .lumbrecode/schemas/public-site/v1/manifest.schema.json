@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumbrecode.de/schemas/public-site/v1/manifest.schema.json",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "app",
+    "release",
+    "locales",
+    "documents"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "app": {
+      "type": "object",
+      "required": [
+        "slug",
+        "displayName",
+        "repository"
+      ],
+      "properties": {
+        "slug": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "repository": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "release": {
+      "type": "object",
+      "required": [
+        "version",
+        "channel",
+        "gitTag",
+        "sourceCommit"
+      ],
+      "properties": {
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "channel": {
+          "enum": [
+            "development",
+            "beta",
+            "stable"
+          ]
+        },
+        "gitTag": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceCommit": {
+          "type": "string",
+          "minLength": 7
+        }
+      },
+      "additionalProperties": false
+    },
+    "locales": {
+      "type": "object",
+      "required": [
+        "default",
+        "supported"
+      ],
+      "properties": {
+        "default": {
+          "type": "string"
+        },
+        "supported": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "documents": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

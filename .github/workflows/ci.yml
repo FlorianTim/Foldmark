@@ -1,0 +1,25 @@
+name: Continuous integration
+on: { push: { branches: [main] }, pull_request: {}, workflow_dispatch: {} }
+permissions: { contents: read }
+jobs:
+  # The gate itself lives in lumbrecode-engineering, so a fix to the Node setup
+  # reaches every consumer without touching this file. Pinned to the moving
+  # major tag: @v1 follows reviewed compatible releases, @main is forbidden
+  # (docs/GITHUB_ACTIONS_ACCESS.md in that repository).
+  verify:
+    uses: FlorianTim/lumbrecode-engineering/.github/workflows/node-quality.yml@v1
+    with:
+      # Both toolchains are pinned in files, and those files are what
+      # `workflow:prepare` verifies before it installs anything. Passing a
+      # version string here instead would let CI and a local run disagree.
+      node-version-file: .nvmrc
+      python-version-file: .python-version
+      # prepare = toolchain check + npm ci + the Python requirements the
+      # documentation renderer and the check-*.py scripts need + Playwright.
+      install-command: npm run workflow:prepare
+      quality-command: npm run workflow:ci
+      # Empty on purpose: `npm run ci` already runs the build between verify
+      # and the e2e tests. A second build would only cost time.
+      build-command: ''
+      failure-artifact-name: playwright-report
+      failure-artifact-path: playwright-report/

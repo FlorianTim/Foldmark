@@ -1,0 +1,33 @@
+{
+  "@type": "Card",
+  "version": "1.0",
+  "uid": "b28e4d70-9c15-4a3f-8e02-6d1b7f4a9c53",
+  "prodId": "-//LumbreCode//WasThereSomething 1.6//EN",
+  "created": "2026-08-25T09:12:00Z",
+  "updated": "2026-08-25T09:12:00Z",
+  "name": {
+    "full": "Anna Weiss"
+  },
+  "anniversaries": {
+    "1": {
+      "@type": "Anniversary",
+      "kind": "birth",
+      "date": {
+        "@type": "PartialDate",
+        "year": 1985,
+        "month": 11,
+        "day": 2
+      }
+    },
+    "2": {
+      "@type": "Anniversary",
+      "kind": "wedding",
+      "date": {
+        "@type": "PartialDate",
+        "year": 2012,
+        "month": 6,
+        "day": 9
+      }
+    }
+  }
+}

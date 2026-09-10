@@ -1,0 +1,10 @@
+{
+  "@type": "Task",
+  "uid": "018f7d8c-7f5b-4be7-91a8-08cdb8216a11",
+  "prodId": "-//LumbreCode//WasThereSomething 1.5//EN",
+  "created": "2026-08-25T09:12:00Z",
+  "updated": "2026-08-25T09:12:00Z",
+  "title": "Schokokuchen backen",
+  "description": "Bitte **dunkle Schokolade** verwenden.\n\n- Sahne kaufen\n- Form einfetten\n\nRezept siehe [Notizbuch](https://example.invalid/rezept).",
+  "descriptionContentType": "text/markdown; charset=utf-8"
+}

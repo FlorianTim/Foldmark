@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumbrecode.de/schemas/lumbrecode-exchange/v1/lumbrecode-exchange-v1.schema.json",
+  "title": "LumbreCode Exchange Profile v1",
+  "description": "A PROFILE, not a format. The envelope is CloudEvents 1.0 in structured JSON mode (CNCF); the payload is RFC 8984 JSCalendar. This schema adds only the constraints LumbreCode requires on top of those two standards: which `type` values exist, which `datacontenttype` values are allowed, that `dataschema` is mandatory, and that an exchanged payload carries `sequence`. Everything else is plain CloudEvents. A single event or a batch array is accepted. Validation is staged: this schema checks the envelope; the payload is then checked against the schema named by datacontenttype/dataschema.",
+
+  "oneOf": [
+    { "$ref": "#/$defs/CloudEvent" },
+    {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 25,
+      "items": { "$ref": "#/$defs/CloudEvent" },
+      "description": "CloudEvents JSON Batch, media type application/cloudevents-batch+json. Use it for INDEPENDENT operations. A set of objects that belong together as a matter of domain meaning is a single event carrying a JSCalendar Group instead."
+    }
+  ],
+
+  "$defs": {
+
+    "UtcInstant": {
+      "type": "string",
+      "description": "RFC 3339 timestamp. This profile requires UTC with second precision, matching RFC 8984 UTCDateTime.",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+
+    "Uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+
+    "CloudEvent": {
+      "type": "object",
+      "properties": {
+
+        "specversion": {
+          "const": "1.0",
+          "description": "CloudEvents core specification version. Versions CloudEvents itself, NOT this profile and NOT the payload."
+        },
+
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Unique within the scope of the producer. Together with `source` it identifies the MESSAGE, never the object."
+        },
+
+        "source": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300,
+          "format": "uri-reference",
+          "description": "URI-reference identifying the producing application, e.g. https://lumbrecode.de/apps/vacation-planner. A URI, never an object. Metadata, NEVER authentication: a receiver displays it as a claim and derives no trust, permission or behaviour from it."
+        },
+
+        "type": {
+          "type": "string",
+          "pattern": "^de\\.lumbrecode\\.exchange\\.jscalendar\\.(upsert|import)\\.v[1-9][0-9]*$",
+          "description": "Reverse-DNS event type carrying the operation and the profile version. v1 defines exactly two: de.lumbrecode.exchange.jscalendar.upsert.v1 (the receiver may create or update the matched object) and de.lumbrecode.exchange.jscalendar.import.v1 (the receiver creates a new local copy and never matches). `delete` is reserved and is not part of v1. The OBJECT kind is not encoded here - it is already unambiguous from datacontenttype and data.@type."
+        },
+
+        "time": {
+          "$ref": "#/$defs/UtcInstant",
+          "description": "When the occurrence happened. Optional in CloudEvents; REQUIRED by this profile."
+        },
+
+        "datacontenttype": {
+          "enum": [
+            "application/jscalendar+json;type=event",
+            "application/jscalendar+json;type=task",
+            "application/jscalendar+json;type=group"
+          ],
+          "description": "Optional in CloudEvents; REQUIRED by this profile. Names which JSCalendar object is in `data`."
+        },
+
+        "dataschema": {
+          "type": "string",
+          "format": "uri",
+          "description": "Optional in CloudEvents; REQUIRED by this profile. It is how the PAYLOAD contract is versioned, which is why this profile needs no protocolVersion of its own. Points at the LumbreCode schema the payload conforms to, e.g. https://lumbrecode.de/schemas/jscalendar-event/v1/jscalendar-event-v1.schema.json"
+        },
+
+        "subject": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Optional in CloudEvents. This profile sets it to the payload uid, so a receiver can log and de-duplicate without parsing `data`."
+        },
+
+        "sourceappid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 155,
+          "description": "CloudEvents extension attribute. The Android application id of the producer, e.g. de.lumbre.code.vacation_planner. Together with data.uid it forms the matching key. Extension names must be lower-case ASCII letters and digits, which is why this is sourceappid and not sourceAppId."
+        },
+
+        "sourceversion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40,
+          "description": "CloudEvents extension attribute. Producer app version, for diagnostics only. Never a behaviour signal."
+        },
+
+        "data": {
+          "type": "object",
+          "description": "A complete, standalone JSCalendar object. Validated in the next stage against the schema named by dataschema. It MUST carry @type, uid, updated and - because it is being exchanged - sequence.",
+          "properties": {
+            "@type": { "enum": ["Event", "Task", "Group"] },
+            "uid": { "$ref": "#/$defs/Uuid" },
+            "updated": { "$ref": "#/$defs/UtcInstant" },
+            "sequence": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "RFC 8984 revision counter. Optional in the RFC; REQUIRED here, because it is the revision half of the matching key and the only way a receiver can update instead of duplicate."
+            }
+          },
+          "required": ["@type", "uid", "updated", "sequence"]
+        }
+      },
+
+      "required": [
+        "specversion", "id", "source", "type",
+        "time", "datacontenttype", "dataschema", "data"
+      ],
+
+      "additionalProperties": true,
+      "$comment": "Deliberately OPEN. CloudEvents allows extension context attributes and a future profile version may add some. A v1 receiver ignores unknown attributes for behaviour while including them in the content hash, so a same-sequence content change stays detectable. Producer-side typos are caught by a lint, not by this schema."
+    }
+  }
+}

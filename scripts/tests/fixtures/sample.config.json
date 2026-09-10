@@ -1,0 +1,46 @@
+{
+  "template": {
+    "id": "lambro-web-app-template",
+    "version": "1.0.0",
+    "demo": "todo"
+  },
+  "organization": {
+    "name": "LumbreCode",
+    "domain": "lumbrecode.de",
+    "url": "https://lumbrecode.de",
+    "webAppsDomain": "webapps.lumbrecode.de",
+    "contactLocalParts": {
+      "contact": "Y29udGFjdA==",
+      "support": "c3VwcG9ydA==",
+      "feedback": "ZmVlZGJhY2s=",
+      "bugs": "YnVncw==",
+      "privacy": "cHJpdmFjeQ==",
+      "security": "c2VjdXJpdHk="
+    }
+  },
+  "application": {
+    "name": "Sample Notes <Safe>",
+    "shortName": "Sample Notes",
+    "slug": "sample-notes",
+    "description": "Local \"notes\" <demo> for initializer regression testing.",
+    "packageName": "sample-notes",
+    "version": "1.2.3",
+    "defaultLocale": "en",
+    "supportedLocales": ["de", "en"],
+    "repositoryOwner": "sample-owner",
+    "repositoryName": "sample-notes",
+    "githubPagesBase": "auto",
+    "customDomain": "",
+    "theme": "system",
+    "license": "MIT"
+  },
+  "features": {
+    "demoTodo": true,
+    "indexedDb": true,
+    "i18n": true,
+    "themes": true,
+    "privacyCenter": true,
+    "pwa": false,
+    "externalConnectors": false
+  }
+}

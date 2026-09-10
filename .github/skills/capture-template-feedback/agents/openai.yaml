@@ -1,0 +1,5 @@
+interface:
+  display_name: 'Capture Template Feedback'
+  short_description: 'Turn concrete app problems into reusable template improvements'
+  default_prompt:
+    'Capture this app-generation problem as sanitized, versioned feedback for the original template.'

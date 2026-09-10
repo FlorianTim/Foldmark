@@ -1,0 +1,24 @@
+{
+  "@type": "Task",
+  "uid": "2a6c9f38-5b14-4e7d-8f03-6c9d1a4b7e52",
+  "prodId": "-//LumbreCode//WasThereSomething 1.5//EN",
+  "created": "2026-08-25T09:12:00Z",
+  "updated": "2026-08-25T09:12:00Z",
+  "title": "Vorräte prüfen",
+  "due": "2027-03-06T00:00:00",
+  "showWithoutTime": true,
+  "recurrenceRules": [
+    {
+      "@type": "RecurrenceRule",
+      "frequency": "monthly",
+      "interval": 2,
+      "byDay": [
+        {
+          "@type": "NDay",
+          "day": "sa",
+          "nthOfPeriod": 1
+        }
+      ]
+    }
+  ]
+}

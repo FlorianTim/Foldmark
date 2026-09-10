@@ -1,0 +1,92 @@
+[
+  {
+    "specversion": "1.0",
+    "id": "1a2b3c4d-0007-4a5e-9f8d-1b2c3d4e5f60-1",
+    "source": "https://lumbrecode.de/apps/vacation-planner",
+    "type": "de.lumbrecode.exchange.jscalendar.upsert.v1",
+    "time": "2026-08-25T08:00:00Z",
+    "datacontenttype": "application/jscalendar+json;type=event",
+    "dataschema": "https://lumbrecode.de/schemas/jscalendar-event/v1/jscalendar-event-v1.schema.json",
+    "subject": "550e8400-e29b-41d4-a716-4466554400a1",
+    "sourceappid": "de.lumbre.code.vacation_planner",
+    "sourceversion": "1.0.1",
+    "data": {
+      "@type": "Event",
+      "uid": "550e8400-e29b-41d4-a716-4466554400a1",
+      "prodId": "-//LumbreCode//Vacation Planner 1.0.1//EN",
+      "created": "2026-08-25T07:55:00Z",
+      "updated": "2026-08-25T07:55:00Z",
+      "sequence": 1,
+      "title": "Italien",
+      "start": "2026-09-12T00:00:00",
+      "duration": "P12D",
+      "showWithoutTime": true,
+      "status": "confirmed",
+      "lumbrecode.de:statusCategory": "confirmed",
+      "lumbrecode.de:statusCode": "booked",
+      "categories": {
+        "https://lumbrecode.de/ns/event-type/trip": true
+      }
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "1a2b3c4d-0007-4a5e-9f8d-1b2c3d4e5f60-2",
+    "source": "https://lumbrecode.de/apps/vacation-planner",
+    "type": "de.lumbrecode.exchange.jscalendar.upsert.v1",
+    "time": "2026-08-25T08:00:00Z",
+    "datacontenttype": "application/jscalendar+json;type=event",
+    "dataschema": "https://lumbrecode.de/schemas/jscalendar-event/v1/jscalendar-event-v1.schema.json",
+    "subject": "550e8400-e29b-41d4-a716-4466554400a2",
+    "sourceappid": "de.lumbre.code.vacation_planner",
+    "sourceversion": "1.0.1",
+    "data": {
+      "@type": "Event",
+      "uid": "550e8400-e29b-41d4-a716-4466554400a2",
+      "prodId": "-//LumbreCode//Vacation Planner 1.0.1//EN",
+      "created": "2026-06-02T07:10:00Z",
+      "updated": "2026-08-25T07:56:10Z",
+      "sequence": 3,
+      "title": "Betriebsurlaub",
+      "start": "2026-09-12T00:00:00",
+      "duration": "P12D",
+      "showWithoutTime": true,
+      "status": "confirmed",
+      "lumbrecode.de:statusCategory": "confirmed",
+      "lumbrecode.de:statusCode": "approved",
+      "categories": {
+        "https://lumbrecode.de/ns/event-type/time_off": true
+      }
+    }
+  },
+  {
+    "specversion": "1.0",
+    "id": "1a2b3c4d-0007-4a5e-9f8d-1b2c3d4e5f60-3",
+    "source": "https://lumbrecode.de/apps/vacation-planner",
+    "type": "de.lumbrecode.exchange.jscalendar.upsert.v1",
+    "time": "2026-08-25T08:00:00Z",
+    "datacontenttype": "application/jscalendar+json;type=event",
+    "dataschema": "https://lumbrecode.de/schemas/jscalendar-event/v1/jscalendar-event-v1.schema.json",
+    "subject": "550e8400-e29b-41d4-a716-4466554400a3",
+    "sourceappid": "de.lumbre.code.vacation_planner",
+    "sourceversion": "1.0.1",
+    "data": {
+      "@type": "Event",
+      "uid": "550e8400-e29b-41d4-a716-4466554400a3",
+      "prodId": "-//LumbreCode//Vacation Planner 1.0.1//EN",
+      "created": "2026-03-01T09:00:00Z",
+      "updated": "2026-05-20T09:00:00Z",
+      "sequence": 3,
+      "title": "Elternzeit",
+      "start": "2027-01-04T00:00:00",
+      "duration": "P28D",
+      "showWithoutTime": true,
+      "status": "confirmed",
+      "lumbrecode.de:statusCategory": "confirmed",
+      "lumbrecode.de:statusCode": "approved",
+      "categories": {
+        "https://lumbrecode.de/ns/event-type/time_off": true
+      }
+    }
+  }
+]
