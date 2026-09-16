@@ -1,0 +1,28 @@
+{
+  "id": "us-letter",
+  "name": {
+    "de": "US Letter",
+    "en": "US Letter"
+  },
+  "category": "letter",
+  "builtIn": true,
+  "version": 1,
+  "page": {
+    "widthMm": 215.9,
+    "heightMm": 279.4,
+    "orientation": "portrait"
+  },
+  "margins": {
+    "topMm": 25.4,
+    "rightMm": 25.4,
+    "bottomMm": 25.4,
+    "leftMm": 25.4
+  },
+  "capabilities": {
+    "foldMarks": false,
+    "addressWindow": false,
+    "duplex": false,
+    "bleed": false
+  },
+  "markers": []
+}

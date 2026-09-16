@@ -1,0 +1,71 @@
+{
+  "id": "postcard-a6-landscape-duplex",
+  "name": {
+    "de": "Postkarte A6 quer, Vorder-/Rückseite",
+    "en": "A6 landscape postcard, duplex"
+  },
+  "category": "postcard",
+  "builtIn": true,
+  "version": 1,
+  "page": {
+    "widthMm": 148,
+    "heightMm": 105,
+    "orientation": "landscape"
+  },
+  "margins": {
+    "topMm": 6,
+    "rightMm": 6,
+    "bottomMm": 6,
+    "leftMm": 6
+  },
+  "capabilities": {
+    "foldMarks": false,
+    "addressWindow": false,
+    "duplex": true,
+    "bleed": true
+  },
+  "duplex": {
+    "flip": "short-edge",
+    "surfaces": [
+      "front",
+      "back"
+    ]
+  },
+  "regions": {
+    "backMessage": {
+      "xMm": 8,
+      "yMm": 10,
+      "widthMm": 62,
+      "heightMm": 85
+    },
+    "separator": {
+      "xMm": 74,
+      "yMm": 8,
+      "heightMm": 89
+    },
+    "backAddress": {
+      "xMm": 80,
+      "yMm": 40,
+      "widthMm": 60,
+      "heightMm": 50
+    },
+    "stamp": {
+      "xMm": 118,
+      "yMm": 8,
+      "widthMm": 22,
+      "heightMm": 28
+    }
+  },
+  "markers": [
+    {
+      "id": "safe",
+      "kind": "safe-area",
+      "xMm": 4,
+      "yMm": 4,
+      "widthMm": 140,
+      "heightMm": 97,
+      "print": false,
+      "preview": true
+    }
+  ]
+}

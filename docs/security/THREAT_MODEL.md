@@ -2,45 +2,62 @@
 
 ## Assets
 
-Local user data, imported files, app configuration, dependency integrity, optional connector tokens
-and generated exports.
+Correspondence (names, postal addresses, letter bodies), signature images, the local address book,
+backup files, the application bundle and the dependency supply chain.
+
+Foldmark holds **no** credentials: there is no account, no server and no connector, so there is no
+token to steal and no secret that could be embedded in the bundle.
 
 ## Trust boundaries
 
-1. Untrusted user/file input into the browser app.
-2. Presentation to application/domain boundary.
-3. Browser application to IndexedDB.
-4. Static application to an optional external provider after consent.
-5. Source repository to dependency registry and CI runner.
+1. A Markdown file with YAML front matter that the user was handed.
+2. An image file chosen from the local machine.
+3. A backup JSON file, possibly from another machine or another version.
+4. Records read back out of IndexedDB — any script on this origin can have written them.
+5. Any value that reaches a mail header or a MIME filename.
+6. Any value that reaches a download filename.
+7. The dependency registry and the CI runner.
 
-## Primary threats
+## Threats and controls
 
-- XSS and unsafe rich content.
-- Malicious file/SVG/URL imports.
-- OAuth token leakage.
-- Dependency confusion or compromised packages.
-- accidental third-party requests and privacy leakage.
-- insecure direct object handling in future APIs.
-- loss or corruption of local data.
-- configuration-driven HTML injection during initialization.
-- denial of service through unbounded local records or oversized configuration values.
-- unsafe Markdown rendering or disguised `javascript:`/remote-resource content.
-- mistaken reliance on crawler directives or client-side bot classification for confidentiality.
+| #   | Threat                                                                                               | Control                                                                                                                                                                                                                                                                                                                                                                                                 | Verified by                                                                                                             |
+| --- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| T1  | Script injection through document text reaching the DOM                                              | No HTML is generated from user text anywhere: a bounded token tree rendered by static Vue templates on screen, and an escaping generator for HTML email. CSP has no `'unsafe-inline'`.                                                                                                                                                                                                                  | `tests/security/untrustedInput.test.ts`, `tests/security/noUnsafeDom.test.ts`, e2e                                      |
+| T2  | YAML expansion or type confusion (billion laughs, tags, merge keys)                                  | A subset parser with no anchors, aliases or tags; bounded depth, size, line count and key shape; conservative scalar typing                                                                                                                                                                                                                                                                             | `tests/frontMatter.test.ts`                                                                                             |
+| T3  | Prototype pollution through parsed metadata                                                          | Null-prototype parse targets; `__proto__`, `constructor`, `prototype` rejected as keys; preserved metadata restricted to safe scalar keys                                                                                                                                                                                                                                                               | `tests/security/untrustedInput.test.ts`                                                                                 |
+| T4  | Mail header injection (`\r\n Bcc:`)                                                                  | Every header value refused — never repaired — on any control character, validated **before** whitespace normalization                                                                                                                                                                                                                                                                                   | `tests/email.test.ts`                                                                                                   |
+| T5  | Path traversal through a MIME or download filename                                                   | Separators, quotes, control characters and leading dots replaced; length bounded                                                                                                                                                                                                                                                                                                                        | `tests/email.test.ts`, `tests/security/untrustedInput.test.ts`                                                          |
+| T6  | Malicious SVG (script, external references, foreign objects)                                         | SVG is not an accepted asset type                                                                                                                                                                                                                                                                                                                                                                       | `tests/services.test.ts`                                                                                                |
+| T7  | Decompression bomb or type-confused image                                                            | Size refused before decoding; type sniffed from leading bytes; dimensions and pixel count read from the decoded image and bounded                                                                                                                                                                                                                                                                       | `tests/services.test.ts`                                                                                                |
+| T8  | Hostile or corrupted record in IndexedDB reaching the renderer                                       | Every record re-validated on read; invalid records dropped rather than propagated, so one bad row cannot break a screen                                                                                                                                                                                                                                                                                 | `tests/services.test.ts`, `tests/security/untrustedInput.test.ts`                                                       |
+| T9  | Hostile backup file                                                                                  | Format and version checked first; every record validated individually; failures reported per record; a backup may not reintroduce a built-in print profile                                                                                                                                                                                                                                              | `tests/services.test.ts`                                                                                                |
+| T10 | Denial of service through unbounded local data                                                       | Bounded documents, addresses, sender identities, tags, asset bytes, asset pixels, render pages, front-matter size                                                                                                                                                                                                                                                                                       | `tests/services.test.ts`                                                                                                |
+| T11 | Accidental third-party request                                                                       | No network code exists in the application; asserted on first load                                                                                                                                                                                                                                                                                                                                       | e2e, `npm run privacy:check`                                                                                            |
+| T12 | Loss of local data                                                                                   | Complete backup export and import; deletion separated from preference reset                                                                                                                                                                                                                                                                                                                             | `tests/services.test.ts`, e2e                                                                                           |
+| T13 | Dependency compromise                                                                                | Lockfile, `npm audit`, dependency review, licence policy, no runtime CDN                                                                                                                                                                                                                                                                                                                                | CI                                                                                                                      |
+| T14 | Physical output that silently differs from the preview                                               | Pure render plan shared by preview and print; a separate print-only DOM built in `paper` mode; pagination decided in the plan; marker positions asserted in the browser                                                                                                                                                                                                                                 | `tests/renderPlan.test.ts`, e2e                                                                                         |
+| T15 | Markup, CSS or a remote fetch smuggled through a directive, attribute, colour or image (change 0017) | remark has no compiler; the mdast adapter turns HTML into text, keeps only `http`/`https`/`mailto` links and `asset:` images, validates directive attributes against a registry and drops the rest; colours are palette names resolved through the theme and reach the DOM as `var(--md-color-*)` references set through CSSOM, so `style-src 'self'` holds; theme values from a file must be `#rrggbb` | `tests/security/untrustedInput.test.ts`, `tests/documentTheme.test.ts`, e2e (no console error under the production CSP) |
 
-## Controls
+| T16 | Hostile contact file (vCard/CSV) — oversized, malformed, script in a field, thousands of
+cards (change 0034) | The readers never throw; 5 MB, 5 000 entries and 64 KiB per entry are refused
+before reading further; every field is plain text with control characters removed and length
+bounded; photos, keys and unknown properties are dropped; nothing is interpreted as HTML or
+Markdown; nothing is stored before the person confirms the review; a merge only adds |
+`tests/contactImport.test.ts` (limits, hostile field, quoted-printable), e2e | | T17 | A dropped
+file that is not a document (change 0035) | Only `.md`/`.markdown`/`.txt` or `text/markdown` are
+read at all; everything else is refused unread with a message; the codec's own bounds apply to what
+is read; the preview shows what would be stored before anything is | e2e (a PNG is refused) |
 
-Strict validation, context-aware HTML escaping, safe DOM APIs, CSP, no frontend secrets, bounded
-configuration and demo collections, bidirectional persistence validation, least scopes, lazy
-capabilities, lockfile, CodeQL, Dependency Review, license checks, negative tests, backups/exports
-and revocable consent.
+## Accepted risks
 
-The Todo Markdown parser creates a small typed syntax tree and Vue renders it through static
-templates. HTML, links and images are not recognized, so no generated HTML reaches a DOM sink.
-`robots.txt`, robot metadata and `X-Robots-Tag` are data-minimization signals only; non-public apps
-must enforce authentication before content is returned.
+| Risk                                                                             | Why it is accepted                                                                                                                                                                                 |
+| -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| IndexedDB is readable by any script on the origin, including a browser extension | There is no browser-side storage that is not. The mitigation is T1: no execution path exists for injected script. The data inventory states this plainly rather than describing storage as secure. |
+| Print accuracy depends on the user's print dialog being at 100 %                 | No browser API can set or read printer scaling. Every print path says so.                                                                                                                          |
+| DIN-style profile geometry is unverified                                         | The standard is a licensed document. The profiles are named "DIN-style … (draft)", carry `standardsStatus: 'draft-unverified'`, and say so in the UI and on every print.                           |
+| A `mailto:` hand-off exposes the body to the operating system's URL handling     | It is the user's own mail client, invoked by the user. Length is bounded and the app falls back to copy.                                                                                           |
 
-The CSP is delivered through a meta element so GitHub Pages can use it without custom headers. Meta
-CSP cannot enforce `frame-ancestors`; a host that supports response headers must add
-`Content-Security-Policy: frame-ancestors 'none'` (and preferably the full policy) plus other
-desired headers such as `X-Content-Type-Options: nosniff` and `Permissions-Policy`. The template
-does not claim those headers on hosts that cannot configure them.
+## Out of scope
+
+Server-side attacks (there is no server), authentication and session handling (there is no account),
+and multi-user authorisation (there is one user, on one machine).

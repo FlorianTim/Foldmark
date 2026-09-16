@@ -32,6 +32,8 @@ textarea {
   min-height: 100vh;
   display: grid;
   grid-template-rows: auto 1fr auto;
+  /* One column that may shrink: a wide nav wraps instead of widening the page. */
+  grid-template-columns: minmax(0, 1fr);
 }
 .topbar {
   display: flex;
@@ -103,6 +105,10 @@ main {
   gap: 1rem;
   align-items: flex-start;
 }
+.section-heading > .badge {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
 .eyebrow {
   text-transform: uppercase;
   letter-spacing: 0.13em;
@@ -120,12 +126,6 @@ h2 {
 .section-heading p,
 .privacy-card p {
   color: var(--app-muted);
-}
-.todo-form {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 0.75rem;
-  margin: 2rem 0;
 }
 .markdown-editor {
   min-width: 0;
@@ -152,13 +152,13 @@ h2 {
   border-radius: 0.25rem;
   background: color-mix(in srgb, var(--app-border) 55%, transparent);
 }
-.todo-list {
+.document-list {
   list-style: none;
   padding: 0;
   display: grid;
   gap: 0.6rem;
 }
-.todo-row {
+.document-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -166,12 +166,6 @@ h2 {
   border: 1px solid var(--app-border);
   border-radius: 0.85rem;
   padding: 0.75rem;
-}
-.todo-label {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  min-width: 0;
 }
 .completed {
   text-decoration: line-through;
@@ -247,9 +241,9 @@ footer {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
-  padding: 1.25rem clamp(1rem, 4vw, 3rem);
+  padding: 0.75rem clamp(1rem, 4vw, 3rem);
   color: var(--app-muted);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 .sr-only {
   position: absolute;
@@ -268,9 +262,6 @@ footer {
   .section-heading {
     align-items: stretch;
     flex-direction: column;
-  }
-  .todo-form {
-    grid-template-columns: 1fr;
   }
   .metadata div {
     grid-template-columns: 1fr;

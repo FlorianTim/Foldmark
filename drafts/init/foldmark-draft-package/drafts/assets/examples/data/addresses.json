@@ -1,0 +1,27 @@
+[
+  {
+    "id": "addr-city",
+    "displayName": "Stadt Beispielstadt – Bürgerbüro",
+    "organization": "Stadt Beispielstadt",
+    "department": "Bürgerbüro",
+    "street": "Rathausplatz 1",
+    "postalCode": "12345",
+    "city": "Beispielstadt",
+    "countryCode": "DE",
+    "tags": [
+      "Behörde"
+    ]
+  },
+  {
+    "id": "addr-erika",
+    "displayName": "Erika Beispiel",
+    "person": "Erika Beispiel",
+    "street": "Beispielweg 12",
+    "postalCode": "54321",
+    "city": "Musterort",
+    "countryCode": "DE",
+    "tags": [
+      "Privat"
+    ]
+  }
+]

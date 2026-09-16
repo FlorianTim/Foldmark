@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img">
+
+  <title>Foldmark monochrome mark</title>
+  <path d="M145 78h154l68 68v288H145z" fill="none" stroke="currentColor" stroke-width="24" stroke-linejoin="round"/>
+  <path d="M299 78v68h68M112 218h68M112 294h92M112 370h68M215 198h92M215 250h112M215 302h86" fill="none" stroke="currentColor" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+
+</svg>

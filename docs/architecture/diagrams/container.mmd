@@ -1,0 +1,36 @@
+%% Foldmark building blocks and the direction dependencies may point.
+%% Enforced by scripts/check-architecture.py.
+flowchart TB
+  subgraph Presentation
+    UI[Vue components]
+    STORE[Pinia workspace and library stores]
+  end
+  subgraph Application
+    UC[Use cases]
+    PORTS[Ports]
+    PLAN[Render plan and target validation]
+  end
+  subgraph Domain
+    MODEL[Documents, print profiles, markers, addresses, assets]
+    RULES[Units, schemas, email header rules, findings]
+  end
+  subgraph Infrastructure
+    DEXIE[Dexie repositories]
+    CODEC[Markdown and front-matter codec]
+    MAIL[Email renderers and EML builder]
+    PROBE[Image probe]
+  end
+
+  UI --> STORE
+  STORE --> UC
+  UI --> PLAN
+  UC --> PORTS
+  UC --> MODEL
+  PLAN --> MODEL
+  MODEL --> RULES
+  DEXIE -.implements.-> PORTS
+  CODEC -.implements.-> PORTS
+  MAIL -.implements.-> PORTS
+  PROBE -.implements.-> PORTS
+  DEXIE --> DB[(IndexedDB)]
+  CODEC --> MODEL

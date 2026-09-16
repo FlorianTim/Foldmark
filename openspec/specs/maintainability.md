@@ -2,13 +2,18 @@
 
 ## Requirement
 
-The template documents source layout, dependency direction, runtime flow, configuration and safe
+The application documents source layout, dependency direction, runtime flow, configuration and safe
 extension points. Every exported TypeScript declaration has concise TSDoc, and documentation checks
 prevent undocumented public source APIs.
+
+Layering is enforced: the domain imports nothing from application, infrastructure, presentation, Vue
+or Dexie; the application layer declares ports and imports no framework; infrastructure implements
+ports; presentation invokes use cases and may hold only UI and workspace state.
 
 ## Verification
 
 - `npm run docs:check` validates the source guide and exported TypeScript declarations.
+- `npm run architecture:check` validates the dependency direction.
 - Architecture and source documentation are linked from the repository README.
 
 ## Workflow parity

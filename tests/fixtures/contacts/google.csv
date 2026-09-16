@@ -1,0 +1,4 @@
+First Name,Middle Name,Last Name,Organization Name,Organization Department,E-mail 1 - Label,E-mail 1 - Value,E-mail 2 - Label,E-mail 2 - Value,Phone 1 - Label,Phone 1 - Value,Address 1 - Label,Address 1 - Street,Address 1 - City,Address 1 - Region,Address 1 - Postal Code,Address 1 - Country,Website 1 - Value,Labels,Notes
+Erika,,Beispiel,Muster GmbH,Einkauf,Work,erika.beispiel@example.org,Home,erika@home.example,Mobile,+49 170 1234567,Work,Beispielstraße 12,Berlin,,12345,Germany,https://example.org/erika,* myContacts ::: * Kunden,"Kennt sich aus, ""sehr"" hilfsbereit"
+Max,,Mustermann,,,,max@example.de,,,Home,030 555 0100,Home,Musterstraße 1,Musterstadt,,54321,Deutschland,,,
+,,,Stadtverwaltung Beispielstadt,Bürgeramt,,,,,,,Work,Rathausplatz 1,Beispielstadt,,11111,DE,,,

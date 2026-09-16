@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+import { appConfig } from '@/config';
 import {
   allSettings,
   appSettings,
@@ -29,8 +30,11 @@ describe('settings registry', () => {
 
 describe('degradation', () => {
   it('falls back to the default when nothing is stored', () => {
-    expect(readSetting(appSettings.theme)).toBe('system');
-    expect(readSetting(appSettings.locale)).toBe('de');
+    // Derived from the application configuration rather than written out: the
+    // behaviour under test is "an unset preference yields its declared default",
+    // which stays true whichever theme an app ships.
+    expect(readSetting(appSettings.theme)).toBe(appConfig.theme);
+    expect(readSetting(appSettings.locale)).toBe(appConfig.defaultLocale);
     expect(readSetting(appSettings.entitlement)).toBe('free');
     expect(readSetting(appSettings.introCompleted)).toBe(false);
   });
@@ -39,7 +43,7 @@ describe('degradation', () => {
     // A preference must never be able to stop the app from rendering.
     for (const raw of ['', 'nonsense', 'DARK', '1']) {
       writeSetting(appSettings.theme, raw as never);
-      expect(readSetting(appSettings.theme)).toBe(raw === '' ? 'system' : 'system');
+      expect(readSetting(appSettings.theme)).toBe(appConfig.theme);
     }
     writeSetting(appSettings.entitlement, 'pro' as never);
     expect(readSetting(appSettings.entitlement)).toBe('free');
@@ -65,13 +69,13 @@ describe('the intro flag', () => {
   it('accepts the value the earlier privacy notice wrote', () => {
     // Visitors who already accepted must not be shown the intro again just
     // because it grew extra steps.
-    window.localStorage.setItem('web-app-template:ui:privacy-notice-v1', 'accepted');
+    window.localStorage.setItem('foldmark:ui:privacy-notice-v1', 'accepted');
     expect(readSetting(appSettings.introCompleted)).toBe(true);
   });
 
   it('degrades to showing the intro for anything unreadable', () => {
     for (const raw of ['yes', 'TRUE', '1', '']) {
-      window.localStorage.setItem('web-app-template:ui:privacy-notice-v1', raw);
+      window.localStorage.setItem('foldmark:ui:privacy-notice-v1', raw);
       expect(readSetting(appSettings.introCompleted)).toBe(false);
     }
   });
@@ -88,7 +92,7 @@ describe('resetAllSettings', () => {
     for (const setting of allSettings) {
       expect(rawValue(setting)).toBeNull();
     }
-    expect(readSetting(appSettings.theme)).toBe('system');
+    expect(readSetting(appSettings.theme)).toBe(appConfig.theme);
   });
 
   it('leaves keys outside the registry alone', () => {

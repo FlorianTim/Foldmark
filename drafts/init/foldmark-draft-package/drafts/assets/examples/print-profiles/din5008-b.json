@@ -1,0 +1,71 @@
+{
+  "id": "din5008-b",
+  "name": {
+    "de": "DIN-Stil Form B (Entwurf)",
+    "en": "DIN-style Form B (draft)"
+  },
+  "category": "letter",
+  "builtIn": true,
+  "version": 1,
+  "page": {
+    "widthMm": 210,
+    "heightMm": 297,
+    "orientation": "portrait"
+  },
+  "margins": {
+    "topMm": 45,
+    "rightMm": 20,
+    "bottomMm": 20,
+    "leftMm": 25
+  },
+  "capabilities": {
+    "foldMarks": true,
+    "addressWindow": true,
+    "duplex": false,
+    "bleed": false
+  },
+  "markers": [
+    {
+      "id": "fold-top",
+      "kind": "fold",
+      "xMm": 5,
+      "yMm": 105,
+      "widthMm": 8,
+      "print": true,
+      "preview": true
+    },
+    {
+      "id": "hole",
+      "kind": "hole",
+      "xMm": 5,
+      "yMm": 148.5,
+      "widthMm": 12,
+      "print": true,
+      "preview": true
+    },
+    {
+      "id": "fold-bottom",
+      "kind": "fold",
+      "xMm": 5,
+      "yMm": 210,
+      "widthMm": 8,
+      "print": true,
+      "preview": true
+    }
+  ],
+  "regions": {
+    "addressWindow": {
+      "xMm": 20,
+      "yMm": 45,
+      "widthMm": 85,
+      "heightMm": 45
+    },
+    "body": {
+      "xMm": 25,
+      "yMm": 105,
+      "widthMm": 165,
+      "heightMm": 167
+    }
+  },
+  "verificationStatus": "draft-unverified"
+}

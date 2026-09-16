@@ -1,9 +1,9 @@
 {
-  "name": "web-app-template",
-  "version": "0.1.0",
+  "name": "foldmark",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Secure, privacy-first, local-first Vue web application template for agentic development.",
+  "description": "Local-first editor for letters, print profiles, fold marks, postcards and privacy-friendly document export.",
   "license": "MIT",
   "engines": {
     "node": ">=24.15.0",
@@ -45,7 +45,7 @@
     "artifact:check": "node scripts/run-local-workflow.mjs artifact",
     "dependencies:check": "node scripts/check-dependencies.mjs",
     "verify:fast": "npm run format:prettier-check && npm run lint && npm run typecheck && npm run test",
-    "verify": "npm run verify:fast && npm run structured:check && npm run workflow:check && npm run template:validate && npm run template:test && npm run version:check && npm run agents:check && npm run docs:check && npm run help:check && npm run openspec:check && npm run privacy:check && npm run architecture:check && npm run security:check && npm run licenses:generate && npm run licenses:check",
+    "verify": "npm run verify:fast && npm run icons:build && npm run structured:check && npm run workflow:check && npm run template:validate && npm run template:test && npm run version:check && npm run agents:check && npm run docs:check && npm run help:check && npm run openspec:check && npm run privacy:check && npm run architecture:check && npm run security:check && npm run licenses:generate && npm run licenses:check",
     "ci": "npm run verify && npm run build && npm run test:e2e && npm run audit",
     "prepare": "node scripts/install-hooks.mjs",
     "audit": "npm audit --audit-level=high",
@@ -66,11 +66,17 @@
     "devcontainer:verify": "node scripts/run-local-workflow.mjs container",
     "help:render": "node scripts/run-python.mjs .lumbrecode/tooling/docs/render_app_help.py --repo . --out src/presentation/help --target app",
     "help:check": "node scripts/run-python.mjs .lumbrecode/tooling/docs/render_app_help.py --repo . --out src/presentation/help --target app --check",
-    "screenshots:capture": "playwright test --project=screenshots"
+    "screenshots:capture": "playwright test --project=screenshots",
+    "icons:build": "node scripts/build-icon-sprite.mjs"
   },
   "dependencies": {
+    "@milkdown/kit": "7.22.1",
     "dexie": "4.4.5",
     "pinia": "3.0.4",
+    "remark-directive": "4.0.0",
+    "remark-gfm": "4.0.1",
+    "remark-parse": "11.0.0",
+    "unified": "11.0.5",
     "vue": "3.5.41",
     "vue-i18n": "11.4.10",
     "zod": "4.4.3"
@@ -80,6 +86,7 @@
     "@eslint/js": "9.39.5",
     "@playwright/test": "1.62.1",
     "@tailwindcss/vite": "4.3.3",
+    "@types/mdast": "4.0.4",
     "@types/node": "24.13.3",
     "@vitejs/plugin-vue": "6.0.8",
     "@vitest/coverage-v8": "4.1.10",

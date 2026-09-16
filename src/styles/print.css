@@ -1,0 +1,418 @@
+/*
+ * Paper.
+ *
+ * Two rules carry the whole product:
+ *
+ * 1. Sheets are sized and positioned in **CSS millimetres**, straight from the
+ *    render plan. Nothing here converts to pixels, so nothing here can drift
+ *    from the geometry the domain calculated.
+ * 2. Screen zoom is a `transform` on `.preview-sheet`, which is a *parent* of
+ *    `.paper`. A transform does not change layout, so the millimetres inside
+ *    are the same at 40 % and at 100 % — zooming physically cannot move a mark.
+ *
+ * `@page { size }` is written at runtime by `usePrintPageSize`, because the
+ * sheet size depends on the profile and a stylesheet cannot know it in advance.
+ */
+
+.paper {
+  position: relative;
+  box-sizing: border-box;
+  background: var(--fm-paper);
+  color: var(--fm-paper-ink);
+  overflow: hidden;
+  /* Highlights, note boxes and table rules are ink the writer chose; the
+     browser's "print backgrounds" switch must not take them away. */
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+  /* A paper-coloured sheet on a paper-coloured canvas needs an edge. */
+  box-shadow: 0 10px 30px rgb(24 33 38 / 18%);
+  /* The family is the document theme's; the surface sets the variable. */
+  font-family: var(
+    --md-font-family,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    sans-serif
+  );
+}
+
+.paper-block {
+  position: absolute;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.paper-line {
+  margin: 0;
+}
+
+.paper-block .safe-markdown p,
+.paper-block .safe-markdown ul,
+.paper-block .safe-markdown ol,
+.paper-block .safe-markdown blockquote,
+.paper-block .safe-markdown table {
+  margin: 0 0 0.6em;
+}
+
+.paper-block .safe-markdown ul,
+.paper-block .safe-markdown ol {
+  padding-left: 1.4em;
+}
+.paper-block .safe-markdown ul {
+  list-style: disc outside;
+}
+.paper-block .safe-markdown ol {
+  list-style: decimal outside;
+}
+/* Nesting is flattened to indentation; the depth comes from the parser. */
+.paper-block .safe-markdown li.md-depth-1 {
+  margin-left: 1.4em;
+}
+.paper-block .safe-markdown li.md-depth-2 {
+  margin-left: 2.8em;
+}
+.paper-block .safe-markdown li.md-depth-3,
+.paper-block .safe-markdown li.md-depth-4 {
+  margin-left: 4.2em;
+}
+
+.paper-block .safe-markdown blockquote {
+  border-left: 0.4mm solid currentColor;
+  padding-left: 0.8em;
+}
+
+.paper-block .safe-markdown hr {
+  border: 0;
+  border-top: 0.25mm solid currentColor;
+  margin: 0.6em 0;
+}
+
+.paper-block .safe-markdown table {
+  border-collapse: collapse;
+  width: 100%;
+}
+/* A rule a printer keeps: 0.3 mm is about a 1 pt line, thin but never
+   rounded away, on screen at 70 % as on paper (R14 feedback, 2026-09-17). */
+.paper-block .safe-markdown th,
+.paper-block .safe-markdown td {
+  border: 0.3mm solid currentColor;
+  padding: 0.15em 0.4em;
+  text-align: left;
+  vertical-align: top;
+}
+
+/* On paper a link is only useful with its address. */
+.paper-block .safe-markdown a {
+  color: inherit;
+  text-decoration: underline;
+}
+.paper-block .safe-markdown a::after {
+  content: ' (' attr(href) ')';
+  font-size: 0.85em;
+}
+
+.paper-block .safe-markdown h2,
+.paper-block .safe-markdown h3,
+.paper-block .safe-markdown h4,
+.paper-block .safe-markdown h5,
+.paper-block .safe-markdown h6 {
+  margin: 0 0 0.4em;
+  font-size: 1em;
+}
+.paper-block .safe-markdown h2 {
+  font-size: 1.5em;
+}
+.paper-block .safe-markdown h3 {
+  font-size: 1.25em;
+}
+.paper-block .safe-markdown h4 {
+  font-size: 1.1em;
+}
+.paper-block .safe-markdown h6 {
+  font-style: italic;
+  font-weight: 600;
+}
+
+/*
+ * Directives (change 0017). Sizes come from the document theme through custom
+ * properties the surface sets; the colours behind `--md-color-*` likewise, so a
+ * `:red[word]` on screen and on paper reads from the same palette in the two
+ * values it defines. The paragraph gap mirrors the theme, so the estimate the
+ * render plan made is the gap the browser draws.
+ */
+.paper-block .safe-markdown p,
+.paper-block .safe-markdown ul,
+.paper-block .safe-markdown ol,
+.paper-block .safe-markdown blockquote,
+.paper-block .safe-markdown table,
+.paper-block .safe-markdown .md-indent,
+.paper-block .safe-markdown .md-align,
+.paper-block .safe-markdown .md-note,
+.paper-block .safe-markdown .md-small,
+.paper-block .safe-markdown .md-signature,
+.paper-block .safe-markdown .md-unknown-block {
+  margin: 0 0 var(--md-paragraph-gap, 0.6em);
+}
+.paper-block .safe-markdown .safe-markdown > :last-child {
+  margin-bottom: 0;
+}
+.paper-block .safe-markdown .md-indent {
+  margin-left: 8mm;
+}
+.paper-block .safe-markdown .md-indent[data-level='2'] {
+  margin-left: 16mm;
+}
+.paper-block .safe-markdown .md-indent[data-level='3'] {
+  margin-left: 24mm;
+}
+.paper-block .safe-markdown .md-align-left {
+  text-align: left;
+}
+.paper-block .safe-markdown .md-align-center {
+  text-align: center;
+}
+.paper-block .safe-markdown .md-align-right {
+  text-align: right;
+}
+.paper-block .safe-markdown .md-align-justify {
+  text-align: justify;
+}
+.paper-block .safe-markdown .md-small,
+.paper-block .safe-markdown .md-small.safe-markdown,
+.paper-block .safe-markdown small.md-small {
+  font-size: var(--md-small-size, 0.82em);
+}
+.paper-block .safe-markdown .md-note {
+  border: 0.3mm solid currentColor;
+  padding: 0.5em 0.8em;
+}
+.paper-block .safe-markdown .md-note-warning {
+  border-width: 0.6mm;
+}
+.paper-block .safe-markdown .md-signature > .safe-markdown {
+  margin-top: calc(3 * var(--md-line-height, 1.45em));
+  border-top: 0.25mm solid currentColor;
+  padding-top: 0.2em;
+  max-width: 70mm;
+}
+.paper-block .safe-markdown .md-signature[data-level='1'] > .safe-markdown {
+  margin-top: calc(1 * var(--md-line-height, 1.45em));
+}
+.paper-block .safe-markdown .md-signature[data-level='2'] > .safe-markdown {
+  margin-top: calc(2 * var(--md-line-height, 1.45em));
+}
+.paper-block .safe-markdown .md-signature[data-level='4'] > .safe-markdown {
+  margin-top: calc(4 * var(--md-line-height, 1.45em));
+}
+.paper-block .safe-markdown .md-signature[data-level='5'] > .safe-markdown {
+  margin-top: calc(5 * var(--md-line-height, 1.45em));
+}
+.paper-block .safe-markdown .md-signature[data-level='6'] > .safe-markdown {
+  margin-top: calc(6 * var(--md-line-height, 1.45em));
+}
+.paper-block .safe-markdown .md-page-break {
+  display: none;
+}
+.paper-block .safe-markdown .md-highlight {
+  background: var(--md-highlight, #fef08a);
+  color: inherit;
+}
+.paper-block .safe-markdown .md-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+/* Alignment moves the image alone, not the paragraph around it (R14-015). */
+.paper-block .safe-markdown .md-image-align-center {
+  margin-inline: auto;
+}
+.paper-block .safe-markdown .md-image-align-right {
+  margin-inline-start: auto;
+}
+.paper-block .safe-markdown .md-image-missing {
+  display: inline-block;
+  border: 0.25mm dashed currentColor;
+  padding: 0.2em 0.5em;
+  font-size: 0.85em;
+}
+.paper-block .safe-markdown .md-unknown,
+.paper-block .safe-markdown .md-unknown-block {
+  /* Unknown directives render as their content; nothing marks them on paper. */
+  color: inherit;
+}
+
+/* The subject line is set bold by default (R13-018); Format → Bold over the
+   subject field toggles the whole line (R14-003). */
+.paper-block[data-style='subject'] {
+  font-weight: 700;
+}
+.paper-block[data-style='subject'][data-weight='regular'] {
+  font-weight: 400;
+}
+/* The salutation and the closing are ordinary paragraphs on paper; the
+   closing gets a little room above so the sign-off reads as its own line. */
+.paper-block .safe-markdown .md-salutation,
+.paper-block .safe-markdown .md-closing {
+  margin: 0 0 var(--md-paragraph-gap, 0.6em);
+}
+.paper-block .safe-markdown .md-closing {
+  margin-top: calc(var(--md-paragraph-gap, 0.6em) * 1.5);
+}
+
+.paper-page-number {
+  margin: 0;
+  color: inherit;
+}
+
+.paper-fields {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.15em 0.6em;
+  margin: 0;
+}
+
+.paper-fields dt {
+  font-weight: 600;
+}
+
+.paper-fields dd {
+  margin: 0;
+}
+
+.paper-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.print-marker {
+  position: absolute;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+/* Preview-only guides are visibly *guides*: tinted, and gone on paper. */
+.marker-preview {
+  opacity: 0.75;
+}
+
+.preview-viewport {
+  position: relative;
+  overflow: auto;
+  background: var(--fm-canvas);
+  border: 1px solid var(--app-border);
+  border-radius: 1rem;
+  padding: 1rem;
+  min-height: 60vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.preview-pages {
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+}
+
+.preview-stage {
+  position: relative;
+  flex: none;
+  box-shadow: 0 6px 24px rgb(0 0 0 / 0.12);
+}
+
+.preview-stage.is-selected {
+  outline: 2px solid var(--app-accent);
+  outline-offset: 4px;
+}
+
+.preview-sheet {
+  position: absolute;
+  inset: 0;
+}
+
+.preview-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.preview-zoom,
+.preview-surfaces {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.preview-note {
+  margin: 0.6rem 0 0;
+  color: var(--app-muted);
+  font-size: 0.85rem;
+}
+
+/*
+ * The print copy.
+ *
+ * Hidden on screen and shown only to the printer. It is rendered from the
+ * `paper`-mode render plan, so what comes out is decided by the print profile
+ * rather than by which CSS rule happened to win.
+ *
+ * Print isolation (R14-001): the copy is teleported to `body`, next to the
+ * app shell rather than inside it, and the print medium hides **every other
+ * child of `body`**. There is no list of chrome classes to keep complete — a
+ * new dialog, toast or menu is hidden by construction. `.no-print` exists for
+ * the one case the rule cannot reach: something rendered *into* the print
+ * root that must not print (nothing today).
+ */
+.print-root {
+  display: none;
+}
+
+@media print {
+  :root {
+    --fm-paper: #fff;
+    --fm-paper-ink: #000;
+    --fm-mark-print: #000;
+  }
+
+  /* On paper the viewport is one sheet: a `min-height: 100vh` shell would be
+     exactly one page tall and any offset spills onto a blank second sheet. */
+  html,
+  body {
+    min-height: 0;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+  }
+
+  /* An open modal lives in the browser's top layer, which Chrome has printed
+     over the page (R13-001); it is a child of `body` like everything else and
+     falls under the same rule. The dialog is closed before `print()` as well. */
+  body > :not(.print-root),
+  .no-print {
+    display: none !important;
+  }
+
+  .print-root {
+    display: block;
+  }
+
+  .print-root .paper {
+    box-shadow: none;
+    break-after: page;
+    page-break-after: always;
+  }
+
+  .print-root .paper:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+}
+
+/* Marks are grey on screen so they read as guides, and solid on paper. */
+:root {
+  --fm-mark-print: #3d4a50;
+}

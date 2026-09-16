@@ -11,6 +11,8 @@ export default tseslint.config(
       'coverage/**',
       'playwright-report/**',
       'public/THIRD-PARTY-NOTICES.generated.*',
+      // Raw input material: snippets there are read, adapted and copied in, never linted in place.
+      'drafts/**',
     ],
   },
   eslint.configs.recommended,
@@ -47,6 +49,31 @@ export default tseslint.config(
         Storage: 'readonly',
         crypto: 'readonly',
         structuredClone: 'readonly',
+        // Foldmark additions: the debounced editor, the preview's resize
+        // tracking, the unsaved-changes guard and the image import path.
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        requestAnimationFrame: 'readonly',
+        ResizeObserver: 'readonly',
+        BeforeUnloadEvent: 'readonly',
+        // The file manager's drop zone (change 0035).
+        DragEvent: 'readonly',
+        CSSStyleSheet: 'readonly',
+        Image: 'readonly',
+        TextEncoder: 'readonly',
+        // The output dialog and the workspace mode tabs.
+        HTMLDialogElement: 'readonly',
+        KeyboardEvent: 'readonly',
+        // The open-source view reads the generated notices from the app's own origin.
+        fetch: 'readonly',
+        // Pane resizing and the popovers of the editor toolbar (changes 0020, 0022).
+        PointerEvent: 'readonly',
+        MouseEvent: 'readonly',
+        FocusEvent: 'readonly',
+        HTMLButtonElement: 'readonly',
+        Node: 'readonly',
+        Element: 'readonly',
+        HTMLDetailsElement: 'readonly',
       },
     },
   },

@@ -1,0 +1,45 @@
+/* Foldmark themes derived from the uploaded LumbreCode theme tokens.
+ * Keep them local and explicit so the app stays deployment-agnostic.
+ * Source naming note: the uploaded CSS uses "LumbreCode"; the business name in
+ * the chat was later written as "Lambro Code". The semantic theme IDs below use
+ * "lambro-*"; rename if you keep the older spelling.
+ */
+:root[data-theme='lambro-dark'] {
+  color-scheme: dark;
+  --app-bg: #070a10;
+  --app-surface: #111722;
+  --app-text: #fff9ea;
+  --app-muted: #b9b4a8;
+  --app-border: #2b3442;
+  --app-accent: #ff9f1c;
+  --fm-paper: #ffffff;
+  --fm-paper-ink: #1a120a;
+  --fm-canvas: #0d1119;
+  --fm-guide: #65a8ff;
+  --fm-fold: #ffd48a;
+  --fm-fold-ink: #1b0f03;
+  --fm-danger: #ff6b6b;
+  --fm-success: #4ccb8a;
+  --fm-on-accent: #1b0f03;
+  --fm-on-status: #070a10;
+}
+
+:root[data-theme='lambro-light'] {
+  color-scheme: light;
+  --app-bg: #fff8ed;
+  --app-surface: #ffffff;
+  --app-text: #1a120a;
+  --app-muted: #675d53;
+  --app-border: #e8d6c1;
+  --app-accent: #a95000;
+  --fm-paper: #ffffff;
+  --fm-paper-ink: #1a120a;
+  --fm-canvas: #f7ebdd;
+  --fm-guide: #205faf;
+  --fm-fold: #ff9f1c;
+  --fm-fold-ink: #1a120a;
+  --fm-danger: #b3261e;
+  --fm-success: #17794e;
+  --fm-on-accent: #ffffff;
+  --fm-on-status: #ffffff;
+}

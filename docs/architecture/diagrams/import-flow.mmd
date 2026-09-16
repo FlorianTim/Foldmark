@@ -1,0 +1,14 @@
+%% Importing a Markdown file. The failure path is the interesting one:
+%% the user's text is handed back rather than swallowed.
+flowchart TB
+  File[".md file the user was sent"] --> Split{splitFrontMatter}
+  Split -->|opened and never closed| Fail
+  Split -->|no fence| Body[Body only, defaults applied]
+  Split -->|fenced| Parse{parseFrontMatter}
+  Parse -->|anchor, alias, tag, flow,<br/>too deep, too large, bad key| Fail
+  Parse -->|subset| Map[Map to document fields]
+  Body --> Map
+  Map --> Schema{FoldmarkDocumentSchema}
+  Schema -->|invalid| Fail
+  Schema -->|valid| Review[Show findings, then store]
+  Fail["Reject with the reason,<br/>the line number,<br/>and the original source"]

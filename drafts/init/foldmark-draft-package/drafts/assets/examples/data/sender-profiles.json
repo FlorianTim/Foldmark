@@ -1,0 +1,27 @@
+[
+  {
+    "id": "sender-private",
+    "name": "Privat",
+    "address": {
+      "person": "Florian Beispiel",
+      "street": "Lambrostraße 1",
+      "postalCode": "10115",
+      "city": "Berlin",
+      "countryCode": "DE"
+    },
+    "email": "florian@example.invalid",
+    "defaultSignatureId": "signature-default"
+  },
+  {
+    "id": "sender-lambro",
+    "name": "Lambro Code",
+    "address": {
+      "organization": "Lambro Code",
+      "street": "Lambrostraße 1",
+      "postalCode": "10115",
+      "city": "Berlin",
+      "countryCode": "DE"
+    },
+    "website": "https://lambrocode.de"
+  }
+]

@@ -1,0 +1,45 @@
+{
+  "id": "photo-10x15",
+  "name": {
+    "de": "Foto 10 × 15 cm",
+    "en": "Photo 10 × 15 cm"
+  },
+  "category": "photo",
+  "builtIn": true,
+  "version": 1,
+  "page": {
+    "widthMm": 100,
+    "heightMm": 150,
+    "orientation": "portrait"
+  },
+  "margins": {
+    "topMm": 0,
+    "rightMm": 0,
+    "bottomMm": 0,
+    "leftMm": 0
+  },
+  "capabilities": {
+    "foldMarks": false,
+    "addressWindow": false,
+    "duplex": false,
+    "bleed": true
+  },
+  "bleed": {
+    "topMm": 2,
+    "rightMm": 2,
+    "bottomMm": 2,
+    "leftMm": 2
+  },
+  "markers": [
+    {
+      "id": "safe",
+      "kind": "safe-area",
+      "xMm": 5,
+      "yMm": 5,
+      "widthMm": 90,
+      "heightMm": 140,
+      "print": false,
+      "preview": true
+    }
+  ]
+}

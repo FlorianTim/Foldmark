@@ -1,0 +1,15 @@
+{
+  "organization": { "name": "Lambro Code", "url": "https://lambrocode.de" },
+  "application": {
+    "name": "Foldmark",
+    "slug": "foldmark",
+    "defaultLocale": "de",
+    "supportedLocales": ["de", "en"]
+  },
+  "features": {
+    "postcards": true,
+    "emailHandoff": true,
+    "customPrintProfiles": true,
+    "externalConnectors": false
+  }
+}

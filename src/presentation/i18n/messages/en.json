@@ -1,46 +1,26 @@
 {
   "app": {
-    "demo": "Template demo",
     "privacy": "Local and privacy-friendly by default"
   },
   "nav": {
     "primary": "Primary navigation",
-    "todos": "Todos",
     "settings": "Settings",
-    "about": "About"
-  },
-  "todo": {
-    "title": "Simple Todo demo",
-    "description": "Write a todo with a safe Markdown subset. This demo is replaced when a concrete application is initialized.",
-    "inputLabel": "New todo in Markdown",
-    "placeholder": "New todo — **bold**, _italic_, `code`, or - list items",
-    "markdownToolbar": "Markdown formatting",
-    "bold": "Bold",
-    "italic": "Italic",
-    "code": "Code",
-    "list": "List",
-    "preview": "Markdown preview",
-    "add": "Add",
-    "remaining": "{count} remaining",
-    "empty": "No todos yet.",
-    "delete": "Delete",
-    "clear": "Clear all",
-    "loading": "Loading todos…",
-    "errors": {
-      "invalid": "The todo must contain between 1 and 2,000 characters.",
-      "limit": "The local limit of 1,000 todos has been reached.",
-      "persistence": "Local storage is unavailable or contains invalid data. Check the browser privacy settings and reload the page."
-    }
+    "about": "About",
+    "documents": "Documents",
+    "addresses": "Contact directory",
+    "profiles": "Print profiles",
+    "assets": "Images",
+    "home": "Back to the workspace"
   },
   "settings": {
     "title": "Settings",
     "language": "Language",
     "theme": "Color theme",
     "localData": "Local data",
-    "privacyText": "This demo stores todos in IndexedDB and preferences in localStorage in this browser. It sets no cookies and contacts no external service.",
+    "privacyText": "Foldmark stores documents, addresses, profiles and images in IndexedDB and preferences in localStorage in this browser. It sets no cookies and contacts no external service.",
     "deleteData": "Delete my local data",
     "confirmTitle": "Permanently delete local app data?",
-    "confirmText": "Todos and this app's saved preferences will be removed from this browser. This cannot be undone.",
+    "confirmText": "Documents, addresses, senders, your own print profiles, images and this app's saved preferences will be removed from this browser. This cannot be undone.",
     "confirmDelete": "Delete now",
     "cancel": "Cancel",
     "deleted": "Local app data was deleted.",
@@ -61,14 +41,113 @@
       "high-contrast": "High contrast",
       "ocean": "Ocean"
     },
-    "sections": {
-      "help": "Help",
-      "data": "Data and privacy",
-      "pro": "Pro",
-      "support": "Support",
-      "development": "Development"
+    "privacyEntryHint": "What is stored, and how to delete it",
+    "demoData": {
+      "title": "Sample data",
+      "hint": "20 contacts, two folders, letters, postcards and a free document – marked, and removable again without touching your own data.",
+      "count": "Stored: {contacts} contacts, {documents} documents, {folders} folders, {assets} image(s).",
+      "insert": "Insert sample data",
+      "remove": "Remove sample data"
     },
-    "privacyEntryHint": "What is stored, and how to delete it"
+    "categories": "Categories",
+    "category": {
+      "general": "General",
+      "documents": "Documents",
+      "appearance": "Appearance",
+      "fonts": "Fonts",
+      "storage": "Storage & history",
+      "privacy": "Privacy",
+      "data": "Data & backup",
+      "development": "Development",
+      "about": "About Foldmark",
+      "colours": "Colours"
+    },
+    "documentsHint": "What a new document starts with. Existing documents stay as they are.",
+    "appearanceHint": "The colour theme applies to the app, not to the paper. How a document is set is under “Fonts” and in the document itself.",
+    "fontsHint": "The typography a new document starts with. Every document can deviate from it in its document settings.",
+    "colorsHint": "Semantic colours (primary, note, warning) are chosen by name in the editor; the document theme sets their print values.",
+    "storageHint": "Everything lives in this browser. The history keeps versions of a document; this sets how many automatic versions stay per document.",
+    "dataManagement": "Data management",
+    "dataManagementHint": "Each action deletes exactly one collection and asks first. Backups live under “Privacy and data”.",
+    "defaults": {
+      "locale": "Document language",
+      "dateFormat": "Date format",
+      "printProfile": "Print profile",
+      "pageNumbers": "Page numbers",
+      "pageNumberPosition": "Page number position",
+      "reset": "Restore factory defaults"
+    },
+    "locales": {
+      "de-DE": "German (Germany)",
+      "de-AT": "German (Austria)",
+      "de-CH": "German (Switzerland)",
+      "en-GB": "English (UK)",
+      "en-US": "English (US)"
+    },
+    "dateFormats": {
+      "long": "Written out – 15 September 2026",
+      "medium": "Short – 15 Sept 2026",
+      "numeric": "Numeric – 15/09/2026"
+    },
+    "delete": {
+      "documents": {
+        "title": "Delete documents",
+        "hint": "Every document, folder and their history. Contacts and images stay.",
+        "confirmTitle": "Delete all documents?",
+        "confirmText": "Documents, folders and the history will be removed for good.",
+        "confirm": "Delete documents",
+        "done": "All documents have been deleted."
+      },
+      "addresses": {
+        "title": "Delete contacts",
+        "hint": "The whole contact directory. Documents keep their addresses.",
+        "confirmTitle": "Delete all contacts?",
+        "confirmText": "The contact directory will be removed for good.",
+        "confirm": "Delete contacts",
+        "done": "All contacts have been deleted."
+      },
+      "assets": {
+        "title": "Delete images",
+        "hint": "Every image, logo and signature. Documents show a note in their place.",
+        "confirmTitle": "Delete all images?",
+        "confirmText": "The images will be removed for good.",
+        "confirm": "Delete images",
+        "done": "All images have been deleted."
+      },
+      "history": {
+        "title": "Delete history",
+        "hint": "Every saved version and automatic copy. The documents themselves stay.",
+        "confirmTitle": "Delete the history?",
+        "confirmText": "Saved versions and automatic copies will be removed for good.",
+        "confirm": "Delete history",
+        "done": "The history has been deleted."
+      },
+      "all": {
+        "title": "Delete all local data",
+        "hint": "Documents, templates, contacts, images, own profiles and history. Settings stay.",
+        "confirmTitle": "Delete all local data for good?",
+        "confirmText": "Documents, contacts, own print profiles, images and history will be removed from this browser. This cannot be undone.",
+        "confirm": "Delete now",
+        "done": "The local data has been deleted."
+      },
+      "settings": {
+        "title": "Reset settings",
+        "confirmTitle": "Reset the settings?",
+        "confirmText": "Language, colour theme, document defaults and views return to their defaults. Content stays.",
+        "confirm": "Reset",
+        "done": "The settings have been reset."
+      },
+      "templates": {
+        "title": "Delete templates",
+        "hint": "Every own document template. Documents made from them stay.",
+        "confirmTitle": "Delete all templates?",
+        "confirmText": "The templates are removed for good. Documents stay as they are.",
+        "confirm": "Delete templates",
+        "done": "The templates were deleted."
+      }
+    },
+    "coloursHint": "Where the named colours point when a new document is created: success, warning, danger, info, muted and highlight. Existing documents keep their own mapping.",
+    "resetColours": "Reset colours"
   },
   "privacy": {
     "title": "Privacy-friendly start",
@@ -76,18 +155,27 @@
     "settings": "Open settings"
   },
   "about": {
-    "title": "About this template",
+    "title": "About Foldmark",
+    "description": "Foldmark is a local-first editor for letters, postcards and cards: write once, print onto different sheets — with fold and punch marks in millimetres, without an account and without a server.",
     "application": "Application",
     "version": "Version",
+    "build": "Build",
     "organization": "Organization",
     "license": "License",
+    "repository": "Source code",
+    "repositoryLink": "Open the repository on GitHub",
+    "privacy": "Privacy",
+    "privacyBody": "Foldmark works without an account and without a server. All data stays in this browser; the privacy view shows what is stored and deletes it on request.",
+    "privacyLink": "Open the privacy view",
     "libraries": "Libraries and licenses",
-    "notices": "Open third-party notices",
-    "website": "Open app website"
+    "notices": "Show open-source libraries",
+    "website": "Open app website",
+    "versionLine": "Version {version}",
+    "librariesBody": "Foldmark is built on free software. The list shows every library with its version, licence and project page."
   },
   "intro": {
     "welcomeTitle": "Welcome",
-    "welcomeBody": "This application was built from the LumbreCode web template. Three short steps show what it does.",
+    "welcomeBody": "Foldmark writes letters, postcards and cards once and prints them onto different sheets — with fold and punch marks in millimetres. Three short steps show what the app does.",
     "settingsTitle": "Language and appearance",
     "settingsBody": "Both can be changed at any time in the settings, and are stored in this browser only.",
     "next": "Next",
@@ -112,7 +200,28 @@
     "resetConfirmTitle": "Reset settings?",
     "resetConfirmText": "Every preference returns to its default. Your content is kept.",
     "resetConfirm": "Reset",
-    "resetDone": "Settings reset"
+    "resetDone": "Settings reset",
+    "inventory": "What is stored locally",
+    "inventoryHint": "These numbers are counted from local storage every time this view opens.",
+    "inventoryLoading": "Counting …",
+    "categories": {
+      "documents": "Documents",
+      "addresses": "Addresses",
+      "senderProfiles": "of which senders",
+      "printProfiles": "Own print profiles",
+      "assets": "Images",
+      "settings": "Settings",
+      "checkpoints": "Saved versions",
+      "workingCopies": "Automatic copies",
+      "folders": "Folders",
+      "templates": "Templates"
+    },
+    "backup": "Backup",
+    "backupHint": "A backup contains everything: documents, addresses, senders, your own profiles, images and settings.",
+    "exportAll": "Export all data",
+    "importBackup": "Import a backup",
+    "importDone": "Imported: {documents} documents, {addresses} addresses, {assets} images.",
+    "importSkipped": "{count} records were skipped."
   },
   "pro": {
     "title": "Pro status",
@@ -127,7 +236,8 @@
     "restoreRestored": "Pro was restored.",
     "restoreNothing": "No purchases found.",
     "restoreUnavailable": "The purchase channel cannot be reached right now.",
-    "note": "This page shows the entitlement status. Purchases are not enabled in this version."
+    "note": "This page shows the entitlement status. Purchases are not enabled in this version.",
+    "statusHint": "Every feature is free at the moment."
   },
   "diagnostics": {
     "title": "Settings diagnostics",
@@ -135,5 +245,971 @@
     "intro": "Every registered preference with its raw stored value. Read-only.",
     "unset": "not set",
     "default": "Default: {value}"
+  },
+  "documents": {
+    "eyebrow": "Workspace",
+    "title": "Documents",
+    "description": "Letters, cards and free documents – filed in folders, archivable, local to this browser.",
+    "count": "Documents: {count}",
+    "loading": "Loading documents …",
+    "empty": "No documents yet. Create one above or import a Markdown file.",
+    "import": "Import Markdown",
+    "importReport": "Import result",
+    "importRejected": "The file could not be read. Your original text is below, unchanged — nothing was lost.",
+    "originalSource": "Original file content",
+    "duplicate": "Duplicate",
+    "delete": "Delete",
+    "copyOf": "Copy of {title}",
+    "new": {
+      "letter": "New letter",
+      "postcard": "New postcard",
+      "card": "New card",
+      "photo-card": "New photo",
+      "custom": "New free document"
+    },
+    "newTitle": {
+      "letter": "New letter",
+      "postcard": "New postcard",
+      "card": "New card",
+      "photo-card": "New photo",
+      "custom": "New document"
+    },
+    "kind": {
+      "letter": "Letter",
+      "postcard": "Postcard",
+      "card": "Card",
+      "photo-card": "Photo",
+      "email": "Email",
+      "custom": "Free document"
+    },
+    "toolbar": "Document actions",
+    "newMenu": "+ New",
+    "folder": "Folder",
+    "newFolder": "New folder",
+    "folderName": "Folder name",
+    "create": "Create",
+    "exportBackup": "Export / Backup",
+    "archive": "Archive",
+    "archiveEmpty": "Nothing archived.",
+    "search": "Search documents",
+    "breadcrumb": "Folder path",
+    "topLevel": "Documents",
+    "column": {
+      "name": "Name",
+      "kind": "Type",
+      "folder": "Folder",
+      "updated": "Changed",
+      "opened": "Last opened",
+      "size": "Size",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "saved": "Saved",
+      "archived": "Archived",
+      "folder": "Folder"
+    },
+    "actionsFor": "Actions for {name}",
+    "action": {
+      "open": "Open",
+      "rename": "Rename",
+      "move": "Move",
+      "archive": "Archive",
+      "restore": "Restore",
+      "export": "Export"
+    },
+    "renameTitle": "Rename",
+    "newName": "New name",
+    "moveTitle": "Move to",
+    "moveTarget": "Target folder",
+    "deleteTitle": "Delete document?",
+    "deleteText": "“{name}” and its history will be deleted for good.",
+    "deleteFolderTitle": "Delete folder?",
+    "deleteFolderText": "The folder “{name}” will be deleted. Documents and subfolders inside move up one level.",
+    "dropHere": "Drop Markdown document here",
+    "importPreview": "Check import",
+    "importPreviewOf": "Check import ({index} of {total})",
+    "importSize": "{kb} kB",
+    "importPreserved": "Unknown fields (kept)",
+    "importAssets": "Images",
+    "importAssetsMissing": "{count} referenced image(s) are not in the library.",
+    "importConfirm": "Import",
+    "importSkip": "Skip"
+  },
+  "workspace": {
+    "title": "Edit document",
+    "untitled": "Untitled",
+    "save": "Save",
+    "close": "Close",
+    "profileFallback": "The stored print profile no longer exists. The default profile is being used instead.",
+    "status": {
+      "new": "New",
+      "unsaved": "Unsaved",
+      "saving": "Saving …",
+      "saved": "Saved · {time}",
+      "error": "Save failed",
+      "draft": "Draft saved · {time}"
+    },
+    "modes": "Workspace",
+    "mode": {
+      "document": "Document settings",
+      "write": "Writing area",
+      "preview": "Preview"
+    },
+    "layout": {
+      "label": "Areas",
+      "auto": "Automatic",
+      "tabs": "One pane",
+      "two": "Two panes",
+      "three": "Three panes",
+      "document": "Document settings",
+      "write": "Writing area",
+      "preview": "Preview",
+      "document-write": "Document settings + writing area",
+      "write-preview": "Writing area + preview",
+      "document-preview": "Document settings + preview",
+      "all": "All three areas"
+    },
+    "history": "History",
+    "recovery": "An automatically saved state from {time} is newer than the saved version.",
+    "recoveryContinue": "Continue from it",
+    "recoveryDiscard": "Discard",
+    "print": "Print",
+    "export": "Export",
+    "email": "Email",
+    "check": "Check",
+    "checkHint": "Check the document: errors, warnings and notes for the current output",
+    "outputGroup": "Output",
+    "closeHint": "Close and return to the workspace",
+    "focus": "Maximize",
+    "exitFocus": "Leave focus mode",
+    "focusWrite": "Focus: writing area",
+    "focusPreview": "Focus: preview",
+    "expandPane": "Expand {pane}",
+    "collapsePane": "Collapse {pane}",
+    "resizer": "Width between {left} and {right}",
+    "resizerHint": "Drag or use the arrow keys; double-click restores the default width"
+  },
+  "metadata": {
+    "document": "Document",
+    "title": "Title",
+    "printProfile": "Print profile",
+    "sender": "Sender",
+    "recipient": "Recipient",
+    "letter": "Letter details",
+    "subject": "Subject",
+    "date": "Date",
+    "reference": "Reference",
+    "salutation": "Salutation",
+    "closing": "Closing",
+    "emailTo": "Recipient email address",
+    "pickFromBook": "Contact directory",
+    "field": {
+      "organization": "Organization",
+      "department": "Department",
+      "person": "Person",
+      "street": "Street and number",
+      "addressLine2": "Additional address line",
+      "postalCode": "Postal code",
+      "city": "City",
+      "region": "Region / State",
+      "countryCode": "Country"
+    },
+    "kind": "Document type",
+    "addressBook": "Address book",
+    "senderSnapshot": "{name} (copy in document)",
+    "refreshSender": "Update from address book",
+    "pageOptions": "Page numbers and print",
+    "pageNumbers": {
+      "format": "Page numbers",
+      "formats": {
+        "none": "none",
+        "number": "number only",
+        "page": "Page X",
+        "page-of": "Page X of Y",
+        "slash": "1 / 4",
+        "of": "1 of 4"
+      },
+      "position": "Position",
+      "positions": {
+        "top-left": "top left",
+        "top-center": "top centre",
+        "top-right": "top right",
+        "bottom-left": "bottom left",
+        "bottom-center": "bottom centre",
+        "bottom-right": "bottom right"
+      },
+      "hideOnFirstPage": "Hide on the first page"
+    },
+    "theme": {
+      "title": "Typeface and spacing",
+      "hint": "How the paper is set. This travels with the document and is separate from the app theme.",
+      "fontFamily": "Typeface",
+      "fontFamilies": {
+        "serif": "Serif",
+        "sans": "Sans-serif",
+        "mono": "Monospace"
+      },
+      "fontSizePt": "Body size (pt)",
+      "lineHeight": "Line height",
+      "paragraphSpacing": "Paragraph gap (lines)",
+      "smallSizePt": "Small print (pt)",
+      "aliases": "Semantic colours",
+      "reset": "Reset to defaults",
+      "defaults": "Defaults: {size} pt, {family}. Colours are chosen by name in the editor; on paper every colour has a print value with enough contrast.",
+      "ownAliases": "This document carries its own mapping of the named colours; new documents follow Settings → Colours."
+    },
+    "noneChosen": "Not chosen",
+    "titleHint": "The name in the workspace. On first entry it takes the subject – and the other way round.",
+    "senderName": "Sender name",
+    "noContactShown": "No contact details shown in the document (enable them in the contact directory).",
+    "noSubject": "No subject",
+    "showSubject": "Show the subject in the document",
+    "showDate": "Show the date",
+    "salutationHint": "Salutation and closing are blocks in the text; they are replaced from here.",
+    "advanced": "Advanced options",
+    "emailToHint": "Taken from the recipient contact; editable here for the email hand-off.",
+    "snapshotChanged": "Changed against the contact directory",
+    "resetFromContact": "Reset from contact"
+  },
+  "editor": {
+    "toolbar": "Text formatting",
+    "bold": "Bold",
+    "italic": "Italic",
+    "code": "Code",
+    "list": "List",
+    "bodyLabel": "Letter body in Markdown",
+    "placeholder": "Dear Sir or Madam, …",
+    "hint": "Markdown with headings, bold, italic, code and lists. HTML is deliberately not interpreted.",
+    "undo": "Undo",
+    "redo": "Redo",
+    "block": "Block format",
+    "blocks": {
+      "paragraph": "Paragraph",
+      "heading1": "Heading 1",
+      "heading2": "Heading 2",
+      "heading3": "Heading 3",
+      "heading4": "Heading 4",
+      "heading5": "Heading 5",
+      "heading6": "Heading 6"
+    },
+    "strikethrough": "Strikethrough",
+    "bulletList": "• List",
+    "orderedList": "1. List",
+    "blockquote": "Quote",
+    "link": "Link",
+    "linkUrl": "Link address (https://…)",
+    "linkApply": "Set link",
+    "table": "Table",
+    "rule": "Rule",
+    "view": "View",
+    "visual": "Visual",
+    "source": "Markdown",
+    "loading": "Loading the editor …",
+    "failed": "The visual editor could not be loaded. The Markdown view keeps working.",
+    "insert": "Insert",
+    "dateToday": "Today's date",
+    "datePick": "Pick a date",
+    "dateInsert": "Insert date",
+    "salutations": [
+      "Dear Sir or Madam,",
+      "Dear Ms …,",
+      "Dear Mr …,",
+      "Dear Dr …,",
+      "Dear …,",
+      "Hello …,",
+      "To whom it may concern,"
+    ],
+    "closings": [
+      "Yours sincerely,",
+      "Yours faithfully,",
+      "Kind regards,",
+      "Best regards,",
+      "With best wishes,",
+      "Respectfully,"
+    ],
+    "underline": "Underline",
+    "highlight": "Highlight",
+    "small": "Small",
+    "superscript": "Superscript",
+    "subscript": "Subscript",
+    "color": "Colour",
+    "colorNone": "No colour",
+    "colorAliases": {
+      "success": "Success",
+      "warning": "Warning",
+      "danger": "Danger",
+      "info": "Info",
+      "muted": "Muted",
+      "highlight": "Highlight"
+    },
+    "layout": "Layout …",
+    "layoutActive": {
+      "indent": "✓ Indent",
+      "align": "✓ Alignment",
+      "note": "✓ Note box",
+      "signature": "✓ Signature",
+      "small": "✓ Small print",
+      "salutation": "Salutation",
+      "closing": "Closing"
+    },
+    "layouts": {
+      "indent1": "Indent 1",
+      "indent2": "Indent 2",
+      "indent3": "Indent 3",
+      "alignLeft": "Align left",
+      "alignCenter": "Centre",
+      "alignRight": "Align right",
+      "alignJustify": "Justify",
+      "noteInfo": "Note box",
+      "noteWarning": "Warning box",
+      "signature": "Signature line",
+      "small": "Small print"
+    },
+    "pageBreak": "Page break",
+    "image": "Image",
+    "imageWidth": "Width (mm)",
+    "imageInsert": "Insert image",
+    "imageNone": "No images stored yet — add one in the asset library.",
+    "layoutHint": "Wrap the selection in a layout block; choose it again to remove it.",
+    "visualHint": "Formatting as on paper.",
+    "sourceHint": "Markdown source; the toolbar inserts the syntax.",
+    "highlightTone": "Highlight colour",
+    "alignment": "Alignment",
+    "date": "Date",
+    "dateInsertHint": "Insert a date (today or chosen)",
+    "tableInsert": "Insert table",
+    "tableSize": "{rows} × {cols}",
+    "tableRows": "Rows",
+    "tableCols": "Columns",
+    "tableInsertButton": "Insert",
+    "linkTitle": "Insert link",
+    "linkText": "Text / title",
+    "linkInvalid": "Only http(s) and mailto addresses.",
+    "imageTitle": "Insert image",
+    "imageSource": "Image source",
+    "imageFromLibrary": "From library",
+    "imageImport": "Import file",
+    "clearFormatting": "Clear formatting",
+    "history": "Undo and redo",
+    "imageLayout": "Image alignment",
+    "imageAlign": {
+      "left": "Left",
+      "center": "Centred",
+      "right": "Right"
+    },
+    "imageSize": "Image size",
+    "imageWidthMm": "Width in mm",
+    "imageWidthPercent": "Width in % of the text width",
+    "imageSizeFull": "Full width",
+    "imageSizePercent": "{percent} % of the text width",
+    "imageSmaller": "Smaller",
+    "imageLarger": "Larger",
+    "imageSizeOriginal": "Original size",
+    "imageSizeOriginalHint": "Set no width; the image is shown at its own size, at most as wide as the text."
+  },
+  "surface": {
+    "sides": "Sides",
+    "front": "Front",
+    "back": "Back",
+    "background": "Background image",
+    "noBackground": "No image",
+    "caption": "Caption",
+    "messageLabel": "Message on the back",
+    "noAssetsHint": "No images imported yet. Add one under “Images”."
+  },
+  "preview": {
+    "title": "Paper preview",
+    "empty": "No preview available.",
+    "zoomLabel": "Display size",
+    "surfaceLabel": "Choose a side",
+    "zoom": {
+      "fit-page": "Whole page",
+      "fit-width": "Width",
+      "actual": "100 %"
+    },
+    "surface": {
+      "all": "Page {page}",
+      "front": "Front",
+      "back": "Back"
+    },
+    "showGuides": "Show guides",
+    "hideGuides": "Hide guides",
+    "scalingNote": "The preview is to scale in millimetres. Zooming does not change the output — set printer scaling to 100 %.",
+    "marksLabel": "Guides and printed marks",
+    "guidesHint": "Preview only: safe areas, stamp box, letterhead band. Printed marks stay visible.",
+    "printedMarks": "Printed marks",
+    "printedMarksHint": "Print fold, punch and cut marks – applies to preview, print and PDF.",
+    "toolsLabel": "Preview tools",
+    "quickPrint": "Print (open the print dialog)",
+    "maximize": "Maximize the preview",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "pageOf": "of {total}",
+    "guidesMenu": "Show guides"
+  },
+  "marker": {
+    "kind": {
+      "fold": "Fold mark",
+      "hole": "Punch mark",
+      "cut": "Cut mark",
+      "bleed": "Bleed",
+      "safe-area": "Safe area",
+      "separator": "Separator",
+      "address-window": "Address window",
+      "stamp-area": "Stamp area",
+      "grid": "Grid",
+      "custom": "Custom mark"
+    }
+  },
+  "render": {
+    "field": {
+      "date": "Date",
+      "reference": "Reference"
+    },
+    "pageNumber": {
+      "page": "Page {page}",
+      "pageOf": "Page {page} of {total}",
+      "of": "{page} of {total}"
+    },
+    "assetMissingInline": "Image missing"
+  },
+  "validation": {
+    "blocked": "Not ready for output",
+    "none": "Nothing to report.",
+    "counts": "{errors} errors · {warnings} warnings · {infos} notes",
+    "severity": {
+      "error": "Error",
+      "warning": "Warning",
+      "info": "Note"
+    },
+    "profile": {
+      "idInvalid": "The profile identifier is invalid.",
+      "nameIncomplete": "The profile needs a German and an English name.",
+      "pageSizeOutOfRange": "The page size is outside the supported range.",
+      "marginInvalid": "At least one margin is not a valid measurement.",
+      "contentBoxEmpty": "The margins leave no room for content.",
+      "markerIdInvalid": "A marker identifier is invalid.",
+      "markerGeometryInvalid": "A marker has no valid coordinates.",
+      "markerStrokeInvalid": "A marker stroke width must be greater than 0.",
+      "markerOutsidePage": "The marker “{label}” lies outside the page.",
+      "markerOutsidePageAllowed": "The marker “{label}” lies outside the trim — which is intended for cut and bleed marks.",
+      "markerSurfaceWithoutDuplex": "The marker targets one side, but the profile has only one.",
+      "builtInMarkerUnlocked": "A shipped marker is not locked.",
+      "capabilityWithoutMarker": "The profile claims “{capability}” but carries no marker for it.",
+      "markerWithoutCapability": "The profile carries “{capability}” markers but does not claim the capability.",
+      "addressWindowRegionMissing": "The address-window region is missing.",
+      "duplexClaimMismatch": "The duplex claim does not match the duplex definition.",
+      "regionNameInvalid": "A region name is invalid.",
+      "regionGeometryInvalid": "A region has no valid measurements.",
+      "regionEmpty": "A region has no area.",
+      "regionOutsidePage": "A region lies outside the page.",
+      "regionsOverlap": "The regions “{first}” and “{second}” overlap.",
+      "photoFoldMarksUnexpected": "A photo format with printed fold marks is unusual ({count}).",
+      "postcardWithoutDuplex": "A postcard profile without a back is unusual.",
+      "standardsUnverified": "This profile uses working values that have not been checked against a standards source."
+    },
+    "document": {
+      "recipientRequired": "A postal address is required for this output.",
+      "recipientIncomplete": "The address looks incomplete (name, street, city).",
+      "postalCodeMissing": "The postal code is missing.",
+      "emailToMissing": "No email address is set.",
+      "emailToInvalid": "The email address is invalid.",
+      "subjectMissing": "A subject is missing.",
+      "subjectUnsafe": "The subject contains a line break and is rejected.",
+      "emlRecipientInvalid": "The recipient address cannot be used in an EML file.",
+      "bodyEmpty": "The document has no text yet.",
+      "twoSidedWithoutDuplexProfile": "The document has two sides, but the profile has only one.",
+      "postcardAddressRegionMissing": "The profile has no address region for the back.",
+      "profileCategoryMismatch": "The profile targets “{actual}”, the document is a “{expected}”.",
+      "assetMissing": "A referenced image is missing ({assetId}).",
+      "senderProfileMissing": "The stored sender identity no longer exists.",
+      "senderRecommended": "An address window works best with a sender identity."
+    },
+    "export": {
+      "scalingReminder": "Set printer scaling to 100 % in the print dialog.",
+      "emailPdfMarksEnabled": "Physical marks are enabled for the email PDF.",
+      "profileStandardsUnverified": "This profile follows a standard in style but has not been verified."
+    },
+    "render": {
+      "assetMissing": "A placed image was not found ({assetId}).",
+      "imageResolutionLow": "The resolution is low for print ({dpi} dpi, {minimum} dpi recommended).",
+      "bodyOverflow": "The text does not fit its region on page {page}.",
+      "messageOverflow": "The message does not fit the text area on the back.",
+      "noAddressRegion": "The profile “{profile}” has no address field."
+    },
+    "import": {
+      "fileTooLarge": "The file is too large.",
+      "frontMatterInvalid": "The YAML front matter could not be read ({reason}, line {line}).",
+      "unsupportedFormatVersion": "Format version {version} is not supported.",
+      "noFrontMatter": "The file has no front matter; defaults were used.",
+      "unknownKind": "Unknown document kind “{kind}” — imported as a custom format.",
+      "metadataDropped": "{count} metadata entries were not carried over.",
+      "fieldInvalid": "Field not imported: {reason}",
+      "flowCollectionDropped": "The key “{key}” uses YAML flow syntax ([…] or {…}) and was not carried over.",
+      "notMarkdown": "Only Markdown documents (.md, .markdown, .txt) can be dropped here."
+    },
+    "backup": {
+      "recordRejected": "A record of type “{kind}” was skipped."
+    },
+    "contactImport": {
+      "unknownFormat": "The file is neither a vCard nor a CSV file.",
+      "fileTooLarge": "The file is too large (5 MB at most).",
+      "noContacts": "No contacts were recognised.",
+      "unknownColumns": "The column headers are unknown; a Google Contacts export or columns such as first name, last name, street, city are expected.",
+      "emptyEntry": "An entry without a name, address, e-mail and phone was skipped ({path}).",
+      "entryTooLarge": "An entry that is too large was skipped ({path}).",
+      "tooMany": "{count} further entries above the limit of 5000 were not read."
+    }
+  },
+  "export": {
+    "target": {
+      "pdf": "PDF",
+      "email-pdf": "Email with PDF attachment",
+      "print": "Print",
+      "markdown": "Markdown",
+      "email-text": "Plain-text mail",
+      "email-html": "HTML mail",
+      "eml": "EML file"
+    },
+    "printScaling": "Set scaling to 100 %, not “fit to page”.",
+    "printBackground": "Enable background graphics so images are printed.",
+    "duplex": {
+      "long-edge": "Print both sides, flip on the long edge.",
+      "short-edge": "Print both sides, flip on the short edge."
+    },
+    "includeMarks": "Print physical marks",
+    "placementsNotPortable": "Freely placed images are not written to the file; they live only in this browser. Use the backup under “Privacy and data” for a complete copy.",
+    "downloadMarkdown": "Download Markdown",
+    "emailExplain": "Foldmark prepares the message and hands it to your mail client. Nothing is sent.",
+    "defaultSubject": "Message",
+    "subject": "Subject",
+    "plainText": "Text",
+    "html": "HTML",
+    "emailPdfMarks": "Print physical marks in the email PDF",
+    "openMailClient": "Open mail client",
+    "mailtoTooLong": "The message is too long for a mailto link. Copy the text and paste it into your mail client.",
+    "copyBody": "Copy text",
+    "copied": "Copied to the clipboard.",
+    "downloadEml": "Download EML file",
+    "headerUnsafe": "The subject or address contains a line break. It is rejected to prevent header injection.",
+    "notSentNote": "Foldmark never sends anything itself and stores no credentials.",
+    "localeNote": "Dates are formatted in the document language (interface: {locale})."
+  },
+  "addresses": {
+    "eyebrow": "Contacts",
+    "title": "Contact directory",
+    "description": "People and organisations with all their addresses and contact details, local to this browser. Nothing is uploaded.",
+    "new": "+ Contact",
+    "edit": "Edit contact",
+    "displayName": "Display name",
+    "contact": "Contact details",
+    "contactHint": "Contact details are stored but only appear in a document when released here.",
+    "email": "Email",
+    "phone": "Phone",
+    "website": "Website",
+    "showInDocument": "Show in document",
+    "roles": "Use",
+    "role": {
+      "primary": "Primary address",
+      "home": "Home address",
+      "sender": "Can be used as sender",
+      "favorite": "Favourite"
+    },
+    "footerLines": "Sender footer lines (one per line: IBAN, register, …)",
+    "notes": "Notes",
+    "add": "Save contact",
+    "cancel": "Cancel",
+    "saved": "Saved.",
+    "search": "Search contacts – name, city, street, e-mail, tags",
+    "empty": "No contacts yet.",
+    "delete": "Delete",
+    "copyOf": "Copy of {name}",
+    "duplicateWarning": "{count} similar contact(s) found. Foldmark never merges automatically.",
+    "action": {
+      "edit": "Edit",
+      "duplicate": "Duplicate",
+      "primary": "Primary",
+      "home": "Home",
+      "favorite": "Favourite",
+      "useAsSender": "Use as sender",
+      "useAsRecipient": "Use as recipient"
+    },
+    "source": {
+      "manual": "manual",
+      "imported-file": "imported from file",
+      "connector": "from connector"
+    },
+    "newTitle": "New contact",
+    "section": {
+      "name": "Name",
+      "addresses": "Postal addresses"
+    },
+    "firstName": "First name",
+    "lastName": "Last name",
+    "displayNameHint": "Leave empty and the directory shows the name or the organisation.",
+    "addressLabel": "Label",
+    "addressLabelHint": "e.g. Home, Office, PO box",
+    "addAddress": "Add address",
+    "removeAddress": "Remove address",
+    "removeEntry": "Remove entry",
+    "primary": "Primary",
+    "moreAddresses": "+{count} more address(es)",
+    "tags": "Tags",
+    "tagsHint": "separated by commas",
+    "count": "{shown} of {total}",
+    "noMatches": "No contacts match the search.",
+    "pagination": "Pages",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "discardTitle": "Discard changes?",
+    "discardText": "The contact has unsaved changes.",
+    "discard": "Discard",
+    "deleteTitle": "Delete contact?",
+    "deleteText": "“{name}” will be deleted from the directory. Documents keep what they show.",
+    "import": {
+      "button": "Import contacts",
+      "title": "Import contacts",
+      "dropHere": "Drop a vCard or CSV file here",
+      "reading": "Reading the file …",
+      "recognised": "{count} contacts recognised",
+      "groupNew": "{count} new",
+      "groupExisting": "{count} probably existing",
+      "groupReview": "{count} need review",
+      "group": {
+        "new": "New",
+        "existing": "Probably existing",
+        "review": "Needs review"
+      },
+      "signal": {
+        "external-id": "Same identifier",
+        "email": "Same e-mail address",
+        "phone": "Same phone number",
+        "name-postal-code": "Same name and postal code",
+        "name": "Same name"
+      },
+      "decision": "Decision",
+      "skip": "Skip",
+      "merge": "Merge",
+      "asNew": "Import as new",
+      "allSkip": "Skip all",
+      "allMerge": "Merge all",
+      "allNew": "All as new",
+      "unnamed": "(no name)",
+      "plan": "{add} new, {merge} merged",
+      "confirm": "Import",
+      "done": "{added} contacts imported, {merged} merged."
+    }
+  },
+  "profiles": {
+    "eyebrow": "Geometry",
+    "title": "Print profiles",
+    "description": "A print profile describes the paper: size, margins, regions and helper marks — never the content.",
+    "category": {
+      "letter": "Letter",
+      "postcard": "Postcard",
+      "card": "Card",
+      "photo": "Photo",
+      "label": "Label",
+      "custom": "Custom"
+    },
+    "builtIn": "Built in",
+    "builtInNote": "Built-in profiles are immutable and cannot be deleted. “Create copy” makes an own profile to edit.",
+    "standardsUnverified": "The measurements of this profile are common working values and have not been checked against a licensed copy of the standard. Foldmark claims no conformance.",
+    "pageSize": "Page size",
+    "margins": "Margins (top / right / bottom / left)",
+    "duplex": "Front and back",
+    "singleSided": "Single-sided",
+    "markers": "Helper marks",
+    "noMarkers": "This profile has no helper marks.",
+    "printed": "printed",
+    "previewOnly": "preview only",
+    "checks": "Checks",
+    "noIssues": "Nothing to report.",
+    "clone": "Create a copy",
+    "cloneName": "Name of the copy",
+    "copySuffix": "copy",
+    "cloned": "Copy created.",
+    "delete": "Delete profile",
+    "removed": "Profile deleted.",
+    "makeDefault": "Use as default",
+    "defaultSaved": "Default profile saved.",
+    "group": {
+      "letters": "Letters",
+      "cards": "Cards",
+      "photos": "Photos",
+      "other": "Other"
+    },
+    "own": "Own profile",
+    "edit": "Edit profile",
+    "name": "Name",
+    "margin": {
+      "topMm": "Top margin (mm)",
+      "rightMm": "Right margin (mm)",
+      "bottomMm": "Bottom margin (mm)",
+      "leftMm": "Left margin (mm)"
+    },
+    "save": "Save profile",
+    "saved": "Profile saved.",
+    "deleteTitle": "Delete profile?",
+    "deleteText": "“{name}” will be deleted. Documents using it fall back to the default profile."
+  },
+  "assets": {
+    "eyebrow": "Media",
+    "title": "Images",
+    "description": "Logos, photos, letterheads, signature images and QR codes – kept in this browser only.",
+    "count": "Images: {count}",
+    "kind": "Used as",
+    "kindName": {
+      "image": "Image",
+      "logo": "Logo",
+      "signature": "Signature",
+      "background": "Background / letterhead",
+      "qr-code": "QR code"
+    },
+    "import": "Import image",
+    "rules": "PNG, JPEG or WebP up to {max} MB. SVG is deliberately refused; please shrink very large images first.",
+    "signatureNote": "A signature image is a picture of a signature — not a qualified electronic signature.",
+    "empty": "No images yet.",
+    "delete": "Delete",
+    "deleteTitle": "Delete this image?",
+    "deleteInUse": "This image is used by {count} document(s).",
+    "deleteUnused": "This image is not used by any document.",
+    "confirmDelete": "Delete permanently",
+    "cancel": "Cancel",
+    "rejected": {
+      "empty": "The file is empty.",
+      "tooLarge": "The file exceeds the size limit.",
+      "unsupportedType": "This file type is not supported.",
+      "undecodable": "The file could not be read as an image.",
+      "tooSmall": "The image is too small.",
+      "dimensionsTooLarge": "The image dimensions are too large.",
+      "pixelCountTooLarge": "The image has too many pixels.",
+      "invalidMetadata": "The image metadata is not plausible.",
+      "unknown": "The import was rejected."
+    },
+    "field": {
+      "title": "Title",
+      "description": "Description",
+      "dimensions": "Dimensions",
+      "size": "File size",
+      "filename": "Filename",
+      "mimeType": "Type",
+      "created": "Imported"
+    }
+  },
+  "backup": {
+    "rejected": {
+      "notJson": "The file is not valid JSON.",
+      "notAnObject": "The file contains no backup.",
+      "wrongFormat": "This is not a Foldmark backup.",
+      "unsupportedVersion": "This backup is newer than this version of the app.",
+      "unknown": "The backup was rejected."
+    }
+  },
+  "errors": {
+    "invalidInput": "The input is not valid.",
+    "notFound": "The record was not found.",
+    "limitReached": "The maximum number has been reached ({limit}).",
+    "immutableRecord": "Built-in records cannot be changed.",
+    "importRejected": "The import was rejected ({reason}).",
+    "assetRejected": "The image was rejected ({reason}).",
+    "storageUnavailable": "Local storage is unavailable. In private mode, or with storage blocked, Foldmark cannot save anything.",
+    "unexpected": "An unexpected error occurred."
+  },
+  "combobox": {
+    "placeholder": "Type a name or place …",
+    "openBook": "Open the contact directory",
+    "noMatches": "No matching addresses.",
+    "more": "More in the contact directory …",
+    "countryPlaceholder": "Type a country …"
+  },
+  "history": {
+    "title": "Document history",
+    "explain": "Every manual save, every import and every ten minutes of editing create a version. Restore saves the current version first.",
+    "empty": "No saved versions yet.",
+    "preview": "Preview of the version",
+    "restore": "Restore",
+    "openAsCopy": "Open as copy",
+    "export": "Export",
+    "restored": "Version restored. The previous version is in the history.",
+    "origin": {
+      "manual": "Saved manually",
+      "automatic": "Automatic checkpoint",
+      "imported": "Imported version",
+      "restore": "Before restore"
+    },
+    "retention": "Keep automatic versions",
+    "retentionHint": "Manually saved, imported and pre-restore versions are never removed automatically.",
+    "pickToPreview": "Pick a version to see it here.",
+    "retentionOption": "{count} versions per document"
+  },
+  "openSource": {
+    "title": "Open-source libraries",
+    "description": "Every package in the installed dependency tree, generated from package metadata. Runtime packages may end up in the browser; development packages are only needed to build and check.",
+    "search": "Filter by name or licence",
+    "rawNotices": "Third-party notices (Markdown)",
+    "unavailable": "The list could not be loaded. The third-party notices are still available as Markdown.",
+    "loading": "Loading libraries …",
+    "noMatches": "No matching packages.",
+    "project": "Project page",
+    "group": {
+      "runtime": "Runtime ({count})",
+      "development": "Development ({count})"
+    },
+    "column": {
+      "name": "Library",
+      "version": "Version",
+      "license": "Licence",
+      "link": "Project"
+    }
+  },
+  "dialog": {
+    "close": "Close",
+    "cancel": "Cancel",
+    "save": "Save"
+  },
+  "menu": {
+    "label": "Application menu",
+    "file": "File",
+    "edit": "Edit",
+    "insert": "Insert",
+    "format": "Format",
+    "view": "View",
+    "help": "Help",
+    "open": "Open …",
+    "selectAll": "Select all",
+    "shortcuts": "Keyboard shortcuts",
+    "qrCodeLater": "QR code (later)",
+    "documentFont": "Typeface and spacing …"
+  },
+  "shortcuts": {
+    "title": "Keyboard shortcuts",
+    "scope": {
+      "workspace": "Workspace",
+      "editor": "Writing area",
+      "navigation": "Navigation"
+    },
+    "save": "Save",
+    "print": "Print",
+    "undo": "Undo",
+    "redo": "Redo",
+    "bold": "Bold",
+    "italic": "Italic",
+    "underline": "Underline",
+    "link": "Insert link",
+    "selectAll": "Select all",
+    "pageBreak": "Page break",
+    "clearFormatting": "Clear formatting",
+    "paragraph": "Paragraph",
+    "heading1": "Heading 1",
+    "heading2": "Heading 2",
+    "heading3": "Heading 3",
+    "heading4": "Heading 4",
+    "heading5": "Heading 5",
+    "heading6": "Heading 6",
+    "escape": "Leave a dialog or focus mode",
+    "splitter": "Move a splitter (when focused)",
+    "menu": "Open and navigate the menu"
+  },
+  "print": {
+    "title": "Print",
+    "titlePdf": "Save as PDF",
+    "explain": "Foldmark opens the browser's print dialog with the print copy of the document.",
+    "pdfExplain": "Choose \"Save as PDF\" as the destination in the browser's print dialog. The filename is the document title.",
+    "profile": "Print profile",
+    "pages": "Pages",
+    "pageCount": "{count} page(s)",
+    "pageNumbers": "Page numbers",
+    "print": "Print",
+    "openForPdf": "Open print dialog",
+    "blocked": "This output is technically impossible. The document check names the reason."
+  },
+  "exportDialog": {
+    "title": "Export",
+    "formatLabel": "Format",
+    "continueToPdf": "Continue to the print dialog",
+    "format": {
+      "pdf": {
+        "name": "PDF",
+        "hint": "Through the browser's print dialog (\"Save as PDF\"), page-exact."
+      },
+      "markdown": {
+        "name": "Markdown",
+        "hint": "The file with its YAML header – readable without Foldmark, importable without loss."
+      },
+      "odt": {
+        "name": "ODT",
+        "hint": "Planned."
+      },
+      "backup": {
+        "name": "Backup",
+        "hint": "All data as one file – under Privacy & data."
+      }
+    }
+  },
+  "emailDialog": {
+    "title": "Email",
+    "modeLabel": "Kind of email",
+    "to": "Recipient address",
+    "toMissing": "No email address stored. The mail client opens without a recipient; the address can be entered there.",
+    "makePdf": "Make the PDF",
+    "pdfStep1": "\"Make the PDF\" opens the print dialog – choose \"Save as PDF\" there.",
+    "pdfStep2": "\"Open mail client\" starts a message with subject and recipient.",
+    "pdfStep3": "Attach the saved PDF in the mail client.",
+    "mode": {
+      "pdf-attachment": {
+        "name": "PDF attachment",
+        "hint": "The letter stays as it would print."
+      },
+      "html": {
+        "name": "HTML mail",
+        "hint": "With simple formatting, to paste into the mail client's editor."
+      },
+      "plain-text": {
+        "name": "Plain-text mail",
+        "hint": "Plain text without Markdown syntax, straight through a mailto link."
+      }
+    }
+  },
+  "check": {
+    "title": "Check document",
+    "ready": "Ready for output",
+    "explain": "Checked for the output \"{target}\". Warnings and notes never block anything.",
+    "group": {
+      "error": "Errors",
+      "warning": "Warnings",
+      "info": "Notes"
+    }
+  },
+  "templates": {
+    "title": "Templates",
+    "hint": "A template is a document without recipient and date: print profile, sender, font and colours, salutation and closing, the text if you like. A new document from it is independent afterwards.",
+    "empty": "No templates yet. In an open document: File → Save as template …",
+    "manage": "Manage templates …",
+    "saveAs": "Save as template …",
+    "saveTitle": "Save as template",
+    "saveHint": "Taken along: print profile, language, font, colours, page numbers, salutation, closing and signer. Recipient and date stay with the letter.",
+    "name": "Name",
+    "description": "Description (optional)",
+    "include": "Also take along",
+    "includeSender": "Sender",
+    "includeBody": "Body text as text blocks",
+    "includeSubject": "Subject",
+    "save": "Save template",
+    "saved": "Template \"{name}\" saved. It is under Documents → + New.",
+    "use": "Use",
+    "rename": "Rename",
+    "delete": "Delete",
+    "deleteTitle": "Delete template?",
+    "deleteText": "\"{name}\" will be deleted. Documents made from it stay."
+  },
+  "premium": {
+    "mode": {
+      "beta-free": "Premium — free during the test phase. The first template always stays free.",
+      "quota": "{limit} still free.",
+      "licensed": "Premium — licensed.",
+      "locked": "Premium — not unlocked."
+    }
   }
 }

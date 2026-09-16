@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const lock = JSON.parse(await readFile(resolve(root, 'package-lock.json'), 'utf8'));
 
-async function readInstalledPackageMetadata(path) {
+async function readInstalledPackageMetadata(path, entry) {
   try {
     const pkg = JSON.parse(await readFile(resolve(root, path, 'package.json'), 'utf8'));
     const repository = typeof pkg.repository === 'string' ? pkg.repository : pkg.repository?.url;
@@ -15,6 +15,9 @@ async function readInstalledPackageMetadata(path) {
       license: pkg.license ?? 'UNKNOWN',
       homepage: pkg.homepage,
       repository,
+      // The lockfile marks packages only development needs; everything else
+      // can end up in the shipped bundle. The About view groups by this.
+      runtime: entry?.dev !== true,
     };
   } catch {
     return null;
@@ -25,7 +28,9 @@ const packageEntries = Object.entries(lock.packages ?? {}).filter(([path]) =>
   path.includes('node_modules/'),
 );
 const installedPackages = (
-  await Promise.all(packageEntries.map(([path]) => readInstalledPackageMetadata(path)))
+  await Promise.all(
+    packageEntries.map(([path, entry]) => readInstalledPackageMetadata(path, entry)),
+  )
 ).filter((value) => value !== null);
 const packages = [
   ...new Map(installedPackages.map((pkg) => [`${pkg.name}@${pkg.version}`, pkg])).values(),

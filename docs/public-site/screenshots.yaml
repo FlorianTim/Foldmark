@@ -21,9 +21,25 @@ shots:
       en: The first-visit intro
   - id: 02-settings
     caption:
-      de: Die Einstellungen mit Sprache, Darstellung und den Bereichen darunter
-      en: The settings hub with language, appearance and the sections below
+      de: Die Einstellungen in Kategorien, mit Sprache und Einleitung unter „Allgemein“
+      en: The settings in categories, with language and intro under “General”
   - id: 03-privacy
     caption:
-      de: Datenschutz und Daten mit dem Gefahrenbereich
-      en: Privacy and data, showing the danger zone
+      de: Datenschutz und Daten mit Bestandsanzeige, Sicherung und Gefahrenbereich
+      en: Privacy and data, showing the inventory, the backup and the danger zone
+  - id: 04-workspace
+    caption:
+      de: Arbeitsbereich mit Dokumenteinstellungen, Schreibbereich und Papiervorschau
+      en: The workspace with document settings, writing area and paper preview
+  - id: 05-profiles
+    caption:
+      de: Ein Druckprofil mit allen Markenkoordinaten in Millimetern
+      en: A print profile with every marker coordinate in millimetres
+  - id: 06-documents
+    caption:
+      de: Der Arbeitsbereich als Dateimanager mit Ordnern, Typen und Status
+      en: The workspace as a file manager with folders, types and status
+  - id: 07-contacts
+    caption:
+      de: Das Kontaktverzeichnis, alphabetisch gruppiert, mit Suche
+      en: The contact directory, grouped alphabetically, with search

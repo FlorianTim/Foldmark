@@ -23,3 +23,11 @@ public/THIRD-PARTY-NOTICES.generated.*
 # a local modification of an upstream file: the next sync reports it as
 # CONFLICT and refuses to update it.
 .github/renovate.json5
+
+# `src/presentation/help/` is rendered from `docs/public-site/` by
+# `render_app_help.py`, and `npm run help:check` compares the files byte for
+# byte with what the renderer produces. The renderer owns their line wrapping,
+# so reformatting them here would make the two checks contradict each other:
+# whichever ran last would fail. The sources under `docs/public-site/` are
+# prettier-checked, which is where the prose actually lives.
+src/presentation/help/

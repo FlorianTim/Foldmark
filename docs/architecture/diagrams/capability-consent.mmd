@@ -1,0 +1,21 @@
+%% The consent sequence a connector must follow.
+%% Specified in openspec/specs/capability-system.md; no connector is shipped in
+%% this version, so nothing implements this flow yet.
+sequenceDiagram
+  actor User
+  participant Privacy as Privacy view
+  participant Registry as Capability registry
+  participant Module as Connector module
+  participant Provider as External provider
+
+  User->>Privacy: Ask to enable a connector
+  Privacy->>Registry: Read manifest
+  Registry-->>Privacy: Provider, purpose, scopes, data flow
+  Privacy-->>User: Show all four before anything loads
+  User->>Privacy: Explicit consent
+  Privacy->>Registry: Record consent locally
+  Registry->>Module: Dynamic import (first time any code loads)
+  Module->>Provider: Authorization Code with PKCE, no client secret
+  Provider-->>Module: Transient token, never persisted
+  User->>Privacy: Withdraw consent
+  Privacy->>Module: Discard token and disable

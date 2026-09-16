@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img">
+
+  <title>Foldmark app icon</title>
+  <rect width="512" height="512" rx="112" fill="#174A5B"/>
+  <path d="M144 72h168l68 68v300H144z" fill="#FAF8F2"/>
+  <path d="M312 72v68h68" fill="none" stroke="#E3A53B" stroke-width="24" stroke-linejoin="round"/>
+  <path d="M92 218h82M92 294h108M92 370h82" stroke="#E3A53B" stroke-width="18" stroke-linecap="round"/>
+  <path d="M218 201h94M218 258h110M218 315h78" stroke="#174A5B" stroke-width="18" stroke-linecap="round"/>
+
+</svg>

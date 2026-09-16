@@ -1,0 +1,7 @@
+flowchart LR
+  User[User] -->|creates and exports documents| Foldmark[Foldmark Web App]
+  Foldmark -->|local persistence| Browser[(IndexedDB / Local Files)]
+  Foldmark -. explicit consent .-> Drive[Google Drive]
+  Foldmark -. explicit consent .-> Contacts[Google Contacts]
+  Foldmark -->|handoff| Mail[Mail client / Web Share]
+  Foldmark -->|static files| Host[GitHub Pages or static host]

@@ -5,7 +5,7 @@ import { AppConfigSchema } from '@/config/AppConfig';
 describe('app config', () => {
   it('is valid and branded for LumbreCode', () => {
     expect(appConfig.organization.name).toBe('LumbreCode');
-    expect(appConfig.customDomain).toBe('web-app-template.webapps.lumbrecode.de');
+    expect(appConfig.customDomain).toBe('foldmark.webapps.lumbrecode.de');
     expect(appConfig.supportedLocales).toEqual(expect.arrayContaining(['de', 'en']));
   });
 

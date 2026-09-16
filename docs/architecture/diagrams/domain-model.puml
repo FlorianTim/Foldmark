@@ -1,0 +1,116 @@
+@startuml
+' Foldmark domain model as implemented.
+' The two halves of the product are deliberately unconnected: a document knows
+' no page size, a profile knows no recipient.
+hide empty members
+
+package "Content" {
+  class FoldmarkDocument {
+    +id
+    +schemaVersion
+    +kind
+    +title
+    +locale
+    +bodyMarkdown
+    +printProfileId
+  }
+  class DocumentMetadata {
+    +subject
+    +date
+    +reference
+    +emailTo
+  }
+  class PostalAddress
+  class SurfaceContent
+  class AssetPlacement {
+    +xMm
+    +yMm
+    +widthMm
+  }
+  class ExportPreferences
+}
+
+package "Geometry" {
+  class PrintProfile {
+    +id
+    +version
+    +builtIn
+    +standardsStatus
+  }
+  class PageSizeMm
+  class MarginsMm
+  class ProfileRegion {
+    +xMm
+    +yMm
+    +widthMm
+    +heightMm
+    +surface
+  }
+  class PrintMarker {
+    +kind
+    +xMm
+    +yMm
+    +preview
+    +print
+    +locked
+  }
+  class DuplexSpec
+}
+
+package "Library" {
+  class Address
+  class SenderProfile
+  class DocumentAsset {
+    +mimeType
+    +checksum
+    +widthPx
+    +heightPx
+  }
+}
+
+package "Rendering" {
+  class RenderPlan {
+    +target
+    +includesPhysicalMarks
+  }
+  class RenderPage
+  class RenderBlock
+  class ValidationIssue {
+    +severity
+    +code
+  }
+}
+
+FoldmarkDocument *-- DocumentMetadata
+FoldmarkDocument *-- ExportPreferences
+FoldmarkDocument *-- "0..*" AssetPlacement
+FoldmarkDocument *-- "0..2" SurfaceContent
+DocumentMetadata *-- "0..1" PostalAddress : recipient (embedded)
+DocumentMetadata ..> SenderProfile : senderProfileId
+AssetPlacement ..> DocumentAsset : assetId
+
+PrintProfile *-- PageSizeMm
+PrintProfile *-- MarginsMm
+PrintProfile *-- "0..*" PrintMarker
+PrintProfile *-- "0..*" ProfileRegion
+PrintProfile *-- "0..1" DuplexSpec
+
+RenderPlan *-- "1..*" RenderPage
+RenderPage *-- "0..*" RenderBlock
+RenderPlan *-- "0..*" ValidationIssue
+RenderPlan ..> FoldmarkDocument : built from
+RenderPlan ..> PrintProfile : built from
+
+Address ..> PostalAddress : holds
+SenderProfile ..> PostalAddress : holds
+
+note bottom of RenderPlan
+  Pure data in millimetres.
+  No DOM, no CSS, no HTML.
+end note
+
+note bottom of PrintProfile
+  Built-ins are deep-frozen and never stored.
+  Editing one clones it and drops the standards claim.
+end note
+@enduml

@@ -1,0 +1,2480 @@
+/*
+ * Foldmark's own screens.
+ *
+ * The template's `app.css` styles the shell — bar, panels, settings, footer —
+ * and stays as it is. Everything specific to documents, geometry and the
+ * three-pane workspace lives here, so a later template update can be taken
+ * without merging two histories of the same file.
+ *
+ * `print.css` owns the sheet itself.
+ */
+
+/* --- Workspace ------------------------------------------------------------
+ *
+ * The one screen that wants the whole window. Three areas — Document
+ * settings, Writing area, Preview — that are tabs on a phone, a chosen pair
+ * on a laptop and three columns on a wide monitor (change 0020). The grid's
+ * columns come from `workspaceLayout.ts` as an inline style: `minmax(min, fr)`
+ * per open pane, a fixed rail per folded one, and a splitter track between
+ * two open neighbours. `data-panes` carries the slot count so the single-tab
+ * case can lose the per-pane scrolling.
+ */
+main.wide {
+  width: calc(100% - 2rem);
+  max-width: none;
+  margin: 1rem auto;
+}
+.workspace {
+  display: grid;
+  gap: 0.75rem;
+}
+.workspace-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 1rem;
+  padding: 0.6rem 1rem;
+}
+.workspace-identity {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+.workspace-identity h1 {
+  font-size: 1.2rem;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.workspace-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+/* The three output actions read as one group: a little closer to each other
+   than to the rest, so the bar has rhythm rather than a row of equal pills. */
+.workspace-output {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0 0.35rem;
+  border-inline: 1px solid var(--app-border);
+}
+/*
+ * Save status: glyph + text carry the state; colour is added on top. The brand
+ * amber fails as text at 4.5:1 (see themes.css), so "unsaved" and "saving" use
+ * the ink colour and let the glyph do the signalling.
+ */
+.save-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: var(--app-muted);
+  white-space: nowrap;
+}
+.save-status-glyph {
+  font-weight: 700;
+}
+.save-status[data-state='unsaved'],
+.save-status[data-state='saving'] {
+  color: var(--app-text);
+}
+.save-status[data-state='saved'] {
+  color: var(--fm-success);
+}
+.save-status[data-state='error'] {
+  color: var(--fm-danger);
+}
+.workspace-modes {
+  display: flex;
+  gap: 0.25rem;
+  background: color-mix(in srgb, var(--app-accent) 6%, transparent);
+  border-radius: 999px;
+  padding: 0.2rem;
+}
+/* A mode switch is instant; a fading tab reads as a stuck one. */
+.workspace-modes .btn {
+  transition: none;
+  border-radius: 999px;
+}
+.workspace-layout .select-sm {
+  min-height: 2rem;
+  height: 2rem;
+  font-size: 0.8rem;
+}
+.workspace-check .checks-badge {
+  display: inline-flex;
+  gap: 0.45rem;
+  margin-left: 0.4rem;
+  font-size: 0.72rem;
+  border-radius: 999px;
+  padding: 0.05rem 0.5rem;
+  border: 1px solid currentColor;
+  font-variant-numeric: tabular-nums;
+}
+.checks-badge.is-ready {
+  color: var(--fm-success);
+}
+.checks-badge.is-blocked {
+  color: var(--fm-danger);
+}
+
+/* The menu bar under the workspace bar: quiet text buttons, one open panel. */
+.app-menu {
+  display: flex;
+  gap: 0.15rem;
+  flex-wrap: wrap;
+  padding: 0 0.25rem;
+}
+.app-menu-entry {
+  position: relative;
+}
+.app-menu-button {
+  border: 0;
+  background: transparent;
+  color: var(--app-text);
+  padding: 0.3rem 0.65rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.app-menu-button:hover,
+.app-menu-button.is-open {
+  background: var(--app-surface);
+  box-shadow: inset 0 0 0 1px var(--app-border);
+}
+.app-menu-panel {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 0.2rem);
+  left: 0;
+  min-width: 15rem;
+  margin: 0;
+  padding: 0.3rem;
+  list-style: none;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 0.75rem;
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.14);
+}
+.app-menu-item {
+  display: grid;
+  grid-template-columns: 1rem auto 1fr auto;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+.app-menu-item:hover,
+.app-menu-item:focus-visible {
+  background: color-mix(in srgb, var(--app-accent) 10%, transparent);
+  outline: none;
+}
+.app-menu-item.is-disabled {
+  color: var(--app-muted);
+  cursor: default;
+}
+.app-menu-item .app-icon {
+  color: var(--app-muted);
+}
+.app-menu-check {
+  width: 1rem;
+  text-align: center;
+  color: var(--app-accent);
+}
+.app-menu-shortcut {
+  font-size: 0.75rem;
+  color: var(--app-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.app-menu-divider {
+  height: 1px;
+  margin: 0.3rem 0.5rem;
+  background: var(--app-border);
+}
+
+.workspace-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: stretch;
+}
+.workspace-pane {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 1rem;
+  padding: 0.75rem 1rem 1rem;
+  min-width: 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  align-content: start;
+  gap: 0.5rem;
+}
+.pane-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--app-border);
+}
+.pane-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--app-muted);
+}
+.pane-tools {
+  display: inline-flex;
+  gap: 0.15rem;
+}
+/*
+ * With two or three panes each one scrolls on its own: the settings form is
+ * long and would otherwise push the paper off screen, and the paper is the
+ * reason the workspace exists. With one pane the page scrolls normally.
+ */
+.workspace:not([data-panes='1']) .workspace-pane {
+  max-height: calc(100vh - 9.5rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.workspace[data-focus] .workspace-pane {
+  max-height: calc(100vh - 9.5rem);
+}
+/* A folded pane: a narrow rail with the expand handle on top and the name
+   written downwards, so the area is still findable. */
+.workspace-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 1rem;
+  min-width: 0;
+}
+.workspace-rail-label {
+  writing-mode: vertical-rl;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--app-muted);
+}
+.workspace-rail-label .app-icon {
+  transform: rotate(90deg);
+}
+/* The splitter: a slim track that widens on hover and shows its grip. */
+.pane-resizer {
+  width: 0.75rem;
+  margin: 0 -0.25rem;
+  cursor: col-resize;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.4rem;
+  touch-action: none;
+  user-select: none;
+}
+.pane-resizer-grip {
+  width: 3px;
+  height: 2.5rem;
+  border-radius: 999px;
+  background: var(--app-border);
+}
+.pane-resizer:hover .pane-resizer-grip,
+.pane-resizer:focus-visible .pane-resizer-grip,
+.pane-resizer.is-dragging .pane-resizer-grip {
+  background: var(--app-accent);
+}
+.pane-resizer:focus-visible {
+  outline: 2px solid var(--app-accent);
+  outline-offset: -2px;
+}
+.workspace[data-panes='1'] .pane-resizer {
+  display: none;
+}
+
+/* --- Icons (change 0020) --------------------------------------------------
+ *
+ * Every icon is a sprite reference drawn in `currentColor`, sized in `em`-ish
+ * rems so a `btn-sm` and a `btn` get the same optical weight. Icon-only
+ * buttons are squares; a label next to an icon gets a small gap.
+ */
+.app-icon {
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+  flex: none;
+  color: currentColor;
+  vertical-align: -0.2em;
+}
+.app-icon-sm {
+  inline-size: 1rem;
+  block-size: 1rem;
+}
+.app-icon-lg {
+  inline-size: 1.4rem;
+  block-size: 1.4rem;
+}
+.btn > .app-icon + span,
+.btn > span + .app-icon {
+  margin-inline-start: 0.35rem;
+}
+.btn.btn-square {
+  padding-inline: 0;
+  inline-size: 2.25rem;
+}
+.btn.btn-sm.btn-square {
+  inline-size: 2rem;
+  min-block-size: 2rem;
+}
+
+/* --- Dialog standard (change 0019) ----------------------------------------
+ *
+ * The native element is transparent and padding-less so a click on the
+ * backdrop lands on the element itself; the box inside is what people see.
+ * On a phone the box becomes a sheet at the bottom.
+ */
+.app-dialog {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  max-width: none;
+  max-height: none;
+  width: 100vw;
+  height: 100vh;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.app-dialog[open] {
+  display: flex;
+}
+.app-dialog::backdrop {
+  background: rgb(0 0 0 / 0.45);
+}
+.app-dialog-box {
+  width: min(var(--dialog-width, 36rem), calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  display: flex;
+  flex-direction: column;
+  background: var(--app-surface);
+  color: var(--app-text);
+  border: 1px solid var(--app-border);
+  border-radius: 1rem;
+  box-shadow: 0 24px 70px rgb(0 0 0 / 0.28);
+}
+.app-dialog-sm {
+  --dialog-width: 26rem;
+}
+.app-dialog-md {
+  --dialog-width: 36rem;
+}
+.app-dialog-lg {
+  --dialog-width: 48rem;
+}
+.app-dialog-xl {
+  --dialog-width: 64rem;
+}
+.app-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem 0.75rem;
+  border-bottom: 1px solid var(--app-border);
+}
+.app-dialog-title {
+  margin: 0;
+  font-size: 1.2rem;
+}
+.app-dialog-body {
+  padding: 1rem 1.25rem;
+  overflow: auto;
+  display: grid;
+  gap: 0.75rem;
+  min-height: 0;
+}
+.app-dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 1.25rem 1rem;
+  border-top: 1px solid var(--app-border);
+}
+@media (max-width: 640px) {
+  .app-dialog {
+    align-items: flex-end;
+  }
+  .app-dialog-box {
+    width: 100vw;
+    max-height: calc(100vh - 1rem);
+    border-radius: 1rem 1rem 0 0;
+  }
+}
+
+/* --- Output dialogs (change 0019) ----------------------------------------- */
+.print-facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 1rem;
+  margin: 0;
+  font-size: 0.9rem;
+}
+.print-facts dt {
+  color: var(--app-muted);
+}
+.print-facts dd {
+  margin: 0;
+}
+.export-formats {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+.export-format {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--app-border);
+  border-radius: 0.75rem;
+  cursor: pointer;
+}
+.export-format.is-active {
+  border-color: var(--app-accent);
+  background: color-mix(in srgb, var(--app-accent) 6%, transparent);
+}
+.export-format.is-disabled {
+  color: var(--app-muted);
+  cursor: default;
+}
+.export-format-text {
+  display: grid;
+  gap: 0.1rem;
+}
+.export-format-text small {
+  color: var(--app-muted);
+}
+.check-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin: 0;
+  border-radius: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--app-border);
+}
+.check-summary.is-ready {
+  border-color: var(--fm-success);
+  background: color-mix(in srgb, var(--fm-success) 12%, transparent);
+}
+.check-summary.is-blocked {
+  border-color: var(--fm-danger);
+  background: color-mix(in srgb, var(--fm-danger) 12%, transparent);
+}
+.check-summary span {
+  color: var(--app-muted);
+  font-size: 0.85rem;
+}
+.check-group {
+  display: grid;
+  gap: 0.4rem;
+}
+.check-heading {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--app-muted);
+}
+.shortcuts-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.shortcuts-table th,
+.shortcuts-table td {
+  text-align: left;
+  padding: 0.35rem 0.5rem;
+  border-bottom: 1px solid var(--app-border);
+  vertical-align: top;
+}
+.shortcuts-table kbd {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+.app-footer {
+  padding: 0.6rem clamp(1rem, 4vw, 3rem);
+  font-size: 0.8rem;
+}
+
+/* --- Forms --------------------------------------------------------------- */
+.metadata-form,
+.address-form,
+.surface-editor {
+  display: grid;
+  gap: 0.75rem;
+}
+.metadata-form fieldset,
+.address-form fieldset {
+  border: 1px solid var(--app-border);
+  border-radius: 0.85rem;
+  padding: 0.75rem 1rem 1rem;
+  display: grid;
+  gap: 0.6rem;
+  min-width: 0;
+}
+.metadata-form legend,
+.metadata-section summary {
+  font-weight: 700;
+  padding: 0 0.4rem;
+}
+.metadata-section {
+  border: 1px solid var(--app-border);
+  border-radius: 0.85rem;
+  padding: 0.75rem 1rem 1rem;
+  display: grid;
+  gap: 0.6rem;
+  min-width: 0;
+}
+.metadata-section summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+}
+.metadata-section summary::-webkit-details-marker {
+  display: none;
+}
+.metadata-section summary::before {
+  content: '▸';
+  display: inline-block;
+  width: 0.9rem;
+  color: var(--app-muted);
+  transition: transform 120ms ease;
+}
+.metadata-section[open] summary::before {
+  transform: rotate(90deg);
+}
+.metadata-section summary .app-icon {
+  color: var(--app-muted);
+}
+/* The folded summary: one muted line of what the group holds (R13-018). */
+.metadata-summary {
+  margin-left: auto;
+  font-weight: 400;
+  color: var(--app-muted);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 60%;
+}
+.metadata-section:not([open]) {
+  padding-bottom: 0.75rem;
+}
+/* Fields in a responsive grid: equal heights, no squeezed controls (R13-020). */
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  gap: 0.5rem 0.75rem;
+}
+.field-grid .field .input,
+.field-grid .field .select {
+  width: 100%;
+}
+.field-radios {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.3rem;
+}
+.field-legend {
+  font-size: 0.85rem;
+  color: var(--app-muted);
+  padding: 0;
+  margin-bottom: 0.2rem;
+}
+.field-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: end;
+}
+.field-grow {
+  flex: 1;
+}
+.field-static {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  margin: 0;
+  font-size: 0.9rem;
+}
+.field-static span {
+  color: var(--app-muted);
+  font-size: 0.85rem;
+}
+.field {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+.field > span,
+.field > label {
+  font-size: 0.85rem;
+  color: var(--app-muted);
+}
+.field-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.field-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+.address-picker {
+  border: 1px dashed var(--app-border);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.5rem;
+}
+.address-results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+  max-height: 14rem;
+  overflow: auto;
+}
+.address-result,
+.document-open,
+.profile-entry {
+  display: grid;
+  gap: 0.15rem;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 0.65rem;
+  padding: 0.5rem 0.65rem;
+  cursor: pointer;
+  color: inherit;
+}
+.address-result:hover,
+.document-open:hover,
+.profile-entry:hover,
+.profile-entry.active {
+  border-color: var(--app-border);
+  background: color-mix(in srgb, var(--app-accent) 8%, transparent);
+}
+.address-result span,
+.document-open span,
+.document-open small,
+.profile-entry span,
+.profile-entry small {
+  color: var(--app-muted);
+  font-size: 0.85rem;
+}
+.body-editor {
+  width: 100%;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.editor-hint,
+.asset-rules,
+.profile-note,
+.export-note,
+.export-locale-note,
+.asset-signature-note {
+  color: var(--app-muted);
+  font-size: 0.85rem;
+}
+
+/* --- Validation -----------------------------------------------------------
+ *
+ * Severity is carried by a colour *and* a word. Colour alone would fail the
+ * contrast-independent reading the accessibility baseline asks for, and the
+ * difference between "will not print" and "will look odd" is worth a word.
+ */
+.validation-summary {
+  display: grid;
+  gap: 0.2rem;
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid var(--app-border);
+  margin-bottom: 0.75rem;
+}
+.validation-summary.is-ready {
+  border-color: var(--fm-success);
+  background: color-mix(in srgb, var(--fm-success) 12%, transparent);
+}
+.validation-summary.is-blocked {
+  border-color: var(--fm-danger);
+  background: color-mix(in srgb, var(--fm-danger) 12%, transparent);
+}
+.validation-summary span {
+  color: var(--app-muted);
+  font-size: 0.85rem;
+}
+.validation-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+.validation-list li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.2rem 0.6rem;
+  border-left: 3px solid var(--app-border);
+  padding: 0.4rem 0.6rem;
+}
+.validation-list .issue-error {
+  border-left-color: var(--fm-danger);
+}
+.validation-list .issue-warning {
+  border-left-color: var(--fm-fold);
+}
+.validation-list .issue-info {
+  border-left-color: var(--fm-guide);
+}
+.issue-severity {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  color: var(--app-muted);
+}
+.issue-path {
+  grid-column: 2;
+  font-size: 0.75rem;
+  color: var(--app-muted);
+}
+
+/* --- Export -------------------------------------------------------------- */
+.export-dialog,
+.export-section {
+  display: grid;
+  gap: 0.75rem;
+}
+.export-targets,
+.export-actions,
+.profile-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: end;
+}
+.export-checklist {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--app-muted);
+  font-size: 0.9rem;
+  /* Tailwind's preflight removes list markers; a checklist needs them back. */
+  list-style: disc outside;
+}
+
+/* The file manager's drop zone (R14-014). */
+.file-manager {
+  position: relative;
+}
+.file-manager.is-dragging > :not(.drop-overlay) {
+  pointer-events: none;
+}
+.drop-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 2px dashed var(--app-accent);
+  border-radius: 1.25rem;
+  background: color-mix(in srgb, var(--app-surface) 88%, var(--app-accent));
+  color: var(--app-fg);
+  font-weight: 600;
+}
+.import-file {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.75rem;
+}
+.import-file small {
+  color: var(--app-muted);
+}
+.import-facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 1rem;
+  margin: 0 0 0.75rem;
+}
+.import-facts dt {
+  color: var(--app-muted);
+}
+.import-facts dd {
+  margin: 0;
+}
+.import-key {
+  display: inline-block;
+  margin: 0 0.25rem 0.25rem 0;
+  padding: 0 0.35rem;
+  border-radius: 0.35rem;
+  background: var(--app-bg);
+  font-size: 0.8rem;
+}
+
+/* Subsections inside the Document group: typeface, page numbers. */
+.metadata-subhead {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 1.1rem 0 0.4rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--app-border);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--app-muted);
+}
+
+/* Templates (change 0039). */
+.template-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.template-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--app-border);
+  border-radius: 0.75rem;
+}
+.template-facts {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
+.template-facts > span {
+  display: grid;
+  min-width: 0;
+}
+.template-facts small {
+  color: var(--app-muted);
+}
+.template-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex: none;
+}
+.template-edit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.5rem;
+  width: 100%;
+}
+.template-edit .field {
+  flex: 1 1 10rem;
+}
+.premium-note {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.5rem 0 0;
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.6rem;
+  background: color-mix(in srgb, var(--app-accent) 10%, transparent);
+  font-size: 0.85rem;
+}
+
+/* Contact import review (R14-013). */
+.contact-directory {
+  position: relative;
+}
+.contact-directory.is-dragging > :not(.drop-overlay) {
+  pointer-events: none;
+}
+.section-actions {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.import-summary {
+  margin: 0 0 0.75rem;
+}
+.import-group {
+  margin-top: 0.75rem;
+}
+.import-group-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.import-group-head h3 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+.import-group-actions {
+  display: inline-flex;
+  gap: 0.25rem;
+}
+.import-rows {
+  list-style: none;
+  margin: 0.25rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+.import-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  gap: 0.5rem 1rem;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--app-border);
+  border-radius: 0.75rem;
+}
+.import-row-side {
+  display: grid;
+  min-width: 0;
+}
+.import-row-side small {
+  color: var(--app-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.import-row-signal {
+  font-size: 0.75rem;
+  color: var(--app-accent);
+}
+.import-row-choice {
+  display: inline-flex;
+  gap: 0.6rem;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font-size: 0.85rem;
+}
+.import-row-choice label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.import-footer-note {
+  margin-inline-end: auto;
+  color: var(--app-muted);
+  font-size: 0.85rem;
+}
+@media (max-width: 640px) {
+  .import-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* A snapshot that drifted from its contact, with the way back (R14-012). */
+.snapshot-status {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.25rem 0 0.5rem;
+  font-size: 0.85rem;
+  color: var(--app-muted);
+}
+.settings-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+.form-control .label-text .rich-swatch {
+  margin-inline-end: 0.35rem;
+}
+
+/* --- Rich editor --------------------------------------------------------- */
+:root {
+  /* Control sizes shared by the editor toolbar, the workspace bar and the
+     preview controls (R14-007): the hit area, the icon, the gaps. */
+  --fm-control: 2.375rem;
+  --fm-icon: 1.25rem;
+  --fm-gap: 0.25rem;
+  --fm-group-gap: 0.75rem;
+}
+.rich-editor {
+  display: grid;
+  /* The pane stretches the editor to its height; the free space belongs to
+     the text, not to the gaps between the switch row and the toolbar. */
+  grid-template-rows: auto auto 1fr;
+  gap: 0.5rem;
+}
+/* The mode switch is the first row (AC-EDIT-001); undo/redo share it (R14-006). */
+.rich-views {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.rich-history {
+  margin-left: auto;
+}
+/* One switch, two labels, the thumb on the active side (R14-006). */
+.editor-mode-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  min-block-size: var(--fm-control);
+  border: 1px solid var(--app-border);
+  border-radius: 999px;
+  background: var(--app-surface);
+  color: var(--app-muted);
+  font: inherit;
+  cursor: pointer;
+}
+.editor-mode-switch:focus-visible {
+  outline: 2px solid var(--app-accent);
+  outline-offset: 2px;
+}
+.editor-mode-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.editor-mode-label.is-active {
+  color: var(--app-fg);
+  font-weight: 700;
+}
+.editor-mode-track {
+  position: relative;
+  inline-size: 2.25rem;
+  block-size: 1.25rem;
+  border-radius: 999px;
+  background: var(--app-accent);
+  flex: none;
+}
+.editor-mode-thumb {
+  position: absolute;
+  inset-block-start: 0.125rem;
+  inset-inline-start: 0.125rem;
+  inline-size: 1rem;
+  block-size: 1rem;
+  border-radius: 999px;
+  background: var(--app-surface);
+  transition: transform 120ms ease;
+}
+.editor-mode-switch[data-view='source'] .editor-mode-thumb {
+  transform: translateX(1rem);
+}
+/* A button with a popover hanging under it. */
+.rich-split {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.rich-caret {
+  padding-inline: 0.3rem;
+  gap: 0.1rem;
+}
+.app-popover {
+  position: absolute;
+  z-index: 25;
+  top: calc(100% + 0.25rem);
+  left: 0;
+  min-width: 12rem;
+  padding: 0.6rem 0.75rem;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 0.75rem;
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.14);
+  display: grid;
+  gap: 0.5rem;
+}
+.popover-title {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--app-muted);
+}
+.popover-form {
+  display: grid;
+  gap: 0.5rem;
+}
+.popover-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.1rem;
+}
+.popover-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 0.35rem 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  text-align: left;
+  white-space: nowrap;
+}
+.popover-item:hover,
+.popover-item:focus-visible {
+  background: color-mix(in srgb, var(--app-accent) 10%, transparent);
+}
+.table-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1.25rem);
+  gap: 0.2rem;
+}
+.table-grid-cell {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 1px solid var(--app-border);
+  border-radius: 0.2rem;
+  background: var(--app-bg);
+  cursor: pointer;
+  padding: 0;
+}
+.table-grid-cell.is-active {
+  background: color-mix(in srgb, var(--app-accent) 35%, transparent);
+  border-color: var(--app-accent);
+}
+.table-grid-label {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--app-muted);
+}
+.table-fields {
+  display: flex;
+  gap: 0.5rem;
+  align-items: end;
+}
+.table-fields .input {
+  width: 4.5rem;
+}
+.link-form {
+  display: grid;
+  gap: 0.75rem;
+}
+.field-error {
+  color: var(--fm-danger);
+}
+.image-tabs {
+  display: flex;
+  gap: 0.25rem;
+}
+.image-choices {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr));
+  gap: 0.5rem;
+  max-height: 14rem;
+  overflow: auto;
+}
+.image-choice {
+  width: 100%;
+  display: grid;
+  gap: 0.25rem;
+  border: 2px solid transparent;
+  border-radius: 0.6rem;
+  background: var(--app-bg);
+  padding: 0.35rem;
+  cursor: pointer;
+  color: inherit;
+}
+.image-choice.is-active {
+  border-color: var(--app-accent);
+}
+.image-choice-thumb {
+  width: 100%;
+  height: 4.5rem;
+  object-fit: contain;
+}
+.image-choice-title {
+  font-size: 0.75rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.image-import {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: start;
+}
+.image-preview {
+  display: grid;
+  grid-template-columns: 8rem 1fr;
+  gap: 0.75rem 1rem;
+  align-items: start;
+  border-top: 1px solid var(--app-border);
+  padding-top: 0.75rem;
+}
+.image-preview-thumb {
+  width: 8rem;
+  max-height: 8rem;
+  object-fit: contain;
+  background: var(--fm-canvas);
+  border-radius: 0.5rem;
+}
+.image-facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.2rem 0.75rem;
+  margin: 0;
+  font-size: 0.9rem;
+}
+.image-facts dt {
+  color: var(--app-muted);
+}
+.image-facts dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.image-width {
+  grid-column: 2;
+  max-width: 10rem;
+}
+.rich-color-wrap {
+  flex-wrap: wrap;
+  max-width: 14rem;
+}
+.rich-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--fm-gap) var(--fm-group-gap);
+  align-items: center;
+}
+.rich-toolbar-group {
+  display: flex;
+  gap: var(--fm-gap);
+  align-items: center;
+}
+/* Toolbar controls are one size (R14-007): a 38 px hit area around a 20 px
+   icon, in every toolbar of the app. `btn-sm` keeps the label buttons in step. */
+.rich-toolbar .btn,
+.rich-views .btn,
+.preview-controls .btn,
+.workspace-actions .btn {
+  min-block-size: var(--fm-control);
+  block-size: var(--fm-control);
+}
+.rich-toolbar .btn.btn-square,
+.rich-views .btn.btn-square,
+.preview-controls .btn.btn-square,
+.workspace-actions .btn.btn-square {
+  inline-size: var(--fm-control);
+}
+.rich-toolbar .app-icon,
+.rich-views .app-icon,
+.preview-controls .btn .app-icon,
+.workspace-actions .btn .app-icon {
+  inline-size: var(--fm-icon);
+  block-size: var(--fm-icon);
+}
+.rich-toolbar .app-icon-sm,
+.rich-views .app-icon-sm {
+  inline-size: 1rem;
+  block-size: 1rem;
+}
+.rich-toolbar .select {
+  block-size: var(--fm-control);
+  min-block-size: var(--fm-control);
+}
+/* An active toggle is a filled pill, not a colour change alone. */
+.rich-toolbar .btn.btn-active {
+  background: var(--app-accent-soft, color-mix(in srgb, var(--app-accent) 18%, transparent));
+  color: var(--app-fg);
+  box-shadow: inset 0 0 0 1px var(--app-accent);
+}
+.rich-toolbar-views {
+  margin-left: auto;
+}
+.rich-link-form {
+  display: flex;
+  gap: 0.5rem;
+  align-items: end;
+}
+.rich-host-wrap {
+  border: 1px solid var(--app-border);
+  border-radius: 0.75rem;
+  background: var(--app-surface);
+  min-height: 24rem;
+}
+.rich-host .ProseMirror {
+  min-height: 24rem;
+  padding: 1rem 1.25rem;
+  outline: none;
+  line-height: 1.55;
+  font-size: 1rem;
+}
+.rich-host .ProseMirror:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--app-accent);
+  border-radius: 0.75rem;
+}
+.rich-host .ProseMirror p {
+  margin: 0 0 0.75rem;
+}
+.rich-host .ProseMirror h1,
+.rich-host .ProseMirror h2,
+.rich-host .ProseMirror h3 {
+  margin: 1rem 0 0.5rem;
+  line-height: 1.25;
+}
+.rich-host .ProseMirror h1 {
+  font-size: 1.5rem;
+}
+.rich-host .ProseMirror h2 {
+  font-size: 1.25rem;
+}
+.rich-host .ProseMirror h3 {
+  font-size: 1.1rem;
+}
+.rich-host .ProseMirror ul,
+.rich-host .ProseMirror ol {
+  padding-left: 1.5rem;
+  margin: 0 0 0.75rem;
+}
+.rich-host .ProseMirror ul {
+  list-style: disc outside;
+}
+.rich-host .ProseMirror ol {
+  list-style: decimal outside;
+}
+.rich-host .ProseMirror blockquote {
+  border-left: 3px solid var(--app-border);
+  margin: 0 0 0.75rem;
+  padding-left: 0.75rem;
+  color: var(--app-muted);
+}
+.rich-host .ProseMirror hr {
+  border: 0;
+  border-top: 1px solid var(--app-border);
+  margin: 1rem 0;
+}
+.rich-host .ProseMirror table {
+  border-collapse: collapse;
+  margin: 0 0 0.75rem;
+}
+.rich-host .ProseMirror th,
+.rich-host .ProseMirror td {
+  border: 1px solid var(--app-border);
+  padding: 0.3rem 0.5rem;
+  min-width: 4rem;
+}
+.rich-host .ProseMirror a {
+  color: var(--app-accent);
+  text-decoration: underline;
+}
+/* Raw HTML in the source is shown as text, never rendered. */
+.rich-host .ProseMirror [data-type='html'] {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.85em;
+  background: color-mix(in srgb, var(--app-accent) 8%, transparent);
+  border-radius: 0.25rem;
+  padding: 0 0.2rem;
+}
+
+/* Directives in the editor (change 0017): the same classes the paper uses,
+   sized for the screen. Colours come from the `--md-color-*` variables the
+   host sets from the document theme. */
+.rich-color-button {
+  gap: 0.35rem;
+}
+.rich-swatch {
+  display: inline-block;
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--app-border);
+}
+.rich-color-panel {
+  display: grid;
+  gap: 0.25rem;
+}
+.rich-color-row {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.rich-color-tone {
+  width: 4.5rem;
+  font-size: 0.8rem;
+  color: var(--app-muted);
+}
+.rich-swatch-button {
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 0.3rem;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+.rich-swatch-button.is-active,
+.rich-swatch-button:focus-visible {
+  border-color: var(--app-accent);
+  outline: none;
+}
+.rich-color-aliases {
+  flex-wrap: wrap;
+  margin-top: 0.25rem;
+}
+.rich-mark {
+  background: #fef08a;
+  color: inherit;
+  padding: 0 0.15rem;
+}
+.rich-host .ProseMirror .md-highlight {
+  background: var(--md-highlight, #fef08a);
+  color: inherit;
+}
+.rich-host .ProseMirror .md-small,
+.rich-host .ProseMirror .md-small p {
+  font-size: 0.85em;
+}
+.rich-host .ProseMirror .md-unknown {
+  border-bottom: 1px dotted var(--app-muted);
+}
+.rich-host .ProseMirror .md-empty-directive,
+.rich-host .ProseMirror .md-foreign-image {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.85em;
+}
+.rich-host .ProseMirror .md-date {
+  border-bottom: 1px dashed var(--app-accent);
+}
+.rich-host .ProseMirror .md-indent,
+.rich-host .ProseMirror .md-align,
+.rich-host .ProseMirror .md-note,
+.rich-host .ProseMirror .md-signature,
+.rich-host .ProseMirror .md-unknown-block {
+  margin: 0 0 0.75rem;
+}
+.rich-host .ProseMirror .md-indent {
+  margin-left: 2rem;
+}
+.rich-host .ProseMirror .md-indent[data-level='2'] {
+  margin-left: 4rem;
+}
+.rich-host .ProseMirror .md-indent[data-level='3'] {
+  margin-left: 6rem;
+}
+.rich-host .ProseMirror .md-align-center {
+  text-align: center;
+}
+.rich-host .ProseMirror .md-align-right {
+  text-align: right;
+}
+.rich-host .ProseMirror .md-align-justify {
+  text-align: justify;
+}
+.rich-host .ProseMirror .md-note {
+  border: 1px solid var(--app-border);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+}
+.rich-host .ProseMirror .md-note-warning {
+  border-width: 2px;
+  border-color: var(--md-color-warning, var(--app-border));
+}
+.rich-host .ProseMirror .md-signature {
+  border-top: 1px solid var(--app-border);
+  padding-top: 0.25rem;
+  margin-top: 3.5rem;
+  max-width: 18rem;
+}
+.rich-host .ProseMirror .md-unknown-block {
+  border-left: 3px dotted var(--app-muted);
+  padding-left: 0.75rem;
+}
+/* Salutation and closing read as plain text; a faint edge on hover says
+   they are managed from the letter details (R13-019). */
+.rich-host .ProseMirror .md-salutation,
+.rich-host .ProseMirror .md-closing {
+  margin: 0 0 0.75rem;
+  border-left: 3px solid transparent;
+  margin-left: -0.75rem;
+  padding-left: 0.6rem;
+}
+.rich-host .ProseMirror .md-salutation:hover,
+.rich-host .ProseMirror .md-closing:hover {
+  border-left-color: var(--app-border);
+}
+.rich-host .ProseMirror .md-unknown-block::before,
+.rich-host .ProseMirror .md-unknown-leaf::before {
+  content: ':::' attr(data-directive-block);
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.75em;
+  color: var(--app-muted);
+}
+.rich-host .ProseMirror .md-unknown-leaf::before {
+  content: attr(data-label);
+}
+.rich-host .ProseMirror .md-page-break {
+  border-top: 2px dashed var(--app-accent);
+  margin: 1rem 0;
+  text-align: center;
+}
+.rich-host .ProseMirror .md-page-break::after {
+  content: attr(data-label);
+  position: relative;
+  top: -0.7em;
+  padding: 0 0.5rem;
+  background: var(--app-surface);
+  color: var(--app-accent);
+  font-size: 0.75rem;
+}
+.rich-host .ProseMirror img.md-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid transparent;
+}
+.rich-host .ProseMirror img.md-image.ProseMirror-selectednode {
+  border-color: var(--app-accent);
+}
+.rich-host .ProseMirror img.md-image[data-align='center'] {
+  margin-inline: auto;
+}
+.rich-host .ProseMirror img.md-image[data-align='right'] {
+  margin-inline-start: auto;
+}
+/* The image toolbar (R14-015): a small floating strip under the selected image. */
+.image-toolbar {
+  position: sticky;
+  bottom: 0.5rem;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--fm-gap);
+  margin: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--app-border);
+  border-radius: 0.75rem;
+  background: var(--app-surface);
+  box-shadow: 0 6px 20px rgb(0 0 0 / 0.12);
+  width: fit-content;
+}
+.image-toolbar .image-toolbar-label {
+  font-size: 0.8rem;
+  color: var(--app-muted);
+  margin-inline-end: 0.25rem;
+}
+.image-toolbar .image-toolbar-sep {
+  inline-size: 1px;
+  block-size: 1.5rem;
+  background: var(--app-border);
+  margin-inline: 0.25rem;
+}
+.rich-host .ProseMirror img.md-image-missing {
+  min-width: 6rem;
+  min-height: 2rem;
+  border: 1px dashed var(--app-muted);
+}
+/* A frame while the bytes are read from IndexedDB, so an insertion is visible at once. */
+.rich-host .ProseMirror img.md-image-loading {
+  min-width: 6rem;
+  min-height: 3rem;
+  background: color-mix(in srgb, var(--app-accent) 8%, transparent);
+  border: 1px dashed var(--app-border);
+}
+
+/* --- History dialog ------------------------------------------------------ */
+.history-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+.history-day h3 {
+  font-size: 0.85rem;
+  color: var(--app-muted);
+  margin: 0.75rem 0 0.25rem;
+}
+.history-day ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.25rem;
+}
+.history-entry {
+  display: grid;
+  gap: 0.25rem;
+  border: 1px solid transparent;
+  border-radius: 0.65rem;
+  padding: 0.35rem 0.5rem;
+}
+.history-entry.active {
+  border-color: var(--app-border);
+  background: color-mix(in srgb, var(--app-accent) 8%, transparent);
+}
+/* Durable versions — manual, imported, pre-restore — carry an accent edge. */
+.history-entry.is-durable {
+  border-left: 3px solid var(--app-accent);
+}
+.history-entry.is-durable .history-summary strong {
+  color: var(--app-accent);
+}
+.history-retention {
+  max-width: 24rem;
+}
+.history-preview-hint {
+  align-self: start;
+}
+.history-summary {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+}
+.history-summary span {
+  color: var(--app-muted);
+  font-size: 0.85rem;
+}
+.history-actions {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+.history-preview {
+  background: var(--fm-canvas);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  overflow: auto;
+  max-height: 60vh;
+}
+.history-preview-sheet {
+  transform: scale(0.4);
+  transform-origin: top left;
+  width: 250%;
+}
+.recovery-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.recovery-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+@media (max-width: 900px) {
+  .history-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* --- Address combobox ---------------------------------------------------- */
+.address-combobox {
+  position: relative;
+}
+.address-combobox-row {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+.address-combobox-row .input {
+  flex: 1;
+  min-width: 0;
+}
+.address-popup {
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  margin: 0.25rem 0 0;
+  padding: 0.25rem;
+  list-style: none;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 0.75rem;
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.12);
+  max-height: 18rem;
+  overflow: auto;
+}
+.address-option {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+.address-option span {
+  color: var(--app-muted);
+  font-size: 0.85rem;
+}
+.address-option.active {
+  background: color-mix(in srgb, var(--app-accent) 12%, transparent);
+}
+.address-more {
+  cursor: default;
+}
+
+/* --- Settings categories (change 0028) ----------------------------------- */
+.settings-layout {
+  display: grid;
+  grid-template-columns: minmax(11rem, 14rem) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+  margin-top: 1rem;
+}
+.settings-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.15rem;
+}
+.settings-tab {
+  width: 100%;
+  text-align: left;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--app-muted);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.65rem;
+  cursor: pointer;
+  font: inherit;
+}
+.settings-tab:hover {
+  color: var(--app-text);
+  background: color-mix(in srgb, var(--app-accent) 6%, transparent);
+}
+.settings-tab.active {
+  color: var(--app-text);
+  font-weight: 600;
+  border-color: var(--app-border);
+  background: color-mix(in srgb, var(--app-accent) 10%, transparent);
+}
+.settings-section {
+  display: grid;
+  gap: 0.9rem;
+  min-width: 0;
+}
+.settings-section h2 {
+  margin: 0;
+}
+.settings-section > p {
+  margin: 0;
+  color: var(--app-muted);
+}
+.settings-section .resource-links {
+  columns: 1;
+  margin: 0;
+}
+.delete-actions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.delete-actions .danger-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--app-border);
+  border-radius: 0.75rem;
+}
+.delete-actions .danger-action p {
+  margin: 0;
+  color: var(--app-muted);
+  font-size: 0.85rem;
+}
+.delete-actions .btn {
+  flex-shrink: 0;
+}
+@media (max-width: 720px) {
+  .settings-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .settings-nav ul {
+    display: flex;
+    gap: 0.25rem;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+  }
+  .settings-tab {
+    width: auto;
+    white-space: nowrap;
+  }
+  .delete-actions .danger-action {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* --- Demo data (change 0026) --------------------------------------------- */
+.demo-data {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--app-border);
+  display: grid;
+  gap: 0.5rem;
+}
+.demo-data h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+.demo-data p {
+  margin: 0;
+}
+
+/* --- Contact directory (change 0025) ------------------------------------ */
+.country-combobox {
+  position: relative;
+}
+/* A grid parent places an absolute child at its start; anchor below the input. */
+.country-combobox .address-popup {
+  top: 100%;
+}
+.country-option {
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+}
+.contact-toolbar {
+  margin-top: 0.5rem;
+}
+.contact-search {
+  margin-left: 0;
+  flex: 1;
+  max-width: 28rem;
+}
+.contact-count {
+  color: var(--app-muted);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+.contact-row {
+  align-items: center;
+}
+.contact-open {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 0.2rem 0.2rem;
+  cursor: pointer;
+  border-radius: 0.6rem;
+}
+.contact-open:hover {
+  background: color-mix(in srgb, var(--app-accent) 6%, transparent);
+}
+.contact-avatar {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--app-accent) 14%, transparent);
+  color: var(--app-accent);
+  font-weight: 700;
+}
+.contact-open .address-summary {
+  min-width: 0;
+}
+.contact-pagination {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+.contact-dialog .app-dialog-box {
+  width: min(52rem, calc(100vw - 2rem));
+}
+.contact-form {
+  display: grid;
+  gap: 1rem;
+}
+.contact-section {
+  border: 1px solid var(--app-border);
+  border-radius: 0.9rem;
+  padding: 0.75rem 1rem 1rem;
+  display: grid;
+  gap: 0.6rem;
+  min-width: 0;
+}
+.contact-section legend {
+  font-weight: 700;
+  padding: 0 0.35rem;
+}
+.contact-address {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--app-accent) 4%, transparent);
+}
+.contact-address + .contact-address {
+  margin-top: 0.25rem;
+}
+.contact-address-head {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+.contact-address-head .field-inline {
+  padding-bottom: 0.35rem;
+}
+.contact-points {
+  display: grid;
+  gap: 0.4rem;
+}
+.contact-points-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.contact-points-label {
+  font-weight: 600;
+}
+.contact-point {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+.contact-point .input {
+  flex: 1;
+  min-width: 0;
+}
+.contact-add {
+  justify-self: start;
+}
+.contact-delete {
+  margin-right: auto;
+}
+
+/* --- Address book -------------------------------------------------------- */
+.address-group {
+  display: grid;
+  gap: 0.4rem;
+}
+.address-initial {
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  color: var(--app-muted);
+  margin: 0.75rem 0 0;
+  border-bottom: 1px solid var(--app-border);
+}
+.address-summary {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+.address-badges {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+.address-lines,
+.address-source {
+  color: var(--app-muted);
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+.address-actions {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.address-actions .btn[aria-pressed='true'] {
+  border-color: var(--app-accent);
+  color: var(--app-accent);
+}
+.field-hint {
+  margin: 0;
+  color: var(--app-muted);
+  font-size: 0.85rem;
+}
+
+/* --- File manager (change 0024) ------------------------------------------ */
+.file-toolbar {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 1rem 0 0.5rem;
+}
+.file-toolbar-new .app-menu-button {
+  background: var(--app-accent);
+  color: var(--fm-on-accent);
+  font-weight: 600;
+  padding: 0.4rem 0.9rem;
+}
+.file-toolbar-new .app-menu-button:hover,
+.file-toolbar-new .app-menu-button.is-open {
+  background: color-mix(in srgb, var(--app-accent) 88%, black);
+  box-shadow: none;
+}
+.file-search {
+  margin-left: auto;
+  min-width: 12rem;
+}
+.file-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+  margin: 0.25rem 0 0.75rem;
+}
+.file-breadcrumb .link-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.file-breadcrumb [aria-current='page'] {
+  font-weight: 700;
+  text-decoration: none;
+}
+.file-breadcrumb-separator {
+  color: var(--app-muted);
+}
+.file-table-wrap {
+  overflow-x: auto;
+  /* Visually hidden header text is positioned; keep it inside the scroll box. */
+  position: relative;
+}
+.file-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.file-table th {
+  text-align: left;
+  padding: 0.4rem 0.6rem;
+  color: var(--app-muted);
+  font-weight: 600;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--app-border);
+  white-space: nowrap;
+}
+.file-sort {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0;
+}
+.file-table td {
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--app-border);
+  vertical-align: middle;
+  color: var(--app-muted);
+  white-space: nowrap;
+}
+.file-table td:first-child {
+  color: var(--app-text);
+  white-space: normal;
+  min-width: 14rem;
+}
+.file-row:hover td {
+  background: color-mix(in srgb, var(--app-accent) 5%, transparent);
+}
+.file-name {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 0.15rem 0;
+  cursor: pointer;
+  border-radius: 0.4rem;
+}
+.file-name .app-icon {
+  color: var(--app-accent);
+}
+.file-name-text {
+  display: grid;
+  gap: 0.05rem;
+}
+.file-name-text small {
+  color: var(--app-muted);
+}
+.file-actions-cell {
+  width: 3rem;
+}
+.file-actions {
+  position: relative;
+}
+.file-menu {
+  position: fixed;
+  z-index: 60;
+  min-width: 13rem;
+  margin: 0;
+  padding: 0.3rem;
+  list-style: none;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 0.75rem;
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.14);
+}
+.popover-item.is-danger {
+  color: var(--fm-danger);
+}
+
+/* --- Lists --------------------------------------------------------------- */
+.document-row-actions {
+  display: flex;
+  gap: 0.25rem;
+}
+.address-list,
+.marker-list,
+.usage-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+.address-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid var(--app-border);
+  border-radius: 0.75rem;
+  padding: 0.6rem 0.75rem;
+}
+.address-row div {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+}
+.address-row span,
+.address-row small {
+  color: var(--app-muted);
+  font-size: 0.85rem;
+}
+.import-report {
+  border: 1px dashed var(--app-border);
+  border-radius: 0.85rem;
+  padding: 1rem;
+  display: grid;
+  gap: 0.6rem;
+  margin: 1rem 0;
+}
+
+/* --- Print profiles -------------------------------------------------------
+ *
+ * Marker coordinates are set in a monospaced face on purpose: they are the
+ * numbers somebody will hold a ruler against, and a column of them has to be
+ * comparable at a glance.
+ */
+.profile-layout {
+  display: grid;
+  grid-template-columns: minmax(240px, 20rem) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+  margin-top: 1.5rem;
+}
+.profile-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.25rem;
+}
+.profile-detail {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+}
+.profile-facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.3rem 1rem;
+  margin: 0;
+}
+.profile-facts dt {
+  font-weight: 700;
+}
+.profile-facts dd {
+  margin: 0;
+}
+.marker-row {
+  display: grid;
+  grid-template-columns: minmax(8rem, auto) 1fr auto;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--app-border);
+  padding: 0.4rem 0;
+  font-size: 0.9rem;
+}
+.marker-position {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color: var(--app-muted);
+}
+.marker-visibility {
+  color: var(--app-muted);
+  font-size: 0.8rem;
+}
+
+/* --- Assets -------------------------------------------------------------- */
+.asset-import {
+  display: flex;
+  gap: 0.75rem;
+  align-items: end;
+  flex-wrap: wrap;
+  margin: 1.5rem 0 0.75rem;
+}
+.asset-grid {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 0.75rem;
+}
+.asset-card {
+  border: 1px solid var(--app-border);
+  border-radius: 0.85rem;
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.5rem;
+}
+.asset-thumb {
+  width: 100%;
+  height: 8rem;
+  object-fit: contain;
+  background: var(--fm-canvas);
+  border-radius: 0.5rem;
+}
+.asset-body {
+  display: grid;
+  gap: 0.4rem;
+}
+.asset-title {
+  font-weight: 600;
+}
+.asset-facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.1rem 0.6rem;
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+}
+.asset-facts dt {
+  color: var(--app-muted);
+}
+.asset-facts dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.asset-delete {
+  justify-self: start;
+}
+
+/* --- Print profiles (change 0027) ---------------------------------------- */
+.profile-group ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.25rem;
+}
+.profile-group + .profile-group {
+  margin-top: 0.75rem;
+}
+.profile-group-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--app-muted);
+  margin: 0 0 0.35rem;
+}
+.profile-editor {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0.5rem 0 1rem;
+  padding: 0.75rem;
+  border: 1px solid var(--app-border);
+  border-radius: 0.75rem;
+}
+.profile-editor h3 {
+  margin: 0;
+}
+.profile-margins {
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+}
+
+/* --- Privacy inventory --------------------------------------------------- */
+.inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
+  margin: 0.75rem 0 0;
+}
+.inventory-grid div {
+  border: 1px solid var(--app-border);
+  border-radius: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  background: var(--app-surface);
+}
+.inventory-grid dt {
+  font-size: 0.8rem;
+  color: var(--app-muted);
+}
+.inventory-grid dd {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.brand-mark-image {
+  color: var(--app-accent);
+  border-radius: 0.6rem;
+}
+
+/* --- About and open-source ------------------------------------------------ */
+.about-identity {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+.about-identity h1 {
+  margin: 0;
+}
+.about-version {
+  margin: 0.2rem 0 0;
+  color: var(--app-muted);
+}
+.about-mark {
+  flex: none;
+}
+.about-sections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.about-sections .privacy-card + .privacy-card {
+  margin-top: 0;
+}
+.about-sections h2 {
+  margin-top: 0;
+}
+.about-links {
+  margin-top: 1.5rem;
+}
+.open-source-tools {
+  display: flex;
+  gap: 0.75rem;
+  align-items: end;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+}
+.open-source-table {
+  overflow-x: auto;
+}
+.open-source-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.open-source-table th,
+.open-source-table td {
+  text-align: left;
+  padding: 0.35rem 0.6rem;
+  border-bottom: 1px solid var(--app-border);
+  vertical-align: top;
+}
+.open-source-table th {
+  color: var(--app-muted);
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+.open-source-muted {
+  color: var(--app-muted);
+}
+
+/* The profile catalogue keeps its own two-column breakpoint. */
+@media (max-width: 900px) {
+  .profile-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -1,0 +1,14 @@
+sequenceDiagram
+  actor User
+  participant UI
+  participant Validate as ValidateForTarget
+  participant Plan as RenderPlanBuilder
+  participant Renderer
+  participant Exporter
+  User->>UI: Choose document, profile and export target
+  UI->>Validate: Validate context
+  Validate-->>UI: Errors/warnings/info
+  UI->>Plan: Build deterministic render plan
+  Plan->>Renderer: Render target representation
+  Renderer->>Exporter: HTML/Canvas/PDF model
+  Exporter-->>User: Print, Blob, file or handoff

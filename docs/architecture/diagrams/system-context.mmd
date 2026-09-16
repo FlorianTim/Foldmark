@@ -1,5 +1,13 @@
+%% Foldmark system context.
+%% Everything below the user runs in one browser tab. The dotted edges are
+%% capabilities that are specified but not implemented in this version.
 flowchart LR
-  U[User] --> A[LumbreCode Web App]
-  A --> B[(Browser IndexedDB)]
-  A -. explicit consent .-> X[Optional external capability]
-  G[GitHub Actions] --> P[Static hosting / GitHub Pages]
+  User[User] -->|writes, prints, exports| Foldmark[Foldmark in the browser]
+  Foldmark -->|documents, addresses, assets| Store[(IndexedDB)]
+  Foldmark -->|preferences| Prefs[(localStorage)]
+  Foldmark -->|rendered sheet, @page size| Printer[Browser print subsystem]
+  Foldmark -->|.md, .json backup, .eml| Files[Downloads and file input]
+  Foldmark -->|mailto:, .eml, clipboard| Mail[The user's mail client]
+  Host[Static host / GitHub Pages] -->|application bundle| Foldmark
+  Foldmark -. not implemented: requires consent .-> Drive[Cloud storage]
+  Foldmark -. not implemented: requires consent .-> Contacts[Contact provider]

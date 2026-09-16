@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img">
+
+  <title>Foldmark logo mark</title>
+  <rect width="512" height="512" rx="112" fill="#FAF8F2"/>
+  <path d="M145 78h154l68 68v288H145z" fill="#fff" stroke="#174A5B" stroke-width="24" stroke-linejoin="round"/>
+  <path d="M299 78v68h68" fill="none" stroke="#E3A53B" stroke-width="24" stroke-linejoin="round"/>
+  <path d="M112 218h68M112 294h92M112 370h68" stroke="#2F7D8C" stroke-width="18" stroke-linecap="round"/>
+  <path d="M215 198h92M215 250h112M215 302h86" stroke="#174A5B" stroke-width="16" stroke-linecap="round" opacity=".9"/>
+
+</svg>

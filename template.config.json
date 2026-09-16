@@ -19,28 +19,33 @@
     }
   },
   "application": {
-    "name": "Web App Template",
-    "shortName": "Web App Template",
-    "slug": "web-app-template",
-    "description": "Secure, privacy-first, local-first Vue web application template for agentic development.",
-    "packageName": "web-app-template",
-    "version": "0.1.0",
+    "name": "Foldmark",
+    "shortName": "Foldmark",
+    "slug": "foldmark",
+    "description": "Local-first editor for letters, print profiles, fold marks, postcards and privacy-friendly document export.",
+    "packageName": "foldmark",
+    "version": "1.0.0",
     "defaultLocale": "de",
     "supportedLocales": ["de", "en"],
-    "repositoryOwner": "CHANGE_ME",
-    "repositoryName": "web-app-template",
+    "repositoryOwner": "FlorianTim",
+    "repositoryName": "Foldmark",
     "githubPagesBase": "auto",
     "customDomain": "auto",
-    "theme": "system",
+    "theme": "paper",
     "license": "MIT"
   },
   "features": {
-    "demoTodo": true,
+    "demoTodo": false,
     "indexedDb": true,
     "i18n": true,
     "themes": true,
     "privacyCenter": true,
     "pwa": false,
-    "externalConnectors": false
+    "externalConnectors": false,
+    "printProfiles": true,
+    "letterWorkspace": true,
+    "postcardDuplex": true,
+    "emailHandoff": true,
+    "localAssets": true
   }
 }

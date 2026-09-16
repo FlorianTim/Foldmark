@@ -1,0 +1,39 @@
+{
+  "id": "a5-card",
+  "name": {
+    "de": "A5 Karte",
+    "en": "A5 card"
+  },
+  "category": "card",
+  "builtIn": true,
+  "version": 1,
+  "page": {
+    "widthMm": 148,
+    "heightMm": 210,
+    "orientation": "portrait"
+  },
+  "margins": {
+    "topMm": 10,
+    "rightMm": 10,
+    "bottomMm": 10,
+    "leftMm": 10
+  },
+  "capabilities": {
+    "foldMarks": false,
+    "addressWindow": false,
+    "duplex": false,
+    "bleed": true
+  },
+  "markers": [
+    {
+      "id": "safe",
+      "kind": "safe-area",
+      "xMm": 5,
+      "yMm": 5,
+      "widthMm": 138,
+      "heightMm": 200,
+      "print": false,
+      "preview": true
+    }
+  ]
+}

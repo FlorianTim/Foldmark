@@ -1,3 +1,12 @@
+import { appConfig } from '@/config';
+import { isValidId } from '@/domain/common/Ids';
+import { DEFAULT_PROFILE_ID } from '@/domain/print/builtInProfiles';
+import {
+  decodeDocumentDefaults,
+  encodeDocumentDefaults,
+  FACTORY_DOCUMENT_DEFAULTS,
+  type DocumentDefaults,
+} from '@/presentation/settings/documentDefaults';
 import { readPreference, writePreference, preferenceKey } from '@/presentation/browserStorage';
 
 /**
@@ -95,6 +104,69 @@ export const THEME_IDS = [
 /** Identifier accepted by the theme controller. */
 export type ThemeId = (typeof THEME_IDS)[number];
 
+/** How the paper preview is scaled on screen. Never affects exported geometry. */
+export const PREVIEW_ZOOM_IDS = ['fit-page', 'fit-width', 'actual'] as const;
+
+/** The three workspace modes: what the document is, what it says, what the paper shows. */
+export const WORKSPACE_MODE_IDS = ['document', 'write', 'preview'] as const;
+
+/** A workspace mode identifier. */
+export type WorkspaceMode = (typeof WORKSPACE_MODE_IDS)[number];
+
+/** The two views of the body: rich text, or the Markdown source itself. */
+export const EDITOR_VIEW_IDS = ['visual', 'source'] as const;
+
+/** An editor view identifier. */
+export type EditorView = (typeof EDITOR_VIEW_IDS)[number];
+
+/**
+ * Pane layout on wide screens, in words (R13-013): `auto` derives it from the
+ * width; the others name the areas to show. The 1.1 values `tabs`, `two` and
+ * `three` are read as `write`, `auto` and `all` so a stored preference survives.
+ */
+export const WORKSPACE_LAYOUT_IDS = [
+  'auto',
+  'document',
+  'write',
+  'preview',
+  'document-write',
+  'write-preview',
+  'document-preview',
+  'all',
+] as const;
+
+/** The 1.1 spellings of the layout preference, mapped onto the named layouts. */
+const LEGACY_LAYOUTS: Readonly<Record<string, (typeof WORKSPACE_LAYOUT_IDS)[number]>> = {
+  tabs: 'write',
+  two: 'auto',
+  three: 'all',
+};
+
+/** A workspace layout identifier. */
+export type WorkspaceLayout = (typeof WORKSPACE_LAYOUT_IDS)[number];
+
+/** Display scale of the paper preview. */
+export type PreviewZoom = (typeof PREVIEW_ZOOM_IDS)[number];
+
+/** The accordion groups of the document settings, in display order (R13-017). */
+export const DOCUMENT_SECTION_IDS = ['document', 'sender', 'recipient', 'letter'] as const;
+
+/** One group of the document settings. */
+export type DocumentSectionId = (typeof DOCUMENT_SECTION_IDS)[number];
+
+/** How many automatic checkpoints a document keeps (R13-023); 50 is the 1.0 bound. */
+export const HISTORY_RETENTION_OPTIONS = [10, 20, 50, 100] as const;
+
+/**
+ * A stored identifier, or `null` when it is not one Foldmark would have written.
+ *
+ * `''` is accepted and means "nothing chosen" — the difference between an empty
+ * default and a corrupted value matters here, because the first is a normal
+ * state and the second must fall back.
+ */
+const decodeId = (raw: string): string | null =>
+  raw === '' || (raw.length <= 80 && isValidId(raw)) ? raw : null;
+
 /**
  * Every persisted preference this app defines, in one place.
  *
@@ -111,9 +183,16 @@ export const appSettings = {
     encode: identity,
   } satisfies SettingDefinition<(typeof LOCALE_IDS)[number]>,
 
+  /**
+   * The colour theme, defaulting to the one the application is configured with.
+   *
+   * Taken from `app.config.json` rather than hard-coded to `system`: the
+   * configuration already names a theme, and an app that ships "paper" and then
+   * opens in dark mode has two answers to the same question.
+   */
   theme: {
     key: 'theme',
-    defaultValue: 'system',
+    defaultValue: appConfig.theme,
     decode: oneOf(THEME_IDS),
     encode: identity,
   } satisfies SettingDefinition<ThemeId>,
@@ -158,6 +237,154 @@ export const appSettings = {
     decode: decodeTimestamp,
     encode: identity,
   } satisfies SettingDefinition<string>,
+
+  /**
+   * The sender identity new documents start with, `''` = none chosen.
+   *
+   * Stored as an id and resolved when a document is opened, not copied into the
+   * document: a person who corrects their street address expects the next letter
+   * to be right, and the ones already written to stay as they were sent.
+   */
+  defaultSenderProfileId: {
+    key: 'default-sender-profile',
+    defaultValue: '',
+    decode: decodeId,
+    encode: identity,
+  } satisfies SettingDefinition<string>,
+
+  /**
+   * What a new document starts with (change 0028): language, date format,
+   * typography and page numbers, as one object. Read by `workspace.create`.
+   */
+  documentDefaults: {
+    key: 'document-defaults',
+    defaultValue: FACTORY_DOCUMENT_DEFAULTS,
+    decode: decodeDocumentDefaults,
+    encode: encodeDocumentDefaults,
+  } satisfies SettingDefinition<DocumentDefaults>,
+
+  /** The print profile new documents start with. */
+  defaultPrintProfileId: {
+    key: 'default-print-profile',
+    defaultValue: DEFAULT_PROFILE_ID,
+    decode: decodeId,
+    encode: identity,
+  } satisfies SettingDefinition<string>,
+
+  /**
+   * How the preview fits the paper on screen.
+   *
+   * Purely a display preference. It is stored next to the others rather than in
+   * the document precisely because it must never be able to influence what is
+   * exported — the whole point of the zoom control is that it cannot.
+   */
+  previewZoom: {
+    key: 'preview-zoom',
+    defaultValue: 'fit-page',
+    decode: oneOf(PREVIEW_ZOOM_IDS),
+    encode: identity,
+  } satisfies SettingDefinition<PreviewZoom>,
+
+  /** Whether preview-only guides — safe areas, stamp boxes — are drawn on screen. */
+  showPreviewGuides: {
+    key: 'preview-guides',
+    defaultValue: true,
+    decode: decodeBoolean,
+    encode: encodeBoolean,
+  } satisfies SettingDefinition<boolean>,
+
+  /** The workspace mode last used — Document, Write or Preview. */
+  workspaceMode: {
+    key: 'workspace-mode',
+    defaultValue: 'document',
+    decode: oneOf(WORKSPACE_MODE_IDS),
+    encode: identity,
+  } satisfies SettingDefinition<WorkspaceMode>,
+
+  /**
+   * How many workspace panes are shown side by side on a wide screen.
+   *
+   * `auto` follows the width; the explicit values let someone with a wide
+   * monitor insist on tabs, or someone with a narrow one squeeze in two.
+   */
+  workspaceLayout: {
+    key: 'workspace-layout',
+    defaultValue: 'auto',
+    decode: (raw: string) => LEGACY_LAYOUTS[raw] ?? oneOf(WORKSPACE_LAYOUT_IDS)(raw),
+    encode: identity,
+  } satisfies SettingDefinition<WorkspaceLayout>,
+
+  /**
+   * Which side panes are folded to a rail (R13-014). Stored as two words so a
+   * value from a later build with more panes still reads.
+   */
+  workspaceCollapsed: {
+    key: 'workspace-collapsed',
+    defaultValue: { document: false, preview: false },
+    decode: (raw: string) => {
+      const parts = raw.split(',').filter(Boolean);
+      if (!parts.every((part) => part === 'document' || part === 'preview')) return null;
+      return { document: parts.includes('document'), preview: parts.includes('preview') };
+    },
+    encode: (value: { document: boolean; preview: boolean }) =>
+      (['document', 'preview'] as const).filter((pane) => value[pane]).join(','),
+  } satisfies SettingDefinition<{ document: boolean; preview: boolean }>,
+
+  /**
+   * The relative widths of the three panes, as fractions summing to one
+   * (R13-014). Anything that does not parse to three positive numbers is the
+   * default — a pane can never be stored at zero.
+   */
+  workspacePaneWidths: {
+    key: 'workspace-pane-widths',
+    defaultValue: { document: 0.26, write: 0.36, preview: 0.38 },
+    decode: (raw: string) => {
+      const parts = raw.split(',').map(Number);
+      if (parts.length !== 3 || parts.some((part) => !Number.isFinite(part) || part <= 0)) {
+        return null;
+      }
+      const sum = parts[0] + parts[1] + parts[2];
+      return { document: parts[0] / sum, write: parts[1] / sum, preview: parts[2] / sum };
+    },
+    encode: (value: { document: number; write: number; preview: number }) =>
+      [value.document, value.write, value.preview].map((part) => part.toFixed(4)).join(','),
+  } satisfies SettingDefinition<{ document: number; write: number; preview: number }>,
+
+  /**
+   * Which groups of the document settings are unfolded (R13-017). Stored as
+   * the open ids; unknown ids from a later build are dropped, never fatal.
+   */
+  documentSectionsOpen: {
+    key: 'document-sections-open',
+    defaultValue: ['document', 'sender', 'recipient', 'letter'] as readonly string[],
+    decode: (raw: string) =>
+      raw.split(',').filter((id) => DOCUMENT_SECTION_IDS.some((known) => known === id)),
+    encode: (value: readonly string[]) => value.join(','),
+  } satisfies SettingDefinition<readonly string[]>,
+
+  /**
+   * Automatic checkpoints kept per document before the oldest are pruned.
+   * Manual, imported and restore checkpoints are never subject to it.
+   */
+  historyAutomaticVersions: {
+    key: 'history-automatic-versions',
+    defaultValue: 50,
+    decode: (raw: string) => {
+      const value = Number(raw);
+      return HISTORY_RETENTION_OPTIONS.some((option) => option === value)
+        ? (value as (typeof HISTORY_RETENTION_OPTIONS)[number])
+        : null;
+    },
+    encode: (value: number) => String(value),
+  } satisfies SettingDefinition<(typeof HISTORY_RETENTION_OPTIONS)[number]>,
+
+  /** Whether the body is edited visually or as Markdown source. */
+  editorView: {
+    key: 'editor-view',
+    defaultValue: 'visual',
+    decode: oneOf(EDITOR_VIEW_IDS),
+    encode: identity,
+  } satisfies SettingDefinition<EditorView>,
 } as const;
 
 /**
@@ -173,6 +400,18 @@ export const allSettings: readonly SettingDescriptor[] = [
   describe(appSettings.introCompleted),
   describe(appSettings.entitlement),
   describe(appSettings.entitlementCheckedAt),
+  describe(appSettings.defaultSenderProfileId),
+  describe(appSettings.defaultPrintProfileId),
+  describe(appSettings.documentDefaults),
+  describe(appSettings.previewZoom),
+  describe(appSettings.showPreviewGuides),
+  describe(appSettings.workspaceMode),
+  describe(appSettings.workspaceLayout),
+  describe(appSettings.workspaceCollapsed),
+  describe(appSettings.workspacePaneWidths),
+  describe(appSettings.documentSectionsOpen),
+  describe(appSettings.historyAutomaticVersions),
+  describe(appSettings.editorView),
 ];
 
 /**

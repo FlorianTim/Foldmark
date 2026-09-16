@@ -1,46 +1,26 @@
 {
   "app": {
-    "demo": "Template-Demo",
     "privacy": "Lokal und datenschutzfreundlich voreingestellt"
   },
   "nav": {
     "primary": "Hauptnavigation",
-    "todos": "Aufgaben",
     "settings": "Einstellungen",
-    "about": "Über"
-  },
-  "todo": {
-    "title": "Einfache To-do-Demo",
-    "description": "Schreibe eine Aufgabe mit einem sicheren Markdown-Teilsatz. Diese Demo wird bei der Initialisierung einer konkreten App ersetzt.",
-    "inputLabel": "Neue Aufgabe in Markdown",
-    "placeholder": "Neue Aufgabe — **fett**, _kursiv_, `Code` oder - Listeneinträge",
-    "markdownToolbar": "Markdown-Formatierung",
-    "bold": "Fett",
-    "italic": "Kursiv",
-    "code": "Code",
-    "list": "Liste",
-    "preview": "Markdown-Vorschau",
-    "add": "Hinzufügen",
-    "remaining": "{count} offen",
-    "empty": "Noch keine Aufgaben.",
-    "delete": "Löschen",
-    "clear": "Alle löschen",
-    "loading": "Aufgaben werden geladen …",
-    "errors": {
-      "invalid": "Die Aufgabe muss zwischen 1 und 2.000 Zeichen lang sein.",
-      "limit": "Das lokale Limit von 1.000 Aufgaben ist erreicht.",
-      "persistence": "Der lokale Speicher ist nicht verfügbar oder enthält ungültige Daten. Prüfe die Browser-Datenschutzeinstellungen und lade die Seite neu."
-    }
+    "about": "Über",
+    "documents": "Dokumente",
+    "addresses": "Kontaktverzeichnis",
+    "profiles": "Druckprofile",
+    "assets": "Bilder",
+    "home": "Zum Arbeitsbereich"
   },
   "settings": {
     "title": "Einstellungen",
     "language": "Sprache",
     "theme": "Farbthema",
     "localData": "Lokale Daten",
-    "privacyText": "Diese Demo speichert Aufgaben in IndexedDB und Einstellungen in localStorage in diesem Browser. Sie setzt keine Cookies und kontaktiert keine externen Dienste.",
+    "privacyText": "Foldmark speichert Dokumente, Adressen, Profile und Bilder in IndexedDB und Einstellungen im Local Storage dieses Browsers. Es setzt keine Cookies und kontaktiert keine externen Dienste.",
     "deleteData": "Meine lokalen Daten löschen",
     "confirmTitle": "Lokale App-Daten endgültig löschen?",
-    "confirmText": "Aufgaben und gespeicherte Einstellungen dieser App werden aus diesem Browser entfernt. Dies kann nicht rückgängig gemacht werden.",
+    "confirmText": "Dokumente, Adressen, Absender, eigene Druckprofile, Bilder und gespeicherte Einstellungen dieser App werden aus diesem Browser entfernt. Dies kann nicht rückgängig gemacht werden.",
     "confirmDelete": "Jetzt löschen",
     "cancel": "Abbrechen",
     "deleted": "Die lokalen App-Daten wurden gelöscht.",
@@ -61,14 +41,113 @@
       "high-contrast": "Hoher Kontrast",
       "ocean": "Ozean"
     },
-    "sections": {
-      "help": "Hilfe",
-      "data": "Daten und Datenschutz",
-      "pro": "Pro",
-      "support": "Unterstützung",
-      "development": "Entwicklung"
+    "privacyEntryHint": "Was gespeichert wird, und wie du es löschst",
+    "demoData": {
+      "title": "Beispieldaten",
+      "hint": "20 Kontakte, zwei Ordner, Briefe, Postkarten und ein freies Dokument – markiert und wieder entfernbar, ohne eigene Daten anzurühren.",
+      "count": "Gespeichert: {contacts} Kontakte, {documents} Dokumente, {folders} Ordner, {assets} Bild(er).",
+      "insert": "Beispieldaten einfügen",
+      "remove": "Beispieldaten entfernen"
     },
-    "privacyEntryHint": "Was gespeichert wird, und wie du es löschst"
+    "categories": "Kategorien",
+    "category": {
+      "general": "Allgemein",
+      "documents": "Dokumente",
+      "appearance": "Darstellung",
+      "fonts": "Schriften",
+      "storage": "Speicher & Verlauf",
+      "privacy": "Datenschutz",
+      "data": "Daten & Backup",
+      "development": "Entwicklung",
+      "about": "Über Foldmark",
+      "colours": "Farben"
+    },
+    "documentsHint": "Womit ein neues Dokument beginnt. Bestehende Dokumente bleiben, wie sie sind.",
+    "appearanceHint": "Das Farbthema betrifft die App, nicht das Papier. Wie ein Dokument gesetzt wird, steht unter „Schriften“ und im Dokument selbst.",
+    "fontsHint": "Die Typografie, mit der ein neues Dokument beginnt. Jedes Dokument kann sie in den Dokumenteinstellungen abweichend festlegen.",
+    "colorsHint": "Semantische Farben (Primär, Hinweis, Warnung) werden im Editor nach Namen gewählt; ihre Druckwerte legt das Dokumentthema fest.",
+    "storageHint": "Alles liegt in diesem Browser. Der Verlauf bewahrt Stände eines Dokuments; hier wird festgelegt, wie viele automatische Stände je Dokument bleiben.",
+    "dataManagement": "Datenverwaltung",
+    "dataManagementHint": "Jede Aktion löscht genau eine Sammlung und fragt vorher nach. Ein Backup gibt es unter „Datenschutz und Daten“.",
+    "defaults": {
+      "locale": "Dokumentsprache",
+      "dateFormat": "Datumsformat",
+      "printProfile": "Druckprofil",
+      "pageNumbers": "Seitenzahlen",
+      "pageNumberPosition": "Position der Seitenzahl",
+      "reset": "Standardwerte wiederherstellen"
+    },
+    "locales": {
+      "de-DE": "Deutsch (Deutschland)",
+      "de-AT": "Deutsch (Österreich)",
+      "de-CH": "Deutsch (Schweiz)",
+      "en-GB": "English (UK)",
+      "en-US": "English (US)"
+    },
+    "dateFormats": {
+      "long": "Ausgeschrieben – 15. September 2026",
+      "medium": "Kurz – 15.09.2026",
+      "numeric": "Numerisch – 15.9.2026"
+    },
+    "delete": {
+      "documents": {
+        "title": "Dokumente löschen",
+        "hint": "Alle Dokumente, Ordner und deren Verlauf. Kontakte und Bilder bleiben.",
+        "confirmTitle": "Alle Dokumente löschen?",
+        "confirmText": "Dokumente, Ordner und der Verlauf werden endgültig entfernt.",
+        "confirm": "Dokumente löschen",
+        "done": "Alle Dokumente wurden gelöscht."
+      },
+      "addresses": {
+        "title": "Kontakte löschen",
+        "hint": "Das ganze Kontaktverzeichnis. Dokumente behalten ihre Anschriften.",
+        "confirmTitle": "Alle Kontakte löschen?",
+        "confirmText": "Das Kontaktverzeichnis wird endgültig entfernt.",
+        "confirm": "Kontakte löschen",
+        "done": "Alle Kontakte wurden gelöscht."
+      },
+      "assets": {
+        "title": "Bilder löschen",
+        "hint": "Alle Bilder, Logos und Unterschriften. Dokumente zeigen an ihrer Stelle einen Hinweis.",
+        "confirmTitle": "Alle Bilder löschen?",
+        "confirmText": "Die Bilder werden endgültig entfernt.",
+        "confirm": "Bilder löschen",
+        "done": "Alle Bilder wurden gelöscht."
+      },
+      "history": {
+        "title": "Verlauf löschen",
+        "hint": "Alle gespeicherten Stände und automatischen Kopien. Die Dokumente selbst bleiben.",
+        "confirmTitle": "Den Verlauf löschen?",
+        "confirmText": "Gespeicherte Stände und automatische Kopien werden endgültig entfernt.",
+        "confirm": "Verlauf löschen",
+        "done": "Der Verlauf wurde gelöscht."
+      },
+      "all": {
+        "title": "Alle lokalen Daten löschen",
+        "hint": "Dokumente, Vorlagen, Kontakte, Bilder, eigene Profile und Verlauf. Einstellungen bleiben.",
+        "confirmTitle": "Alle lokalen Daten endgültig löschen?",
+        "confirmText": "Dokumente, Kontakte, eigene Druckprofile, Bilder und Verlauf werden aus diesem Browser entfernt. Dies kann nicht rückgängig gemacht werden.",
+        "confirm": "Jetzt löschen",
+        "done": "Die lokalen Daten wurden gelöscht."
+      },
+      "settings": {
+        "title": "Einstellungen zurücksetzen",
+        "confirmTitle": "Einstellungen zurücksetzen?",
+        "confirmText": "Sprache, Farbthema, Dokumentvorgaben und Ansichten werden auf die Standardwerte gesetzt. Inhalte bleiben.",
+        "confirm": "Zurücksetzen",
+        "done": "Die Einstellungen wurden zurückgesetzt."
+      },
+      "templates": {
+        "title": "Vorlagen löschen",
+        "hint": "Alle eigenen Dokumentvorlagen. Dokumente, die daraus entstanden sind, bleiben.",
+        "confirmTitle": "Alle Vorlagen löschen?",
+        "confirmText": "Die Vorlagen werden endgültig entfernt. Dokumente bleiben unverändert.",
+        "confirm": "Vorlagen löschen",
+        "done": "Die Vorlagen wurden gelöscht."
+      }
+    },
+    "coloursHint": "Wohin die benannten Farben zeigen, wenn ein neues Dokument entsteht: Erfolg, Warnung, Gefahr, Hinweis, gedämpft und Markierung. Bestehende Dokumente behalten ihre eigene Zuordnung.",
+    "resetColours": "Farben zurücksetzen"
   },
   "privacy": {
     "title": "Datenschutzfreundlicher Start",
@@ -76,18 +155,27 @@
     "settings": "Einstellungen öffnen"
   },
   "about": {
-    "title": "Über dieses Template",
+    "title": "Über Foldmark",
+    "description": "Foldmark ist ein lokaler Editor für Briefe, Postkarten und Karten: einmal schreiben, auf verschiedene Bögen drucken – mit Falz- und Lochmarken in Millimetern, ohne Konto und ohne Server.",
     "application": "Anwendung",
     "version": "Version",
+    "build": "Build",
     "organization": "Organisation",
     "license": "Lizenz",
+    "repository": "Quellcode",
+    "repositoryLink": "Repository auf GitHub öffnen",
+    "privacy": "Datenschutz",
+    "privacyBody": "Foldmark arbeitet ohne Konto und ohne Server. Alle Daten bleiben in diesem Browser; die Datenschutzansicht zeigt, was gespeichert ist, und löscht es auf Wunsch.",
+    "privacyLink": "Datenschutzansicht öffnen",
     "libraries": "Bibliotheken und Lizenzen",
-    "notices": "Third-Party Notices öffnen",
-    "website": "App-Website öffnen"
+    "notices": "Open-Source-Bibliotheken anzeigen",
+    "website": "App-Website öffnen",
+    "versionLine": "Version {version}",
+    "librariesBody": "Foldmark baut auf freier Software auf. Die Liste zeigt jede Bibliothek mit Version, Lizenz und Projektseite."
   },
   "intro": {
     "welcomeTitle": "Willkommen",
-    "welcomeBody": "Diese Anwendung ist aus dem LumbreCode Web-Template entstanden. Drei kurze Schritte zeigen, was sie tut.",
+    "welcomeBody": "Foldmark schreibt Briefe, Postkarten und Karten einmal und druckt sie auf verschiedene Bögen – mit Falz- und Lochmarken in Millimetern. Drei kurze Schritte zeigen, was die App tut.",
     "settingsTitle": "Sprache und Darstellung",
     "settingsBody": "Beides lässt sich jederzeit in den Einstellungen ändern und wird nur in diesem Browser gespeichert.",
     "next": "Weiter",
@@ -112,7 +200,28 @@
     "resetConfirmTitle": "Einstellungen zurücksetzen?",
     "resetConfirmText": "Alle Einstellungen kehren auf ihre Standardwerte zurück. Deine Inhalte bleiben erhalten.",
     "resetConfirm": "Zurücksetzen",
-    "resetDone": "Einstellungen zurückgesetzt"
+    "resetDone": "Einstellungen zurückgesetzt",
+    "inventory": "Was lokal gespeichert ist",
+    "inventoryHint": "Diese Zahlen werden bei jedem Öffnen frisch aus dem lokalen Speicher gezählt.",
+    "inventoryLoading": "Bestand wird ermittelt …",
+    "categories": {
+      "documents": "Dokumente",
+      "addresses": "Adressen",
+      "senderProfiles": "davon Absender",
+      "printProfiles": "Eigene Druckprofile",
+      "assets": "Bilder",
+      "settings": "Einstellungen",
+      "checkpoints": "Gespeicherte Stände",
+      "workingCopies": "Automatische Kopien",
+      "folders": "Ordner",
+      "templates": "Vorlagen"
+    },
+    "backup": "Sicherung",
+    "backupHint": "Das Backup enthält alles: Dokumente, Adressen, Absender, eigene Profile, Bilder und Einstellungen.",
+    "exportAll": "Alle Daten exportieren",
+    "importBackup": "Backup einspielen",
+    "importDone": "Eingespielt: {documents} Dokumente, {addresses} Adressen, {assets} Bilder.",
+    "importSkipped": "{count} Datensätze wurden übersprungen."
   },
   "pro": {
     "title": "Pro-Status",
@@ -127,7 +236,8 @@
     "restoreRestored": "Pro wurde wiederhergestellt.",
     "restoreNothing": "Keine Käufe gefunden.",
     "restoreUnavailable": "Der Kaufkanal ist derzeit nicht erreichbar.",
-    "note": "Diese Seite zeigt den Berechtigungsstatus. Käufe sind in dieser Version nicht aktiviert."
+    "note": "Diese Seite zeigt den Berechtigungsstatus. Käufe sind in dieser Version nicht aktiviert.",
+    "statusHint": "Alle Funktionen sind derzeit kostenlos."
   },
   "diagnostics": {
     "title": "Einstellungen-Diagnose",
@@ -135,5 +245,971 @@
     "intro": "Alle registrierten Einstellungen mit ihrem gespeicherten Rohwert. Nur lesend.",
     "unset": "nicht gesetzt",
     "default": "Standard: {value}"
+  },
+  "documents": {
+    "eyebrow": "Arbeitsbereich",
+    "title": "Dokumente",
+    "description": "Briefe, Karten und freie Dokumente – in Ordnern abgelegt, archivierbar, lokal in diesem Browser.",
+    "count": "Dokumente: {count}",
+    "loading": "Dokumente werden geladen …",
+    "empty": "Noch keine Dokumente. Lege oben eines an oder importiere eine Markdown-Datei.",
+    "import": "Markdown importieren",
+    "importReport": "Importergebnis",
+    "importRejected": "Die Datei konnte nicht gelesen werden. Der Originaltext steht unverändert unten – nichts ist verloren.",
+    "originalSource": "Originalinhalt der Datei",
+    "duplicate": "Duplizieren",
+    "delete": "Löschen",
+    "copyOf": "Kopie von {title}",
+    "new": {
+      "letter": "Neuer Brief",
+      "postcard": "Neue Postkarte",
+      "card": "Neue Karte",
+      "photo-card": "Neues Foto",
+      "custom": "Neues freies Dokument"
+    },
+    "newTitle": {
+      "letter": "Neuer Brief",
+      "postcard": "Neue Postkarte",
+      "card": "Neue Karte",
+      "photo-card": "Neues Foto",
+      "custom": "Neues Dokument"
+    },
+    "kind": {
+      "letter": "Brief",
+      "postcard": "Postkarte",
+      "card": "Karte",
+      "photo-card": "Foto",
+      "email": "E-Mail",
+      "custom": "Freies Dokument"
+    },
+    "toolbar": "Dokumentaktionen",
+    "newMenu": "+ Neu",
+    "folder": "Ordner",
+    "newFolder": "Neuer Ordner",
+    "folderName": "Name des Ordners",
+    "create": "Anlegen",
+    "exportBackup": "Export / Backup",
+    "archive": "Archiv",
+    "archiveEmpty": "Nichts archiviert.",
+    "search": "Dokumente durchsuchen",
+    "breadcrumb": "Ordnerpfad",
+    "topLevel": "Dokumente",
+    "column": {
+      "name": "Name",
+      "kind": "Typ",
+      "folder": "Ordner",
+      "updated": "Geändert",
+      "opened": "Zuletzt geöffnet",
+      "size": "Größe",
+      "status": "Status",
+      "actions": "Aktionen"
+    },
+    "status": {
+      "saved": "Gespeichert",
+      "archived": "Archiviert",
+      "folder": "Ordner"
+    },
+    "actionsFor": "Aktionen für {name}",
+    "action": {
+      "open": "Öffnen",
+      "rename": "Umbenennen",
+      "move": "Verschieben",
+      "archive": "Archivieren",
+      "restore": "Wiederherstellen",
+      "export": "Exportieren"
+    },
+    "renameTitle": "Umbenennen",
+    "newName": "Neuer Name",
+    "moveTitle": "Verschieben nach",
+    "moveTarget": "Zielordner",
+    "deleteTitle": "Dokument löschen?",
+    "deleteText": "„{name}“ und sein Verlauf werden endgültig gelöscht.",
+    "deleteFolderTitle": "Ordner löschen?",
+    "deleteFolderText": "Der Ordner „{name}“ wird gelöscht. Dokumente und Unterordner darin wandern eine Ebene nach oben.",
+    "dropHere": "Markdown-Dokument hier ablegen",
+    "importPreview": "Import prüfen",
+    "importPreviewOf": "Import prüfen ({index} von {total})",
+    "importSize": "{kb} kB",
+    "importPreserved": "Unbekannte Felder (werden bewahrt)",
+    "importAssets": "Bilder",
+    "importAssetsMissing": "{count} referenzierte(s) Bild(er) sind nicht in der Bibliothek.",
+    "importConfirm": "Importieren",
+    "importSkip": "Überspringen"
+  },
+  "workspace": {
+    "title": "Dokument bearbeiten",
+    "untitled": "Ohne Titel",
+    "save": "Speichern",
+    "close": "Schließen",
+    "profileFallback": "Das gespeicherte Druckprofil existiert nicht mehr. Es wird vorübergehend das Standardprofil verwendet.",
+    "status": {
+      "new": "Neu",
+      "unsaved": "Nicht gespeichert",
+      "saving": "Wird gespeichert …",
+      "saved": "Gespeichert · {time}",
+      "error": "Speicherfehler",
+      "draft": "Entwurf gesichert · {time}"
+    },
+    "modes": "Arbeitsbereich",
+    "mode": {
+      "document": "Dokumenteinstellungen",
+      "write": "Schreibbereich",
+      "preview": "Vorschau"
+    },
+    "layout": {
+      "label": "Bereiche",
+      "auto": "Automatisch",
+      "tabs": "Ein Bereich",
+      "two": "Zwei Bereiche",
+      "three": "Drei Bereiche",
+      "document": "Dokumenteinstellungen",
+      "write": "Schreibbereich",
+      "preview": "Vorschau",
+      "document-write": "Dokumenteinstellungen + Schreibbereich",
+      "write-preview": "Schreibbereich + Vorschau",
+      "document-preview": "Dokumenteinstellungen + Vorschau",
+      "all": "Alle drei Bereiche"
+    },
+    "history": "Verlauf",
+    "recovery": "Es gibt einen automatisch gesicherten Stand von {time}, der neuer ist als die gespeicherte Fassung.",
+    "recoveryContinue": "Weiterarbeiten",
+    "recoveryDiscard": "Verwerfen",
+    "print": "Drucken",
+    "export": "Exportieren",
+    "email": "E-Mail",
+    "check": "Prüfen",
+    "checkHint": "Dokument prüfen: Fehler, Warnungen und Hinweise für die aktuelle Ausgabe",
+    "outputGroup": "Ausgabe",
+    "closeHint": "Schließen und zum Arbeitsbereich zurückkehren",
+    "focus": "Maximieren",
+    "exitFocus": "Fokusmodus verlassen",
+    "focusWrite": "Fokus: Schreibbereich",
+    "focusPreview": "Fokus: Vorschau",
+    "expandPane": "{pane} ausklappen",
+    "collapsePane": "{pane} einklappen",
+    "resizer": "Breite zwischen {left} und {right}",
+    "resizerHint": "Ziehen oder Pfeiltasten; Doppelklick stellt die Standardbreite wieder her"
+  },
+  "metadata": {
+    "document": "Dokument",
+    "title": "Titel",
+    "printProfile": "Druckprofil",
+    "sender": "Absender",
+    "recipient": "Empfänger",
+    "letter": "Briefangaben",
+    "subject": "Betreff",
+    "date": "Datum",
+    "reference": "Zeichen / Aktenzeichen",
+    "salutation": "Anrede",
+    "closing": "Grußformel",
+    "emailTo": "E-Mail-Adresse des Empfängers",
+    "pickFromBook": "Kontaktverzeichnis",
+    "field": {
+      "organization": "Organisation",
+      "department": "Abteilung",
+      "person": "Person",
+      "street": "Straße und Hausnummer",
+      "addressLine2": "Adresszusatz",
+      "postalCode": "PLZ",
+      "city": "Ort",
+      "region": "Region / Bundesland",
+      "countryCode": "Land"
+    },
+    "kind": "Dokumenttyp",
+    "addressBook": "Adressbuch",
+    "senderSnapshot": "{name} (Kopie im Dokument)",
+    "refreshSender": "Aus Adressbuch aktualisieren",
+    "pageOptions": "Seitenzahlen und Druck",
+    "pageNumbers": {
+      "format": "Seitenzahlen",
+      "formats": {
+        "none": "keine",
+        "number": "nur Seitenzahl",
+        "page": "Seite X",
+        "page-of": "Seite X von Y",
+        "slash": "1 / 4",
+        "of": "1 von 4"
+      },
+      "position": "Position",
+      "positions": {
+        "top-left": "oben links",
+        "top-center": "oben Mitte",
+        "top-right": "oben rechts",
+        "bottom-left": "unten links",
+        "bottom-center": "unten Mitte",
+        "bottom-right": "unten rechts"
+      },
+      "hideOnFirstPage": "Auf der ersten Seite ausblenden"
+    },
+    "theme": {
+      "title": "Schrift und Abstände",
+      "hint": "Wie das Papier gesetzt wird. Reist mit dem Dokument und ist unabhängig vom App-Thema.",
+      "fontFamily": "Schrift",
+      "fontFamilies": {
+        "serif": "Serif",
+        "sans": "Serifenlos",
+        "mono": "Festbreite"
+      },
+      "fontSizePt": "Grundgröße (pt)",
+      "lineHeight": "Zeilenabstand",
+      "paragraphSpacing": "Absatzabstand (Zeilen)",
+      "smallSizePt": "Kleingedrucktes (pt)",
+      "aliases": "Semantische Farben",
+      "reset": "Auf Standard zurücksetzen",
+      "defaults": "Standard: {size} pt, {family}. Farben werden im Editor nach Namen gewählt; auf Papier hat jede Farbe einen Druckwert mit ausreichend Kontrast.",
+      "ownAliases": "Dieses Dokument trägt eine eigene Zuordnung der benannten Farben; neue Dokumente folgen Einstellungen → Farben."
+    },
+    "noneChosen": "Nicht gewählt",
+    "titleHint": "Der Name im Arbeitsbereich. Beim ersten Ausfüllen übernimmt er den Betreff – und umgekehrt.",
+    "senderName": "Absendername",
+    "noContactShown": "Keine Kontaktdaten im Dokument sichtbar (im Kontaktverzeichnis freigeben).",
+    "noSubject": "Kein Betreff",
+    "showSubject": "Betreff im Dokument anzeigen",
+    "showDate": "Datum anzeigen",
+    "salutationHint": "Anrede und Grußformel stehen als Blöcke im Text; hier werden sie ersetzt.",
+    "advanced": "Erweiterte Optionen",
+    "emailToHint": "Vorbelegt aus dem Empfängerkontakt; hier für die E-Mail-Übergabe änderbar.",
+    "snapshotChanged": "Geändert gegenüber dem Kontaktverzeichnis",
+    "resetFromContact": "Aus Kontakt zurücksetzen"
+  },
+  "editor": {
+    "toolbar": "Textformatierung",
+    "bold": "Fett",
+    "italic": "Kursiv",
+    "code": "Code",
+    "list": "Liste",
+    "bodyLabel": "Brieftext in Markdown",
+    "placeholder": "Sehr geehrte Damen und Herren, …",
+    "hint": "Markdown mit Überschriften, Fett, Kursiv, Code und Listen. HTML wird bewusst nicht ausgewertet.",
+    "undo": "Rückgängig",
+    "redo": "Wiederholen",
+    "block": "Absatzformat",
+    "blocks": {
+      "paragraph": "Absatz",
+      "heading1": "Überschrift 1",
+      "heading2": "Überschrift 2",
+      "heading3": "Überschrift 3",
+      "heading4": "Überschrift 4",
+      "heading5": "Überschrift 5",
+      "heading6": "Überschrift 6"
+    },
+    "strikethrough": "Durchgestrichen",
+    "bulletList": "• Liste",
+    "orderedList": "1. Liste",
+    "blockquote": "Zitat",
+    "link": "Link",
+    "linkUrl": "Adresse des Links (https://…)",
+    "linkApply": "Link setzen",
+    "table": "Tabelle",
+    "rule": "Trennlinie",
+    "view": "Ansicht",
+    "visual": "Visuell",
+    "source": "Markdown",
+    "loading": "Editor wird geladen …",
+    "failed": "Der visuelle Editor konnte nicht geladen werden. Die Markdown-Ansicht funktioniert weiterhin.",
+    "insert": "Einfügen",
+    "dateToday": "Datum heute",
+    "datePick": "Datum wählen",
+    "dateInsert": "Datum einfügen",
+    "salutations": [
+      "Sehr geehrte Damen und Herren,",
+      "Sehr geehrte Frau …,",
+      "Sehr geehrter Herr …,",
+      "Guten Tag,",
+      "Liebe …,",
+      "Lieber …,",
+      "Hallo …,"
+    ],
+    "closings": [
+      "Mit freundlichen Grüßen",
+      "Freundliche Grüße",
+      "Mit besten Grüßen",
+      "Viele Grüße",
+      "Herzliche Grüße",
+      "Hochachtungsvoll"
+    ],
+    "underline": "Unterstrichen",
+    "highlight": "Markieren",
+    "small": "Klein",
+    "superscript": "Hochgestellt",
+    "subscript": "Tiefgestellt",
+    "color": "Farbe",
+    "colorNone": "Keine Farbe",
+    "colorAliases": {
+      "success": "Erfolg",
+      "warning": "Warnung",
+      "danger": "Gefahr",
+      "info": "Info",
+      "muted": "Gedämpft",
+      "highlight": "Hervorhebung"
+    },
+    "layout": "Layout …",
+    "layoutActive": {
+      "indent": "✓ Einzug",
+      "align": "✓ Ausrichtung",
+      "note": "✓ Hinweiskasten",
+      "signature": "✓ Unterschrift",
+      "small": "✓ Kleingedrucktes",
+      "salutation": "Anrede",
+      "closing": "Grußformel"
+    },
+    "layouts": {
+      "indent1": "Einzug 1",
+      "indent2": "Einzug 2",
+      "indent3": "Einzug 3",
+      "alignLeft": "Linksbündig",
+      "alignCenter": "Zentriert",
+      "alignRight": "Rechtsbündig",
+      "alignJustify": "Blocksatz",
+      "noteInfo": "Hinweiskasten",
+      "noteWarning": "Warnkasten",
+      "signature": "Unterschriftszeile",
+      "small": "Kleingedrucktes"
+    },
+    "pageBreak": "Seitenumbruch",
+    "image": "Bild",
+    "imageWidth": "Breite (mm)",
+    "imageInsert": "Bild einfügen",
+    "imageNone": "Noch keine Bilder gespeichert — in der Bildbibliothek hinzufügen.",
+    "layoutHint": "Layout-Block um die Auswahl legen; erneut wählen entfernt ihn.",
+    "visualHint": "Formatierung wie auf dem Papier.",
+    "sourceHint": "Markdown-Quelltext; die Werkzeugleiste fügt die Syntax ein.",
+    "highlightTone": "Markierfarbe",
+    "alignment": "Ausrichtung",
+    "date": "Datum",
+    "dateInsertHint": "Datum einfügen (heute oder gewählt)",
+    "tableInsert": "Tabelle einfügen",
+    "tableSize": "{rows} × {cols}",
+    "tableRows": "Zeilen",
+    "tableCols": "Spalten",
+    "tableInsertButton": "Einfügen",
+    "linkTitle": "Link einfügen",
+    "linkText": "Text / Titel",
+    "linkInvalid": "Nur http(s)- und mailto-Adressen.",
+    "imageTitle": "Bild einfügen",
+    "imageSource": "Bildquelle",
+    "imageFromLibrary": "Aus Bibliothek",
+    "imageImport": "Datei importieren",
+    "clearFormatting": "Formatierung entfernen",
+    "history": "Rückgängig und Wiederholen",
+    "imageLayout": "Bildausrichtung",
+    "imageAlign": {
+      "left": "Links",
+      "center": "Zentriert",
+      "right": "Rechts"
+    },
+    "imageSize": "Bildgröße",
+    "imageWidthMm": "Breite in mm",
+    "imageWidthPercent": "Breite in % der Textbreite",
+    "imageSizeFull": "Volle Breite",
+    "imageSizePercent": "{percent} % der Textbreite",
+    "imageSmaller": "Verkleinern",
+    "imageLarger": "Vergrößern",
+    "imageSizeOriginal": "Originalgröße",
+    "imageSizeOriginalHint": "Keine Breite festlegen; das Bild wird in seiner eigenen Größe gezeigt, höchstens so breit wie der Text."
+  },
+  "surface": {
+    "sides": "Seiten",
+    "front": "Vorderseite",
+    "back": "Rückseite",
+    "background": "Hintergrundbild",
+    "noBackground": "Kein Bild",
+    "caption": "Bildunterschrift",
+    "messageLabel": "Nachricht auf der Rückseite",
+    "noAssetsHint": "Noch keine Bilder importiert. Unter „Bilder“ kannst du eines hinzufügen."
+  },
+  "preview": {
+    "title": "Papiervorschau",
+    "empty": "Keine Vorschau verfügbar.",
+    "zoomLabel": "Darstellungsgröße",
+    "surfaceLabel": "Seite wählen",
+    "zoom": {
+      "fit-page": "Ganze Seite",
+      "fit-width": "Breite",
+      "actual": "100 %"
+    },
+    "surface": {
+      "all": "Seite {page}",
+      "front": "Vorderseite",
+      "back": "Rückseite"
+    },
+    "showGuides": "Hilfslinien einblenden",
+    "hideGuides": "Hilfslinien ausblenden",
+    "scalingNote": "Die Vorschau ist maßstäblich in Millimetern. Zoomen ändert die Ausgabe nicht – im Druckdialog muss die Skalierung auf 100 % stehen.",
+    "marksLabel": "Hilfslinien und Druckmarken",
+    "guidesHint": "Nur Vorschau: Sicherheitsbereiche, Briefmarkenfeld, Briefkopf. Gedruckte Marken bleiben sichtbar.",
+    "printedMarks": "Druckmarken",
+    "printedMarksHint": "Falz-, Loch- und Schnittmarken mitdrucken – wirkt auf Vorschau, Druck und PDF.",
+    "toolsLabel": "Vorschau-Werkzeuge",
+    "quickPrint": "Drucken (Druckdialog öffnen)",
+    "maximize": "Vorschau maximieren",
+    "previousPage": "Vorherige Seite",
+    "nextPage": "Nächste Seite",
+    "pageOf": "von {total}",
+    "guidesMenu": "Hilfslinien anzeigen"
+  },
+  "marker": {
+    "kind": {
+      "fold": "Falzmarke",
+      "hole": "Lochmarke",
+      "cut": "Schnittmarke",
+      "bleed": "Anschnitt",
+      "safe-area": "Sicherheitsbereich",
+      "separator": "Trennlinie",
+      "address-window": "Adressfenster",
+      "stamp-area": "Briefmarkenfeld",
+      "grid": "Raster",
+      "custom": "Eigene Marke"
+    }
+  },
+  "render": {
+    "field": {
+      "date": "Datum",
+      "reference": "Zeichen"
+    },
+    "pageNumber": {
+      "page": "Seite {page}",
+      "pageOf": "Seite {page} von {total}",
+      "of": "{page} von {total}"
+    },
+    "assetMissingInline": "Bild fehlt"
+  },
+  "validation": {
+    "blocked": "Nicht ausgabefähig",
+    "none": "Keine Hinweise.",
+    "counts": "{errors} Fehler · {warnings} Warnungen · {infos} Hinweise",
+    "severity": {
+      "error": "Fehler",
+      "warning": "Warnung",
+      "info": "Hinweis"
+    },
+    "profile": {
+      "idInvalid": "Die Profilkennung ist ungültig.",
+      "nameIncomplete": "Das Profil braucht einen Namen auf Deutsch und Englisch.",
+      "pageSizeOutOfRange": "Das Seitenformat liegt außerhalb des unterstützten Bereichs.",
+      "marginInvalid": "Mindestens ein Rand ist kein gültiges Maß.",
+      "contentBoxEmpty": "Die Ränder lassen keine Fläche für Inhalt übrig.",
+      "markerIdInvalid": "Die Kennung einer Marke ist ungültig.",
+      "markerGeometryInvalid": "Eine Marke hat keine gültigen Koordinaten.",
+      "markerStrokeInvalid": "Die Strichstärke einer Marke muss größer als 0 sein.",
+      "markerOutsidePage": "Die Marke „{label}“ liegt außerhalb der Seite.",
+      "markerOutsidePageAllowed": "Die Marke „{label}“ liegt außerhalb des Beschnitts – bei Schnitt- und Anschnittmarken ist das so gewollt.",
+      "markerSurfaceWithoutDuplex": "Die Marke gilt für eine bestimmte Seite, das Profil hat aber nur eine.",
+      "builtInMarkerUnlocked": "Eine mitgelieferte Marke ist nicht gesperrt.",
+      "capabilityWithoutMarker": "Das Profil sagt „{capability}“ zu, enthält dafür aber keine Marke.",
+      "markerWithoutCapability": "Das Profil enthält Marken für „{capability}“, sagt die Eigenschaft aber nicht zu.",
+      "addressWindowRegionMissing": "Für das Adressfenster fehlt der zugehörige Bereich.",
+      "duplexClaimMismatch": "Die Angabe zur Vorder-/Rückseite passt nicht zur Duplex-Definition.",
+      "regionNameInvalid": "Ein Bereichsname ist ungültig.",
+      "regionGeometryInvalid": "Ein Bereich hat keine gültigen Maße.",
+      "regionEmpty": "Ein Bereich hat keine Fläche.",
+      "regionOutsidePage": "Ein Bereich liegt außerhalb der Seite.",
+      "regionsOverlap": "Die Bereiche „{first}“ und „{second}“ überlappen sich.",
+      "photoFoldMarksUnexpected": "Ein Fotoformat mit gedruckten Falzmarken ist ungewöhnlich ({count}).",
+      "postcardWithoutDuplex": "Ein Postkartenprofil ohne Rückseite ist ungewöhnlich.",
+      "standardsUnverified": "Die Maße dieses Profils sind Arbeitswerte und nicht gegen eine Normquelle geprüft."
+    },
+    "document": {
+      "recipientRequired": "Für den Versand fehlt die Empfängeranschrift.",
+      "recipientIncomplete": "Die Anschrift wirkt unvollständig (Name, Straße, Ort).",
+      "postalCodeMissing": "Die Postleitzahl fehlt.",
+      "emailToMissing": "Es ist keine E-Mail-Adresse hinterlegt.",
+      "emailToInvalid": "Die E-Mail-Adresse ist ungültig.",
+      "subjectMissing": "Ein Betreff fehlt.",
+      "subjectUnsafe": "Der Betreff enthält einen Zeilenumbruch und wird abgelehnt.",
+      "emlRecipientInvalid": "Die Empfängeradresse taugt nicht für eine EML-Datei.",
+      "bodyEmpty": "Das Dokument hat noch keinen Text.",
+      "twoSidedWithoutDuplexProfile": "Das Dokument hat zwei Seiten, das Profil aber nur eine.",
+      "postcardAddressRegionMissing": "Dem Profil fehlt der Adressbereich der Rückseite.",
+      "profileCategoryMismatch": "Das Profil ist für „{actual}“ gedacht, das Dokument für „{expected}“.",
+      "assetMissing": "Ein referenziertes Bild fehlt ({assetId}).",
+      "senderProfileMissing": "Der hinterlegte Absender existiert nicht mehr.",
+      "senderRecommended": "Für das Adressfenster empfiehlt sich ein Absender."
+    },
+    "export": {
+      "scalingReminder": "Im Druckdialog muss die Skalierung auf 100 % stehen.",
+      "emailPdfMarksEnabled": "Für die E-Mail-PDF sind physische Marken eingeschaltet.",
+      "profileStandardsUnverified": "Dieses Profil ist an eine Norm angelehnt, aber nicht geprüft."
+    },
+    "render": {
+      "assetMissing": "Ein platziertes Bild wurde nicht gefunden ({assetId}).",
+      "imageResolutionLow": "Die Auflösung reicht für den Druck kaum aus ({dpi} dpi, empfohlen ab {minimum} dpi).",
+      "bodyOverflow": "Der Text passt auf Seite {page} nicht in den vorgesehenen Bereich.",
+      "messageOverflow": "Die Nachricht passt nicht in das Textfeld der Rückseite.",
+      "noAddressRegion": "Das Profil „{profile}“ hat kein Adressfeld."
+    },
+    "import": {
+      "fileTooLarge": "Die Datei ist zu groß.",
+      "frontMatterInvalid": "Der YAML-Kopf konnte nicht gelesen werden ({reason}, Zeile {line}).",
+      "unsupportedFormatVersion": "Formatversion {version} wird nicht unterstützt.",
+      "noFrontMatter": "Die Datei hat keinen YAML-Kopf; es wurden Standardwerte verwendet.",
+      "unknownKind": "Unbekannte Dokumentart „{kind}“ – als eigenes Format übernommen.",
+      "metadataDropped": "{count} Metadaten wurden nicht übernommen.",
+      "fieldInvalid": "Feld nicht übernommen: {reason}",
+      "flowCollectionDropped": "Der Schlüssel „{key}“ verwendet YAML-Flow-Syntax ([…] oder {…}) und wurde nicht übernommen.",
+      "notMarkdown": "Nur Markdown-Dokumente (.md, .markdown, .txt) können hier abgelegt werden."
+    },
+    "backup": {
+      "recordRejected": "Ein Datensatz vom Typ „{kind}“ wurde übersprungen."
+    },
+    "contactImport": {
+      "unknownFormat": "Die Datei ist weder eine vCard noch eine CSV-Datei.",
+      "fileTooLarge": "Die Datei ist zu groß (höchstens 5 MB).",
+      "noContacts": "Es wurden keine Kontakte erkannt.",
+      "unknownColumns": "Die Spaltenüberschriften sind unbekannt; erwartet wird ein Google-Kontakte-Export oder Spalten wie Vorname, Nachname, Straße, Ort.",
+      "emptyEntry": "Ein Eintrag ohne Namen, Adresse, E-Mail und Telefon wurde übersprungen ({path}).",
+      "entryTooLarge": "Ein zu großer Eintrag wurde übersprungen ({path}).",
+      "tooMany": "{count} weitere Einträge über dem Limit von 5000 wurden nicht gelesen."
+    }
+  },
+  "export": {
+    "target": {
+      "pdf": "PDF",
+      "email-pdf": "E-Mail mit PDF-Anhang",
+      "print": "Drucken",
+      "markdown": "Markdown",
+      "email-text": "Text-Mail",
+      "email-html": "HTML-Mail",
+      "eml": "EML-Datei"
+    },
+    "printScaling": "Skalierung auf 100 % stellen, nicht „an Seite anpassen“.",
+    "printBackground": "Hintergrundgrafiken aktivieren, damit Bilder mitgedruckt werden.",
+    "duplex": {
+      "long-edge": "Beidseitig drucken, Wenden über die lange Kante.",
+      "short-edge": "Beidseitig drucken, Wenden über die kurze Kante."
+    },
+    "includeMarks": "Physische Marken mitdrucken",
+    "placementsNotPortable": "Frei platzierte Bilder werden nicht in die Datei geschrieben; sie liegen nur lokal. Für eine vollständige Kopie das Backup unter „Datenschutz & Daten“ verwenden.",
+    "downloadMarkdown": "Markdown herunterladen",
+    "emailExplain": "Foldmark bereitet die Nachricht vor und übergibt sie an dein E-Mail-Programm. Gesendet wird nichts.",
+    "defaultSubject": "Nachricht",
+    "subject": "Betreff",
+    "plainText": "Text",
+    "html": "HTML",
+    "emailPdfMarks": "Physische Marken in der E-Mail-PDF mitdrucken",
+    "openMailClient": "E-Mail-Programm öffnen",
+    "mailtoTooLong": "Die Nachricht ist für einen mailto-Link zu lang. Kopiere den Text und füge ihn im E-Mail-Programm ein.",
+    "copyBody": "Text kopieren",
+    "copied": "In die Zwischenablage kopiert.",
+    "downloadEml": "EML-Datei herunterladen",
+    "headerUnsafe": "Betreff oder Adresse enthalten einen Zeilenumbruch. Das wird abgelehnt, um Header-Injection zu verhindern.",
+    "notSentNote": "Foldmark versendet nichts selbst und speichert keine Zugangsdaten.",
+    "localeNote": "Datumsangaben werden in der Dokumentsprache formatiert (Oberfläche: {locale})."
+  },
+  "addresses": {
+    "eyebrow": "Kontakte",
+    "title": "Kontaktverzeichnis",
+    "description": "Personen und Organisationen mit allen Adressen und Kontaktdaten, lokal in diesem Browser. Nichts wird hochgeladen.",
+    "new": "+ Kontakt",
+    "edit": "Kontakt bearbeiten",
+    "displayName": "Anzeigename",
+    "contact": "Kontaktdaten",
+    "contactHint": "Kontaktdaten werden gespeichert, erscheinen aber nur im Dokument, wenn sie hier freigegeben sind.",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "website": "Website",
+    "showInDocument": "Im Dokument anzeigen",
+    "roles": "Verwendung",
+    "role": {
+      "primary": "Primäradresse",
+      "home": "Heimatadresse",
+      "sender": "Als Absender verwendbar",
+      "favorite": "Favorit"
+    },
+    "footerLines": "Fußzeilen des Absenders (eine je Zeile: IBAN, Register, …)",
+    "notes": "Notizen",
+    "add": "Kontakt speichern",
+    "cancel": "Abbrechen",
+    "saved": "Gespeichert.",
+    "search": "Kontakte durchsuchen – Name, Ort, Straße, E-Mail, Tags",
+    "empty": "Noch keine Kontakte.",
+    "delete": "Löschen",
+    "copyOf": "Kopie von {name}",
+    "duplicateWarning": "{count} ähnliche(r) Kontakt(e) gefunden. Foldmark führt nichts automatisch zusammen.",
+    "action": {
+      "edit": "Bearbeiten",
+      "duplicate": "Duplizieren",
+      "primary": "Primär",
+      "home": "Heimat",
+      "favorite": "Favorit",
+      "useAsSender": "Als Absender verwenden",
+      "useAsRecipient": "Als Empfänger verwenden"
+    },
+    "source": {
+      "manual": "manuell",
+      "imported-file": "aus Datei importiert",
+      "connector": "aus Connector"
+    },
+    "newTitle": "Neuer Kontakt",
+    "section": {
+      "name": "Name",
+      "addresses": "Postalische Adressen"
+    },
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "displayNameHint": "Leer lassen, dann zeigt das Verzeichnis den Namen bzw. die Organisation.",
+    "addressLabel": "Bezeichnung",
+    "addressLabelHint": "z. B. Privat, Büro, Postfach",
+    "addAddress": "Adresse hinzufügen",
+    "removeAddress": "Adresse entfernen",
+    "removeEntry": "Eintrag entfernen",
+    "primary": "Primär",
+    "moreAddresses": "+{count} weitere Adresse(n)",
+    "tags": "Tags",
+    "tagsHint": "durch Komma getrennt",
+    "count": "{shown} von {total}",
+    "noMatches": "Keine Kontakte passen zur Suche.",
+    "pagination": "Seiten",
+    "previousPage": "Vorherige Seite",
+    "nextPage": "Nächste Seite",
+    "discardTitle": "Änderungen verwerfen?",
+    "discardText": "Der Kontakt hat ungespeicherte Änderungen.",
+    "discard": "Verwerfen",
+    "deleteTitle": "Kontakt löschen?",
+    "deleteText": "„{name}“ wird aus dem Verzeichnis gelöscht. Dokumente behalten, was sie zeigen.",
+    "import": {
+      "button": "Kontakte importieren",
+      "title": "Kontakte importieren",
+      "dropHere": "vCard- oder CSV-Datei hier ablegen",
+      "reading": "Datei wird gelesen …",
+      "recognised": "{count} Kontakte erkannt",
+      "groupNew": "{count} neu",
+      "groupExisting": "{count} wahrscheinlich vorhanden",
+      "groupReview": "{count} benötigen Prüfung",
+      "group": {
+        "new": "Neu",
+        "existing": "Wahrscheinlich vorhanden",
+        "review": "Prüfung nötig"
+      },
+      "signal": {
+        "external-id": "Gleiche Kennung",
+        "email": "Gleiche E-Mail-Adresse",
+        "phone": "Gleiche Telefonnummer",
+        "name-postal-code": "Gleicher Name und Postleitzahl",
+        "name": "Gleicher Name"
+      },
+      "decision": "Entscheidung",
+      "skip": "Überspringen",
+      "merge": "Zusammenführen",
+      "asNew": "Als neu importieren",
+      "allSkip": "Alle überspringen",
+      "allMerge": "Alle zusammenführen",
+      "allNew": "Alle als neu",
+      "unnamed": "(ohne Namen)",
+      "plan": "{add} neu, {merge} zusammengeführt",
+      "confirm": "Importieren",
+      "done": "{added} Kontakte importiert, {merged} zusammengeführt."
+    }
+  },
+  "profiles": {
+    "eyebrow": "Geometrie",
+    "title": "Druckprofile",
+    "description": "Ein Druckprofil beschreibt das Papier: Format, Ränder, Bereiche und Hilfsmarken – nicht den Inhalt.",
+    "category": {
+      "letter": "Brief",
+      "postcard": "Postkarte",
+      "card": "Karte",
+      "photo": "Foto",
+      "label": "Etikett",
+      "custom": "Eigenes"
+    },
+    "builtIn": "Mitgeliefert",
+    "builtInNote": "Mitgelieferte Profile sind unveränderlich und können nicht gelöscht werden. „Kopie anlegen“ erzeugt ein eigenes Profil zum Bearbeiten.",
+    "standardsUnverified": "Die Maße dieses Profils sind gebräuchliche Arbeitswerte und wurden nicht gegen eine lizenzierte Normquelle geprüft. Foldmark behauptet keine Normkonformität.",
+    "pageSize": "Format",
+    "margins": "Ränder (oben / rechts / unten / links)",
+    "duplex": "Vorder-/Rückseite",
+    "singleSided": "Einseitig",
+    "markers": "Hilfsmarken",
+    "noMarkers": "Dieses Profil hat keine Hilfsmarken.",
+    "printed": "wird gedruckt",
+    "previewOnly": "nur Vorschau",
+    "checks": "Prüfung",
+    "noIssues": "Keine Auffälligkeiten.",
+    "clone": "Kopie anlegen",
+    "cloneName": "Name der Kopie",
+    "copySuffix": "Kopie",
+    "cloned": "Kopie angelegt.",
+    "delete": "Profil löschen",
+    "removed": "Profil gelöscht.",
+    "makeDefault": "Als Standard verwenden",
+    "defaultSaved": "Standardprofil gespeichert.",
+    "group": {
+      "letters": "Briefe",
+      "cards": "Karten",
+      "photos": "Fotos",
+      "other": "Weitere"
+    },
+    "own": "Eigenes Profil",
+    "edit": "Profil bearbeiten",
+    "name": "Name",
+    "margin": {
+      "topMm": "Rand oben (mm)",
+      "rightMm": "Rand rechts (mm)",
+      "bottomMm": "Rand unten (mm)",
+      "leftMm": "Rand links (mm)"
+    },
+    "save": "Profil speichern",
+    "saved": "Profil gespeichert.",
+    "deleteTitle": "Profil löschen?",
+    "deleteText": "„{name}“ wird gelöscht. Dokumente, die es verwenden, fallen auf das Standardprofil zurück."
+  },
+  "assets": {
+    "eyebrow": "Medien",
+    "title": "Bilder",
+    "description": "Logos, Fotos, Briefköpfe, Unterschriftsbilder und QR-Codes – ausschließlich lokal in diesem Browser.",
+    "count": "Bilder: {count}",
+    "kind": "Verwendung",
+    "kindName": {
+      "image": "Bild",
+      "logo": "Logo",
+      "signature": "Unterschrift",
+      "background": "Hintergrund / Briefkopf",
+      "qr-code": "QR-Code"
+    },
+    "import": "Bild importieren",
+    "rules": "PNG, JPEG oder WebP bis {max} MB. SVG wird bewusst nicht angenommen; zu große Bilder bitte vorher verkleinern.",
+    "signatureNote": "Ein Unterschriftsbild ist ein Bild einer Unterschrift – keine qualifizierte elektronische Signatur.",
+    "empty": "Noch keine Bilder.",
+    "delete": "Löschen",
+    "deleteTitle": "Bild löschen?",
+    "deleteInUse": "Dieses Bild wird in {count} Dokument(en) verwendet.",
+    "deleteUnused": "Dieses Bild wird derzeit in keinem Dokument verwendet.",
+    "confirmDelete": "Endgültig löschen",
+    "cancel": "Abbrechen",
+    "rejected": {
+      "empty": "Die Datei ist leer.",
+      "tooLarge": "Die Datei überschreitet die zulässige Größe.",
+      "unsupportedType": "Dieser Dateityp wird nicht unterstützt.",
+      "undecodable": "Die Datei konnte nicht als Bild gelesen werden.",
+      "tooSmall": "Das Bild ist zu klein.",
+      "dimensionsTooLarge": "Die Bildabmessungen sind zu groß.",
+      "pixelCountTooLarge": "Das Bild hat zu viele Bildpunkte.",
+      "invalidMetadata": "Die Bilddaten sind nicht plausibel.",
+      "unknown": "Der Import wurde abgelehnt."
+    },
+    "field": {
+      "title": "Titel",
+      "description": "Beschreibung",
+      "dimensions": "Abmessungen",
+      "size": "Dateigröße",
+      "filename": "Dateiname",
+      "mimeType": "Typ",
+      "created": "Importiert"
+    }
+  },
+  "backup": {
+    "rejected": {
+      "notJson": "Die Datei ist kein gültiges JSON.",
+      "notAnObject": "Die Datei enthält kein Backup.",
+      "wrongFormat": "Das ist kein Foldmark-Backup.",
+      "unsupportedVersion": "Diese Backup-Version ist neuer als diese App.",
+      "unknown": "Das Backup wurde abgelehnt."
+    }
+  },
+  "errors": {
+    "invalidInput": "Die Eingabe ist nicht gültig.",
+    "notFound": "Der Datensatz wurde nicht gefunden.",
+    "limitReached": "Die maximale Anzahl ist erreicht ({limit}).",
+    "immutableRecord": "Mitgelieferte Datensätze können nicht geändert werden.",
+    "importRejected": "Der Import wurde abgelehnt ({reason}).",
+    "assetRejected": "Das Bild wurde abgelehnt ({reason}).",
+    "storageUnavailable": "Der lokale Speicher ist nicht verfügbar. Im privaten Modus oder bei blockiertem Speicher kann Foldmark nichts sichern.",
+    "unexpected": "Es ist ein unerwarteter Fehler aufgetreten."
+  },
+  "combobox": {
+    "placeholder": "Name oder Ort tippen …",
+    "openBook": "Kontaktverzeichnis öffnen",
+    "noMatches": "Keine passenden Adressen.",
+    "more": "Weitere im Kontaktverzeichnis …",
+    "countryPlaceholder": "Land eingeben …"
+  },
+  "history": {
+    "title": "Dokumentverlauf",
+    "explain": "Jedes manuelle Speichern, jeder Import und alle zehn Minuten Bearbeitung erzeugen einen Stand. Wiederherstellen sichert die aktuelle Fassung zuerst.",
+    "empty": "Noch keine gespeicherten Stände.",
+    "preview": "Vorschau des Standes",
+    "restore": "Wiederherstellen",
+    "openAsCopy": "Als Kopie öffnen",
+    "export": "Exportieren",
+    "restored": "Stand wiederhergestellt. Die vorherige Fassung liegt im Verlauf.",
+    "origin": {
+      "manual": "Manuell gespeichert",
+      "automatic": "Automatischer Stand",
+      "imported": "Importierte Fassung",
+      "restore": "Vor Wiederherstellung"
+    },
+    "retention": "Automatische Versionen behalten",
+    "retentionHint": "Manuell gespeicherte, importierte und vor einer Wiederherstellung gesicherte Stände werden nicht automatisch entfernt.",
+    "pickToPreview": "Einen Stand auswählen, um ihn hier zu sehen.",
+    "retentionOption": "{count} Stände je Dokument"
+  },
+  "openSource": {
+    "title": "Open-Source-Bibliotheken",
+    "description": "Alle Pakete aus dem installierten Abhängigkeitsbaum, erzeugt aus den Paketmetadaten. Laufzeitpakete können im Browser landen; Entwicklungspakete werden nur zum Bauen und Prüfen gebraucht.",
+    "search": "Nach Name oder Lizenz filtern",
+    "rawNotices": "Third-Party Notices (Markdown)",
+    "unavailable": "Die Liste konnte nicht geladen werden. Die Third-Party Notices stehen weiterhin als Markdown bereit.",
+    "loading": "Bibliotheken werden geladen …",
+    "noMatches": "Keine passenden Pakete.",
+    "project": "Projektseite",
+    "group": {
+      "runtime": "Laufzeit ({count})",
+      "development": "Entwicklung ({count})"
+    },
+    "column": {
+      "name": "Bibliothek",
+      "version": "Version",
+      "license": "Lizenz",
+      "link": "Projekt"
+    }
+  },
+  "dialog": {
+    "close": "Schließen",
+    "cancel": "Abbrechen",
+    "save": "Speichern"
+  },
+  "menu": {
+    "label": "Anwendungsmenü",
+    "file": "Datei",
+    "edit": "Bearbeiten",
+    "insert": "Einfügen",
+    "format": "Format",
+    "view": "Ansicht",
+    "help": "Hilfe",
+    "open": "Öffnen …",
+    "selectAll": "Alles auswählen",
+    "shortcuts": "Tastenkürzel",
+    "qrCodeLater": "QR-Code (später)",
+    "documentFont": "Schrift und Abstände …"
+  },
+  "shortcuts": {
+    "title": "Tastenkürzel",
+    "scope": {
+      "workspace": "Arbeitsbereich",
+      "editor": "Schreibbereich",
+      "navigation": "Navigation"
+    },
+    "save": "Speichern",
+    "print": "Drucken",
+    "undo": "Rückgängig",
+    "redo": "Wiederholen",
+    "bold": "Fett",
+    "italic": "Kursiv",
+    "underline": "Unterstrichen",
+    "link": "Link einfügen",
+    "selectAll": "Alles auswählen",
+    "pageBreak": "Seitenumbruch",
+    "clearFormatting": "Formatierung entfernen",
+    "paragraph": "Absatz",
+    "heading1": "Überschrift 1",
+    "heading2": "Überschrift 2",
+    "heading3": "Überschrift 3",
+    "heading4": "Überschrift 4",
+    "heading5": "Überschrift 5",
+    "heading6": "Überschrift 6",
+    "escape": "Dialog oder Fokusmodus verlassen",
+    "splitter": "Trennbalken verschieben (wenn fokussiert)",
+    "menu": "Menü öffnen und navigieren"
+  },
+  "print": {
+    "title": "Drucken",
+    "titlePdf": "Als PDF speichern",
+    "explain": "Foldmark öffnet den Druckdialog des Browsers mit der Druckkopie des Dokuments.",
+    "pdfExplain": "Im Druckdialog des Browsers „Als PDF speichern“ als Ziel wählen. Der Dateiname ist der Dokumenttitel.",
+    "profile": "Druckprofil",
+    "pages": "Seiten",
+    "pageCount": "{count} Seite(n)",
+    "pageNumbers": "Seitenzahlen",
+    "print": "Drucken",
+    "openForPdf": "Druckdialog öffnen",
+    "blocked": "Die Ausgabe ist technisch nicht möglich. Die Dokumentprüfung nennt den Grund."
+  },
+  "exportDialog": {
+    "title": "Exportieren",
+    "formatLabel": "Format",
+    "continueToPdf": "Weiter zum Druckdialog",
+    "format": {
+      "pdf": {
+        "name": "PDF",
+        "hint": "Über den Druckdialog des Browsers („Als PDF speichern“), seitengenau."
+      },
+      "markdown": {
+        "name": "Markdown",
+        "hint": "Die Datei mit YAML-Kopf – lesbar ohne Foldmark, verlustfrei importierbar."
+      },
+      "odt": {
+        "name": "ODT",
+        "hint": "Geplant."
+      },
+      "backup": {
+        "name": "Backup",
+        "hint": "Alle Daten als eine Datei – unter Datenschutz & Daten."
+      }
+    }
+  },
+  "emailDialog": {
+    "title": "E-Mail",
+    "modeLabel": "Art der E-Mail",
+    "to": "Empfängeradresse",
+    "toMissing": "Keine E-Mail-Adresse hinterlegt. Das E-Mail-Programm öffnet ohne Empfänger; die Adresse kann dort eingetragen werden.",
+    "makePdf": "PDF erzeugen",
+    "pdfStep1": "„PDF erzeugen“ öffnet den Druckdialog – dort „Als PDF speichern“.",
+    "pdfStep2": "„E-Mail-Programm öffnen“ legt eine Nachricht mit Betreff und Empfänger an.",
+    "pdfStep3": "Die gespeicherte PDF im E-Mail-Programm anhängen.",
+    "mode": {
+      "pdf-attachment": {
+        "name": "PDF-Anhang",
+        "hint": "Der Brief bleibt, wie er gedruckt würde."
+      },
+      "html": {
+        "name": "HTML-Mail",
+        "hint": "Mit einfacher Formatierung, zum Einfügen in den Editor des E-Mail-Programms."
+      },
+      "plain-text": {
+        "name": "Text-Mail",
+        "hint": "Reiner Text ohne Markdown-Syntax, direkt per mailto-Link."
+      }
+    }
+  },
+  "check": {
+    "title": "Dokument prüfen",
+    "ready": "Ausgabefähig",
+    "explain": "Geprüft für die Ausgabe „{target}“. Warnungen und Hinweise blockieren nichts.",
+    "group": {
+      "error": "Fehler",
+      "warning": "Warnungen",
+      "info": "Hinweise"
+    }
+  },
+  "templates": {
+    "title": "Vorlagen",
+    "hint": "Eine Vorlage ist ein Dokument ohne Empfänger und Datum: Druckprofil, Absender, Schrift und Farben, Anrede und Gruß, auf Wunsch der Text. Ein neues Dokument daraus ist danach unabhängig.",
+    "empty": "Noch keine Vorlagen. Im geöffneten Dokument: Datei → Als Vorlage speichern …",
+    "manage": "Vorlagen verwalten …",
+    "saveAs": "Als Vorlage speichern …",
+    "saveTitle": "Als Vorlage speichern",
+    "saveHint": "Übernommen werden Druckprofil, Sprache, Schrift, Farben, Seitenzahlen, Anrede, Gruß und Unterzeichner. Empfänger und Datum bleiben beim Brief.",
+    "name": "Name",
+    "description": "Beschreibung (optional)",
+    "include": "Zusätzlich übernehmen",
+    "includeSender": "Absender",
+    "includeBody": "Brieftext als Textbausteine",
+    "includeSubject": "Betreff",
+    "save": "Vorlage speichern",
+    "saved": "Vorlage „{name}“ gespeichert. Sie steht unter Dokumente → + Neu.",
+    "use": "Verwenden",
+    "rename": "Umbenennen",
+    "delete": "Löschen",
+    "deleteTitle": "Vorlage löschen?",
+    "deleteText": "„{name}“ wird gelöscht. Dokumente, die daraus entstanden sind, bleiben."
+  },
+  "premium": {
+    "mode": {
+      "beta-free": "Premium – während der Testphase kostenlos. Die erste Vorlage bleibt immer frei.",
+      "quota": "Noch {limit} kostenlos.",
+      "licensed": "Premium – lizenziert.",
+      "locked": "Premium – nicht freigeschaltet."
+    }
   }
 }

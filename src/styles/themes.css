@@ -1,40 +1,134 @@
 @import 'tailwindcss';
 @plugin "daisyui";
+
+/*
+ * Foldmark colour tokens.
+ *
+ * Three families live here on purpose:
+ *
+ * - `--app-*` are the shell tokens the template ships. Every theme redefines
+ *   the same six, so a component never has to know which theme is active.
+ * - `--fm-*` are the print-surface tokens. A sheet of paper is not part of
+ *   the theme: it is white with black ink in every theme, because that is
+ *   what the printer will produce. Only the *chrome* around the sheet — the
+ *   canvas it floats on, the colour of a helper mark on screen — follows the
+ *   theme, and it does so through these tokens rather than by tinting the
+ *   paper itself.
+ * - `--color-*` are daisyUI's semantic slots, mapped **once** onto the two
+ *   families above. Without that mapping a `btn btn-primary` would be
+ *   daisyUI's default purple, and the app would have two palettes: one in its
+ *   own CSS and one in every component it borrowed.
+ *
+ * `--app-accent` doubles as a text colour (`.eyebrow`) and as a background
+ * behind `--fm-on-accent` text, so every value here is a teal dark or light
+ * enough for both roles. The brand amber is deliberately *not* the accent: at
+ * 4.5:1 against white it fails as text. It is `--fm-fold`, used for fold marks
+ * and for daisyUI's `accent` slot, always with ink on top.
+ */
 :root {
   color-scheme: light dark;
-  --app-bg: #f3f5f7;
-  --app-surface: #fff;
-  --app-text: #18202a;
-  --app-muted: #5e6a78;
-  --app-border: #d9e0e7;
-  --app-accent: #3454d1;
+  --app-bg: #eef2f3;
+  --app-surface: #ffffff;
+  --app-text: #182126;
+  --app-muted: #59666c;
+  --app-border: #c9d2d5;
+  --app-accent: #174a5b;
+
+  --fm-paper: #ffffff;
+  --fm-paper-ink: #182126;
+  --fm-canvas: #dfe6e8;
+  --fm-guide: #2f7d8c;
+  --fm-fold: #e3a53b;
+  --fm-fold-ink: #182126;
+  --fm-danger: #b42318;
+  --fm-success: #287a4a;
+  /* Text drawn on top of `--app-accent`. */
+  --fm-on-accent: #ffffff;
+  /* Text drawn on top of `--fm-danger` and `--fm-success`. */
+  --fm-on-status: #ffffff;
+}
+
+/*
+ * daisyUI's palette, derived from the tokens above.
+ *
+ * Declared once on `:root`: a `var()` resolves against the element it is used
+ * on, and every theme redefines its tokens on that same element, so each theme
+ * gets a matching daisyUI palette without repeating this block seven times.
+ */
+:root {
+  --color-base-100: var(--app-surface);
+  --color-base-200: var(--app-bg);
+  --color-base-300: var(--app-border);
+  --color-base-content: var(--app-text);
+  --color-primary: var(--app-accent);
+  --color-primary-content: var(--fm-on-accent);
+  --color-secondary: var(--fm-guide);
+  --color-secondary-content: var(--fm-on-accent);
+  --color-accent: var(--fm-fold);
+  --color-accent-content: var(--fm-fold-ink);
+  --color-neutral: var(--app-text);
+  --color-neutral-content: var(--app-surface);
+  --color-info: var(--fm-guide);
+  --color-info-content: var(--fm-on-accent);
+  --color-success: var(--fm-success);
+  --color-success-content: var(--fm-on-status);
+  --color-warning: var(--fm-fold);
+  --color-warning-content: var(--fm-fold-ink);
+  --color-error: var(--fm-danger);
+  --color-error-content: var(--fm-on-status);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --app-bg: #eef2f3;
+  --app-surface: #ffffff;
+  --app-text: #182126;
+  --app-muted: #59666c;
+  --app-border: #c9d2d5;
+  --app-accent: #174a5b;
+  --fm-canvas: #dfe6e8;
+  --fm-on-accent: #ffffff;
 }
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --app-bg: #10141b;
-  --app-surface: #1b222d;
-  --app-text: #f5f7fa;
-  --app-muted: #abb6c4;
-  --app-border: #344050;
-  --app-accent: #9fb1ff;
+  --app-bg: #101719;
+  --app-surface: #182326;
+  --app-text: #eef6f7;
+  --app-muted: #afc0c5;
+  --app-border: #35474c;
+  --app-accent: #7cc3d0;
+  --fm-canvas: #0a1012;
+  --fm-guide: #7cc3d0;
+  --fm-fold: #f2bd5d;
+  --fm-danger: #ff9a91;
+  --fm-success: #6ed09a;
+  /* The accent is light in dark themes, so what sits on it must be dark. */
+  --fm-on-accent: #0a1012;
+  --fm-on-status: #101719;
 }
 :root[data-theme='paper'] {
   color-scheme: light;
-  --app-bg: #ece6da;
-  --app-surface: #fffdf7;
-  --app-text: #2b251c;
-  --app-muted: #756b5c;
-  --app-border: #d9cfbc;
-  --app-accent: #825b2f;
+  --app-bg: #eee9df;
+  --app-surface: #faf8f2;
+  --app-text: #26231e;
+  --app-muted: #6b6459;
+  --app-border: #d8cfbe;
+  --app-accent: #174a5b;
+  --fm-canvas: #e2dccd;
+  --fm-fold: #c8871f;
+  --fm-on-accent: #faf8f2;
 }
 :root[data-theme='sepia'] {
   color-scheme: light;
   --app-bg: #efe4ca;
   --app-surface: #f8efd9;
   --app-text: #3e301e;
-  --app-muted: #796446;
+  --app-muted: #6d5936;
   --app-border: #cfbd95;
-  --app-accent: #8a4f22;
+  --app-accent: #14424f;
+  --fm-canvas: #e3d5b4;
+  --fm-fold: #b3761a;
+  --fm-on-accent: #f8efd9;
 }
 :root[data-theme='high-contrast'] {
   color-scheme: dark;
@@ -44,6 +138,14 @@
   --app-muted: #fff;
   --app-border: #fff;
   --app-accent: #ff0;
+  --fm-canvas: #000;
+  --fm-guide: #ff0;
+  --fm-fold: #ff0;
+  --fm-fold-ink: #000;
+  --fm-danger: #ff8a80;
+  --fm-success: #7dff9e;
+  --fm-on-accent: #000;
+  --fm-on-status: #000;
 }
 :root[data-theme='ocean'] {
   color-scheme: dark;
@@ -53,15 +155,28 @@
   --app-muted: #a6d4de;
   --app-border: #245263;
   --app-accent: #55d6be;
+  --fm-canvas: #04141b;
+  --fm-guide: #55d6be;
+  --fm-danger: #ff9a91;
+  --fm-success: #6ed09a;
+  --fm-on-accent: #04141b;
+  --fm-on-status: #071c26;
 }
 @media (prefers-color-scheme: dark) {
   :root[data-theme='system'] {
     color-scheme: dark;
-    --app-bg: #10141b;
-    --app-surface: #1b222d;
-    --app-text: #f5f7fa;
-    --app-muted: #abb6c4;
-    --app-border: #344050;
-    --app-accent: #9fb1ff;
+    --app-bg: #101719;
+    --app-surface: #182326;
+    --app-text: #eef6f7;
+    --app-muted: #afc0c5;
+    --app-border: #35474c;
+    --app-accent: #7cc3d0;
+    --fm-canvas: #0a1012;
+    --fm-guide: #7cc3d0;
+    --fm-fold: #f2bd5d;
+    --fm-danger: #ff9a91;
+    --fm-success: #6ed09a;
+    --fm-on-accent: #0a1012;
+    --fm-on-status: #101719;
   }
 }

@@ -10,8 +10,24 @@ if not notice.exists():
 errors = []
 review_required = []
 recognized = set(policy['allowed']) | set(policy['reviewRequired'])
+def resolve(expression: str) -> str:
+    """An SPDX `(A OR B)` expression is satisfied by its most permissive option.
+
+    The licensee chooses; picking an allowed alternative is that choice, made
+    explicitly here rather than by a reviewer reading the notice file."""
+    if ' OR ' not in expression:
+        return expression
+    options = [part.strip() for part in expression.strip('()').split(' OR ')]
+    for option in options:
+        if option in policy['allowed']:
+            return option
+    for option in options:
+        if option in policy['reviewRequired']:
+            return option
+    return options[0]
+
 for item in json.loads(notice.read_text()):
-    license_name = str(item.get('license', 'UNKNOWN'))
+    license_name = resolve(str(item.get('license', 'UNKNOWN')))
     if license_name in policy['forbidden'] or license_name not in recognized:
         errors.append(f"{item['name']}@{item['version']}: {license_name}")
     elif license_name in policy['reviewRequired']:

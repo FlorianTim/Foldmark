@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="150" viewBox="0 0 640 150" role="img">
+
+  <title>Foldmark horizontal logo</title>
+  <g transform="translate(20 14) scale(.25)">
+
+
+  <path d="M145 78h154l68 68v288H145z" fill="#fff" stroke="#174A5B" stroke-width="24" stroke-linejoin="round"/>
+  <path d="M299 78v68h68" fill="none" stroke="#E3A53B" stroke-width="24" stroke-linejoin="round"/>
+  <path d="M112 218h68M112 294h92M112 370h68" stroke="#2F7D8C" stroke-width="18" stroke-linecap="round"/>
+  <path d="M215 198h92M215 250h112M215 302h86" stroke="#174A5B" stroke-width="16" stroke-linecap="round" opacity=".9"/>
+</g>
+  <text x="160" y="90" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="68" font-weight="760" fill="#182126">Foldmark</text>
+  <text x="163" y="122" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="18" font-weight="560" letter-spacing="3" fill="#2F7D8C">BY LAMBRO CODE</text>
+
+</svg>

@@ -1,0 +1,28 @@
+{
+  "id": "a4-blank",
+  "name": {
+    "de": "A4 ohne Hilfsmarken",
+    "en": "A4 blank"
+  },
+  "category": "letter",
+  "builtIn": true,
+  "version": 1,
+  "page": {
+    "widthMm": 210,
+    "heightMm": 297,
+    "orientation": "portrait"
+  },
+  "margins": {
+    "topMm": 20,
+    "rightMm": 20,
+    "bottomMm": 20,
+    "leftMm": 20
+  },
+  "capabilities": {
+    "foldMarks": false,
+    "addressWindow": false,
+    "duplex": false,
+    "bleed": false
+  },
+  "markers": []
+}

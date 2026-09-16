@@ -1,0 +1,31 @@
+{
+  "$schema": "./config/template.schema.json",
+  "organization": {
+    "name": "Lambro Code",
+    "domain": "lambrocode.de",
+    "url": "https://lambrocode.de"
+  },
+  "application": {
+    "name": "Foldmark",
+    "shortName": "Foldmark",
+    "slug": "foldmark",
+    "packageName": "foldmark",
+    "repositoryOwner": "CHANGE_ME",
+    "repositoryName": "foldmark",
+    "description": "Local-first editor for letters, print profiles, fold marks, postcards and privacy-friendly document export.",
+    "defaultLocale": "de",
+    "supportedLocales": [
+      "de",
+      "en"
+    ]
+  },
+  "deployment": {
+    "basePathMode": "repository",
+    "customDomain": ""
+  },
+  "branding": {
+    "theme": "paper",
+    "logoPath": "/brand/foldmark-logo-horizontal.svg",
+    "iconPath": "/brand/foldmark-mark.svg"
+  }
+}

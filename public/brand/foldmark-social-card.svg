@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img">
+
+  <title>Foldmark social preview</title>
+  <rect width="1200" height="630" fill="#FAF8F2"/>
+  <circle cx="1030" cy="90" r="240" fill="#E3A53B" opacity=".14"/>
+  <circle cx="110" cy="610" r="260" fill="#2F7D8C" opacity=".12"/>
+  <g transform="translate(105 110) scale(.62)">
+
+
+  <path d="M144 72h168l68 68v300H144z" fill="#FAF8F2"/>
+  <path d="M312 72v68h68" fill="none" stroke="#E3A53B" stroke-width="24" stroke-linejoin="round"/>
+  <path d="M92 218h82M92 294h108M92 370h82" stroke="#E3A53B" stroke-width="18" stroke-linecap="round"/>
+  <path d="M218 201h94M218 258h110M218 315h78" stroke="#174A5B" stroke-width="18" stroke-linecap="round"/>
+</g>
+  <text x="480" y="255" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="112" font-weight="780" fill="#182126">Foldmark</text>
+  <text x="488" y="330" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="34" fill="#174A5B">Documents shaped for print.</text>
+  <text x="490" y="385" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="24" fill="#59666c">Local-first · configurable print profiles · privacy by default</text>
+  <text x="490" y="505" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="24" font-weight="650" letter-spacing="3" fill="#2F7D8C">LAMBRO CODE</text>
+
+</svg>

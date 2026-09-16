@@ -1,22 +1,94 @@
-# LumbreCode Web App Template
+# Foldmark
 
-A reusable **GitHub Template Repository** for secure, privacy-first, local-first web applications
-developed agentically with Vue, TypeScript, Vite, OpenSpec, arc42 and ADRs.
+**Write once. Print it where it actually has to fit.**
 
-The repository intentionally contains a very small Todo demonstration. The demo proves that UI,
-state, persistence, validation, themes, i18n, testing and deployment are wired correctly. It is only
-removed when the template initializer is explicitly instructed to create a concrete application from
-the material in `drafts/`.
+Foldmark is a local-first web application for letters, postcards and cards. You write the content
+once — a Markdown body plus structured metadata — and render it onto whichever sheet it is going on:
+a DIN-style letter with fold and punch marks, a blank A4 page, a duplex A6 postcard, a card, a photo
+format, or a message handed to your mail client.
 
-## Verification status
+Everything stays in your browser. There is no account, no server and no upload.
 
-The template was locally finalized on 2026-08-04 with Node 24.17.0 and npm 11.13.0. A clean install,
-all repository gates, the production build, Chromium E2E tests, an initialized-copy regression,
-subpath deployment behavior, dependency audit, and license generation passed. The Docker daemon and
-live GitHub services were also tested where local execution is possible: the Dev Container passed
-its post-create and portable workflow suite. Hosted Actions/CodeQL/Pages publication remains a
-post-push check. See the
-[`local verification report`](docs/release/LOCAL_VERIFICATION_2026-08-04.md).
+## What it does that a word processor does not
+
+**Configurable physical helper geometry.** Fold marks, punch marks, cut marks, bleed, safe areas,
+address windows, stamp areas and separators — positioned in millimetres, rendered in CSS
+millimetres, and shown with their measurements so you can check them against a ruler.
+
+Three properties follow from how that is built:
+
+- **Zoom cannot move a mark.** The preview draws the sheet in millimetres and applies display scale
+  as a CSS transform on a parent element. A transform does not change layout, so no zoom level can
+  alter a coordinate that reaches the printer.
+- **What prints is not the preview.** Printing renders a separate copy built in "paper" mode, so the
+  print profile decides which marks appear — not a stylesheet.
+- **Foldmark does not claim what it has not verified.** The DIN-style profiles use commonly cited
+  working values, are named "DIN-style … (draft)", and say on every print that they have not been
+  checked against a licensed copy of the standard.
+
+## Shipped print profiles
+
+| Profile                  | Size             | Notes                                                          |
+| ------------------------ | ---------------- | -------------------------------------------------------------- |
+| DIN-style Form B (draft) | A4               | Folds at 105 mm and 210 mm, punch at 148.5 mm, address window  |
+| DIN-style Form A (draft) | A4               | Folds at 87 mm and 192 mm, punch at 148.5 mm, address window   |
+| A4 blank                 | A4               | No helper marks                                                |
+| A4 with letterhead       | A4               | Reserved band for a local logo or background                   |
+| A5 card                  | A5               | Preview-only safe area                                         |
+| A6 postcard, landscape   | 148 × 105 mm     | Front and back, short-edge flip, message/address/stamp regions |
+| Photo 10 × 15 cm         | 100 × 150 mm     | Bleed and safe area                                            |
+| US Letter                | 215.9 × 279.4 mm | No DIN-specific assumptions                                    |
+
+Built-in profiles are immutable. Editing one creates a copy — and the copy drops the standards
+claim, because moving a fold mark cannot make geometry more standard-conformant.
+
+## Your data
+
+|               |                                                                                                                      |
+| ------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Where         | IndexedDB and localStorage, in this browser only                                                                     |
+| What          | Documents, addresses, sender identities, custom print profiles, images, preferences                                  |
+| Sent anywhere | No. The application makes no external request at all — asserted by a test                                            |
+| Export        | One JSON backup containing everything, or a single document as Markdown with YAML front matter                       |
+| Delete        | "Delete my local data" clears content; "Reset settings" clears preferences. Separate actions, separate confirmations |
+
+Full detail: [data inventory](docs/privacy/DATA_INVENTORY.md),
+[external request register](docs/privacy/EXTERNAL_REQUEST_REGISTER.md), [PRIVACY.md](PRIVACY.md).
+
+**Foldmark prepares output; it never sends it.** Email hand-off produces a `mailto:` link, a body to
+copy, or an `.eml` file for your own mail client. PDFs come from your browser's print dialog, where
+"Save as PDF" is a destination.
+
+## The document format
+
+Markdown with YAML front matter — readable and editable without Foldmark:
+
+```markdown
+---
+foldmarkVersion: 1
+kind: letter
+title: Antrag auf Ausstellung einer Bescheinigung
+locale: de-DE
+printProfile: din5008-b
+recipient:
+  organization: Stadt Beispielstadt
+  street: Rathausplatz 1
+  postalCode: '12345'
+  city: Beispielstadt
+date: 2026-08-03
+subject: Antrag auf Ausstellung einer Bescheinigung
+---
+
+Sehr geehrte Damen und Herren,
+
+hiermit beantrage ich die Ausstellung einer Bescheinigung.
+```
+
+Front matter is parsed by a purpose-built bounded subset rather than a general YAML library:
+anchors, aliases, tags and flow collections are refused with the offending line number, a quoted
+postcode stays a string, and `city: NO` stays Norway
+([ADR 0010](docs/adr/0010-bounded-yaml-subset.md)). A file that cannot be parsed is handed back with
+its original text, never swallowed.
 
 ## Quick start
 
@@ -24,172 +96,90 @@ post-push check. See the
 npm ci --ignore-scripts
 npm run hooks:install
 npm run verify
-npm run build
 npm run dev
 ```
 
-On Windows PowerShell:
-
-```powershell
-./scripts/bootstrap.ps1
-```
-
-On Linux/macOS:
-
-```bash
-./scripts/bootstrap.sh
-```
-
-## Create a concrete application
-
-Using this repository as a GitHub Template Repository is the recommended start: each app receives an
-independent repository and history while improvements continue in the original template.
-
-1. Enable **Template repository** in this repository's GitHub settings.
-2. Create a new repository with **Use this template**; do not fork it.
-3. Put German raw requirements, notes and images into `drafts/notes/`, `drafts/assets/` and the
-   planned-version folders. Do not put secrets or personal data there.
-4. Adjust `template.config.json`. Keep `customDomain` as `auto` to derive
-   `<slug>.webapps.lumbrecode.de`; for a Todo app with slug `todo`, this becomes
-   `todo.webapps.lumbrecode.de`.
-5. Apply and validate configuration:
-
-```bash
-python3 scripts/init-template.py --config template.config.json
-npm run template:validate
-```
-
-6. Open the generated workspace in VS Code.
-7. Select the `Template Initializer` custom agent or paste `docs/prompts/INITIALIZE_NEW_APP.md` into
-   your coding agent.
-8. Review the English product brief, requirements roadmap and OpenSpec change after phase 2 before
-   implementation continues.
-
-The initializer writes `public/CNAME`, but DNS and GitHub Pages' custom-domain/HTTPS settings remain
-operator tasks. See [`GitHub Template Repository setup`](docs/github/TEMPLATE_REPOSITORY_SETUP.md).
-
-## Local workflow parity
-
-Run `npm run workflow:local` to reproduce every portable CI, Pages, dependency, security, and
-repository-policy step from a clean install. With Docker running, `npm run devcontainer:verify`
-builds the Dev Container through the pinned official CLI and executes its post-create command plus
-the portable workflow suite inside Linux. The exact mapping and unavoidable GitHub-only boundaries
-are documented in [`docs/development/LOCAL_WORKFLOWS.md`](docs/development/LOCAL_WORKFLOWS.md).
+On Windows PowerShell: `./scripts/bootstrap.ps1` — on Linux/macOS: `./scripts/bootstrap.sh`.
 
 ## Common commands
 
-| Purpose                                   | Command                                              |
-| ----------------------------------------- | ---------------------------------------------------- |
-| Start development server                  | `npm run dev`                                        |
-| Fast lint, types and unit tests           | `npm run verify:fast`                                |
-| Full local CI                             | `npm run ci`                                         |
-| All portable hosted-workflow checks       | `npm run workflow:local`                             |
-| Build Pages artifact                      | `npm run workflow:pages`                             |
-| Validate an existing `dist/` artifact     | `npm run artifact:check`                             |
-| Build portable ZIP and checksum           | `npm run workflow:release`                           |
-| Preview removable project data            | `npm run clean:dry-run`                              |
-| Remove project build and Docker caches    | `npm run clean:all`                                  |
-| Review advisories, signatures and updates | `npm run dependencies:check`                         |
-| Validate version consistency              | `npm run version:check`                              |
-| Validate the initializer                  | `npm run template:validate && npm run template:test` |
-| Verify in the Dev Container               | `npm run devcontainer:verify`                        |
-
-The static release format and extraction instructions are documented in
-[`docs/deployment/STATIC_RELEASES.md`](docs/deployment/STATIC_RELEASES.md). Dependency review is in
-[`docs/dependencies/UPDATE_WORKFLOW.md`](docs/dependencies/UPDATE_WORKFLOW.md). Shared mailboxes and
-subject conventions are in [`docs/support/CONTACT_CHANNELS.md`](docs/support/CONTACT_CHANNELS.md).
-Safe project cleanup and the explicitly confirmed system-wide Docker prune are documented in
-[`docs/development/LOCAL_CLEANUP.md`](docs/development/LOCAL_CLEANUP.md).
-
-## Configuration
-
-Product-specific values live primarily in:
-
-- `template.config.json` — source configuration for initialization.
-- `src/config/app.config.json` — generated runtime-safe public configuration.
-- `.env.example` — optional build-time values; never store secrets in `VITE_*` variables.
-- `vite.config.ts` — deployment base path, normally resolved automatically in GitHub Actions.
-
-The initializer updates package metadata, HTML metadata, the VS Code workspace, app configuration
-and documentation context. Avoid manual global search-and-replace.
+| Purpose                                          | Command                       |
+| ------------------------------------------------ | ----------------------------- |
+| Start development server                         | `npm run dev`                 |
+| Fast lint, types and unit tests                  | `npm run verify:fast`         |
+| Full local CI                                    | `npm run ci`                  |
+| End-to-end journeys                              | `npm run test:e2e`            |
+| All portable hosted-workflow checks              | `npm run workflow:local`      |
+| Build Pages artifact                             | `npm run workflow:pages`      |
+| Build portable ZIP and checksum                  | `npm run workflow:release`    |
+| Capture documentation screenshots                | `npm run screenshots:capture` |
+| Render the bundled help from `docs/public-site/` | `npm run help:render`         |
+| Review advisories, signatures and updates        | `npm run dependencies:check`  |
+| Validate version consistency                     | `npm run version:check`       |
+| Verify in the Dev Container                      | `npm run devcontainer:verify` |
 
 ## Architecture
 
 ```text
 Presentation (Vue, Pinia, i18n)
         ↓
-Application (use cases, ports)
+Application (use cases, ports, render plan, target validation)
         ↓
-Domain (entities, value objects, validation)
+Domain (units, documents, print profiles, markers, addresses, assets, findings)
         ↑
-Infrastructure (Dexie/IndexedDB, browser adapters)
+Infrastructure (Dexie/IndexedDB, codecs, email renderers, image probe)
 ```
 
-Dependency direction is inward. Vue components do not access IndexedDB directly. Domain code does
-not import Vue, Pinia, Dexie or browser APIs.
+Dependency direction is inward and enforced by `npm run architecture:check`. The domain imports no
+framework; Vue components never touch IndexedDB.
 
-The generated source, runtime flow, public extension points, storage keys, and documentation policy
-are described in [`docs/development/SOURCE_CODE.md`](docs/development/SOURCE_CODE.md). Exported
-TypeScript APIs carry TSDoc and are checked by `npm run docs:check`.
+The piece worth reading first is the **render plan**
+([`buildRenderPlan.ts`](src/application/render/buildRenderPlan.ts)): a pure function turning a
+document, a profile, a sender and resolved assets into pages, markers and positioned blocks in
+millimetres, with no DOM and no HTML. The screen preview, the print copy and any future PDF adapter
+all consume it, which is why they cannot drift apart.
 
-## Agentic workflow
-
-- `.github/copilot-instructions.md` contains repository-wide rules.
-- `AGENTS.md` defines agent collaboration and delivery gates.
-- `.github/agents/*.agent.md` contains discoverable custom agents for VS Code and GitHub Copilot.
-- `.github/skills/*/SKILL.md` contains portable agent skills.
-- `openspec/specs/` describes the accepted current system.
-- `openspec/changes/` contains proposed changes before implementation.
-- `docs/arc42/`, `docs/adr/` and `docs/architecture/diagrams/` stay synchronized with code.
-
-GitHub and VS Code discover repository custom agents from `.github/agents` and skills from
-`.github/skills`.
+- [arc42 architecture documentation](docs/arc42/)
+- [Architecture decisions](docs/adr/) — 0009–0015 are Foldmark's
+- [Diagram sources](docs/architecture/diagrams/)
+- [Specifications](openspec/specs/) and the [first change](openspec/changes/0001-foldmark-mvp/)
+- [Source-code guide](docs/development/SOURCE_CODE.md)
+- [Threat model](docs/security/THREAT_MODEL.md)
 
 ## Quality and security
 
-The template includes:
+- No HTML is generated from document text anywhere, on screen or in email. There is no sanitizer
+  because there is nothing to sanitize ([ADR 0011](docs/adr/0011-no-generated-html.md)).
+- Mail header values are **refused, not repaired**, when they contain a control character — silent
+  repair hides that something tried.
+- Image imports are validated against the decoded image, not the declared type. SVG is not accepted.
+- Every record is validated on the way out of IndexedDB as well as on the way in, and a damaged
+  record is dropped rather than allowed to break a screen.
+- Strict TypeScript, ESLint security rules, a Content-Security-Policy without `'unsafe-inline'`,
+  CodeQL, dependency review, licence policy and generated third-party notices.
+- 208 unit and integration tests, 18 end-to-end journeys, and a security suite of negative cases.
 
-- strict TypeScript
-- ESLint security rules and unsafe DOM checks
-- unit, security and browser-test foundations
-- Content Security Policy and privacy checks
-- no remote fonts, analytics or runtime CDN dependencies
-- dependency review, CodeQL, Dependabot and OpenSSF Scorecard workflows
-- generated third-party notices and license policy checks
-- native Git hooks under `.githooks/`
-- Dev Container for reproducible development
-- GitHub Pages deployment
-- advisory crawler exclusions and host-header examples
-- a portable static ZIP plus SHA-256 checksum
-- dependency registry-signature checks and Dependabot cooldowns
+`pre-push` runs the complete `npm run workflow:ci` gate.
 
-`pre-push` runs the complete shared `npm run workflow:ci` gate. To bypass a hook in a genuine
-emergency, use Git's standard `--no-verify` option and document the reason in the pull request.
+## Provenance
 
-## Privacy
+Foldmark was generated from the LumbreCode Web App Template `1.0.0`. What was replaced, what was
+inherited and what has been adopted since is recorded in
+[`GENERATED_FROM_TEMPLATE.md`](docs/development/GENERATED_FROM_TEMPLATE.md). Problems found in the
+template while building this app are in [`docs/template-feedback/`](docs/template-feedback/).
 
-The default application intentionally performs no third-party network requests. Optional connectors
-must be separate lazy-loaded capabilities with explicit consent. It sets no cookies, loads no remote
-fonts, and provides direct deletion of app-owned local data. Read [PRIVACY.md](PRIVACY.md) and the
-[`EU privacy and accessibility baseline`](docs/compliance/EU_PRIVACY_ACCESSIBILITY_BASELINE.md).
+The input material the product was derived from is in `drafts/init/`, with
+[`processed.md`](drafts/init/processed.md) recording what became of each piece.
 
-Crawler directives are only requests to cooperative bots. They do not make a public static app
-private, and client-side “human detection” is not a reliable security boundary. Apps with non-public
-data need server-side authentication or an access gateway; see
-[`crawlers and access control`](docs/security/CRAWLER_AND_ACCESS_CONTROL.md).
+## Status and open questions
 
-## Continuous template improvement
+Version `1.0.0`, not yet tagged. The MVP acceptance criteria are met; see
+[`tasks.md`](openspec/changes/0001-foldmark-mvp/tasks.md) for what is implemented and what is not.
 
-`drafts/notes/new-feature-ideas.md` is the versioned idea inbox. During specification, accepted
-ideas become the English [`requirements roadmap`](docs/product/requirements_roadmap.md). Generated
-apps use the `capture-template-feedback` repository skill to record sanitized, reproducible template
-problems under `docs/template-feedback/` and propose them back to the original template. See
-[`IDEA_TO_ROADMAP.md`](docs/product/IDEA_TO_ROADMAP.md).
-
-Template version is stored in `VERSION`; application version remains in `template.config.json` and
-package metadata. Record both released and planned changes in [CHANGELOG.md](CHANGELOG.md).
+Open for review: the DIN-style geometry is unverified, a numeric print-profile editor is not yet
+built, signature _drawing_ is not implemented (importing a signature image is), and no formal WCAG
+2.2 AA audit has been run.
 
 ## License
 
-Template code is MIT licensed. Generated third-party notices are available in `public/` after
-dependency installation.
+MIT. Generated third-party notices are in `public/` after dependency installation.

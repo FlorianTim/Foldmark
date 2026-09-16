@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><title>Foldmark mark filled badge</title>
+<rect x="2.5" y="2.5" width="19" height="19" rx="5" fill="currentColor" stroke="none"/>
+<path d="M8 6.5h6l3 3v8a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-10a1 1 0 0 1 1-1z" stroke="white"/>
+<path d="M14 6.5v3h3" stroke="white"/>
+<path d="M9.5 11.5h4.5M9.5 14h4.5M5 10h1.5M5 14.5h1.5" stroke="white"/>
+</svg>

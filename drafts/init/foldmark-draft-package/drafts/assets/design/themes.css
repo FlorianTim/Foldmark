@@ -1,0 +1,37 @@
+:root,
+:root[data-theme='light'] {
+  --fm-bg: #eef2f3;
+  --fm-surface: #ffffff;
+  --fm-paper: #ffffff;
+  --fm-text: #182126;
+  --fm-muted: #59666c;
+  --fm-primary: #174a5b;
+  --fm-accent: #e3a53b;
+  --fm-border: #c9d2d5;
+}
+
+:root[data-theme='paper'] {
+  --fm-bg: #eee9df;
+  --fm-surface: #faf8f2;
+  --fm-paper: #fffefb;
+  --fm-text: #26231e;
+  --fm-muted: #6d665b;
+  --fm-primary: #174a5b;
+  --fm-accent: #d99727;
+  --fm-border: #d8cfbe;
+}
+
+:root[data-theme='dark'] {
+  --fm-bg: #101719;
+  --fm-surface: #182326;
+  --fm-paper: #ffffff;
+  --fm-text: #eef6f7;
+  --fm-muted: #afc0c5;
+  --fm-primary: #63b4c2;
+  --fm-accent: #f2bd5d;
+  --fm-border: #35474c;
+}
+
+@media print {
+  :root { --fm-paper: #fff; --fm-text: #000; }
+}

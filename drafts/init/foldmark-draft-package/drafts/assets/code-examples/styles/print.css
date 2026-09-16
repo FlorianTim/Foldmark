@@ -1,0 +1,27 @@
+@page {
+  size: var(--page-width) var(--page-height);
+  margin: 0;
+}
+
+.paper {
+  position: relative;
+  box-sizing: border-box;
+  background: #fff;
+  color: #000;
+}
+
+.print-marker {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--width);
+  border-top: 0.2mm solid #5f676b;
+  pointer-events: none;
+}
+
+@media print {
+  .app-shell,
+  .preview-controls { display: none !important; }
+  .paper { transform: none !important; box-shadow: none !important; }
+  .print-marker[data-print='false'] { display: none !important; }
+}

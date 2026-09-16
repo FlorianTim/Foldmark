@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img">
+
+<title>Privacy center wireframe</title>
+<rect width="1200" height="760" fill="#eef2f3"/>
+<rect x="24" y="24" width="1152" height="712" rx="16" fill="#fff"/>
+<text x="54" y="72" font-family="system-ui" font-size="28" font-weight="750" fill="#182126">Datenschutz &amp; Verbindungen</text>
+<rect x="54" y="105" width="1092" height="90" rx="12" fill="#eef7f2" stroke="#87b69b"/>
+<text x="82" y="140" font-family="system-ui" font-size="17" font-weight="700" fill="#287a4a">Lokaler Modus aktiv</text>
+<text x="82" y="168" font-family="system-ui" font-size="13" fill="#59666c">Keine Analytics, Remote-Fonts oder externen Connectoren werden geladen.</text>
+<text x="54" y="245" font-family="system-ui" font-size="20" font-weight="700" fill="#182126">Lokale Daten</text>
+<rect x="54" y="270" width="520" height="160" rx="12" fill="#f8faf9" stroke="#c9d2d5"/>
+<text x="82" y="310" font-family="system-ui" font-size="14">Dokumente: 12 · Adressen: 36 · Assets: 4</text>
+<rect x="82" y="350" width="180" height="42" rx="8" fill="#174A5B"/>
+<text x="112" y="377" font-family="system-ui" font-size="13" fill="#fff">Daten exportieren</text>
+<rect x="280" y="350" width="180" height="42" rx="8" fill="#fff" stroke="#b42318"/>
+<text x="315" y="377" font-family="system-ui" font-size="13" fill="#b42318">Alles löschen</text>
+<text x="620" y="245" font-family="system-ui" font-size="20" font-weight="700" fill="#182126">Optionale Connectoren</text>
+<rect x="620" y="270" width="526" height="160" rx="12" fill="#f8faf9" stroke="#c9d2d5"/>
+<text x="648" y="312" font-family="system-ui" font-size="15" font-weight="650">Google Drive</text>
+<text x="648" y="340" font-family="system-ui" font-size="13" fill="#59666c">Deaktiviert · benötigt externen Netzwerkzugriff</text>
+<rect x="1010" y="295" width="92" height="38" rx="19" fill="#d7dfe1"/>
+<circle cx="1030" cy="314" r="15" fill="#fff"/>
+<text x="648" y="390" font-family="system-ui" font-size="15" font-weight="650">Google Contacts</text>
+<rect x="1010" y="372" width="92" height="38" rx="19" fill="#d7dfe1"/>
+<circle cx="1030" cy="391" r="15" fill="#fff"/>
+
+</svg>

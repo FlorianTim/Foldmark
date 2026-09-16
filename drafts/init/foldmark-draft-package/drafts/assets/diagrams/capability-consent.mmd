@@ -1,0 +1,15 @@
+sequenceDiagram
+  actor User
+  participant Settings
+  participant Registry
+  participant Consent
+  participant Module
+  participant Provider
+  User->>Settings: Enable Google Drive
+  Settings->>Registry: Read manifest and permissions
+  Registry-->>Settings: Provider, scopes, purpose, data flow
+  Settings->>Consent: Explicit approval
+  Consent->>Registry: Persist local consent record
+  Registry->>Module: Dynamic import
+  Module->>Provider: User-initiated OAuth PKCE
+  Provider-->>Module: Transient token

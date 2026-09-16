@@ -1,0 +1,527 @@
+{
+  "package": "Foldmark Draft Package",
+  "organization": "Lambro Code",
+  "generated": "2026-08-03",
+  "files": [
+    {
+      "path": "INITIALIZE_FOLDMARK_PROMPT.md",
+      "bytes": 5726,
+      "sha256": "3cc019b9643e98efbb8030c399fe76222737b8e3d416308c6a80c886dbeb633b"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2317,
+      "sha256": "648fba40a168c712a6c7329de0b54fe94fa3951237d12a3700178c8202c1c513"
+    },
+    {
+      "path": "drafts/assets/brand/README.md",
+      "bytes": 602,
+      "sha256": "11be4aa737d8d84dd23c720b2020873d42ffeee520588dcb5fe81adba4690c3d"
+    },
+    {
+      "path": "drafts/assets/brand/foldmark-app-icon.png",
+      "bytes": 10583,
+      "sha256": "508fe0d0a5fd6a5fdba2cee4b77fe0f20d3f42582d76d55d0fd649d464202546"
+    },
+    {
+      "path": "drafts/assets/brand/foldmark-app-icon.svg",
+      "bytes": 568,
+      "sha256": "3e6ae24f33e452bf153eb6a4ae173515cc9c0391f50176d2245bca63290babdb"
+    },
+    {
+      "path": "drafts/assets/brand/foldmark-logo-horizontal.png",
+      "bytes": 9939,
+      "sha256": "5856c71877752e0f46514543484636669875ffe22b67e70309fe552fd86b3189"
+    },
+    {
+      "path": "drafts/assets/brand/foldmark-logo-horizontal.svg",
+      "bytes": 956,
+      "sha256": "a0063f6dce0bbac995b622b34536b4c74280b4b1f5c8b0e58f0e3eabb089695b"
+    },
+    {
+      "path": "drafts/assets/brand/foldmark-mark-monochrome.png",
+      "bytes": 4507,
+      "sha256": "50843da33852e652eb998f70ec3b5867b92b3517eb4600e331b20a6cd70c2a22"
+    },
+    {
+      "path": "drafts/assets/brand/foldmark-mark-monochrome.svg",
+      "bytes": 461,
+      "sha256": "5809c45ee4dd7a5c64bf2fcd066bbdc6e2802ae5fb5b72e0cb9984d265d677de"
+    },
+    {
+      "path": "drafts/assets/brand/foldmark-mark.png",
+      "bytes": 10965,
+      "sha256": "4925bccb3def5ef4b610af3c06380dd34b950ba2d62e660b562c5b70df920a3d"
+    },
+    {
+      "path": "drafts/assets/brand/foldmark-mark.svg",
+      "bytes": 640,
+      "sha256": "f30aad53a9dd5a1d1108623281eeeff7168f4ce580882f252cf595635f664795"
+    },
+    {
+      "path": "drafts/assets/brand/foldmark-social-card.png",
+      "bytes": 34545,
+      "sha256": "7c919edf123beb9d69fdbfc266df32fdee32946f74a0d7a64f5b02c7189e31f0"
+    },
+    {
+      "path": "drafts/assets/brand/foldmark-social-card.svg",
+      "bytes": 1403,
+      "sha256": "4f196857a479c060fce501eb52ace7164f7eb8348ed95c642219a0f213c21727"
+    },
+    {
+      "path": "drafts/assets/code-examples/README.md",
+      "bytes": 325,
+      "sha256": "9c10d55223c481a321d0711e690c0b25d9237d1dfe95140699188391a038c2d1"
+    },
+    {
+      "path": "drafts/assets/code-examples/application/Ports.ts",
+      "bytes": 578,
+      "sha256": "3120999581a45e69f06ed460d9e125af48f8114ceb436dc541fe879a97f628da"
+    },
+    {
+      "path": "drafts/assets/code-examples/application/ValidateForTarget.ts",
+      "bytes": 741,
+      "sha256": "f9c6799be1200359e92f48ccbe69dc664f12d1df788b1ad3412fe1c36e71dcca"
+    },
+    {
+      "path": "drafts/assets/code-examples/config/foldmark-app-config.json",
+      "bytes": 351,
+      "sha256": "98f69af61d41b33e685cf3c785ef57c8b9777c999cc82848b09af86ad3cbb735"
+    },
+    {
+      "path": "drafts/assets/code-examples/domain/Document.ts",
+      "bytes": 804,
+      "sha256": "1c0b654a7705229c1a0c962b64e7fa218ac6d364769d1394d6d4b7daa416a031"
+    },
+    {
+      "path": "drafts/assets/code-examples/domain/PrintProfile.ts",
+      "bytes": 1100,
+      "sha256": "3cbac9078ba22461a81c6d03c6ef243aba5396cc7fe196eaabac386a69b240f1"
+    },
+    {
+      "path": "drafts/assets/code-examples/domain/Schemas.ts",
+      "bytes": 689,
+      "sha256": "31fa946298779268c158cbf43156c0a7fb387c68c477509cf9d462b6283e3def"
+    },
+    {
+      "path": "drafts/assets/code-examples/infrastructure/CapabilityManifest.ts",
+      "bytes": 697,
+      "sha256": "30441ebcdaa024bf90a210fbac15c0b0c9fbf774ef1dd5d01f9b0d59edad37c9"
+    },
+    {
+      "path": "drafts/assets/code-examples/infrastructure/EmlSafety.ts",
+      "bytes": 345,
+      "sha256": "b14c7316649a0651f43b1f45a20a4db687964b91426a6259e47bbe4ece70ac41"
+    },
+    {
+      "path": "drafts/assets/code-examples/infrastructure/FoldmarkDb.ts",
+      "bytes": 976,
+      "sha256": "ea2f0ea90859582395a60745fa7fdfc8e4f5d0b6fbb89d1a750f4517a4e67a27"
+    },
+    {
+      "path": "drafts/assets/code-examples/infrastructure/MarkdownCodec.ts",
+      "bytes": 705,
+      "sha256": "29941c508749c83be500a0c451a91a51f126e616a3047bea9a18dfe7ede6dc34"
+    },
+    {
+      "path": "drafts/assets/code-examples/presentation/PrintPreview.vue",
+      "bytes": 904,
+      "sha256": "fbaa9a8cb19f43b5e5a443049a9fa250721e97a443b6e5fb34810e8d29647b1e"
+    },
+    {
+      "path": "drafts/assets/code-examples/security/sanitize.ts",
+      "bytes": 551,
+      "sha256": "6aac081fcaa3b8e19e36d36f16be53958a40fdf65165c6575c8f2babc95e6a98"
+    },
+    {
+      "path": "drafts/assets/code-examples/styles/print.css",
+      "bytes": 540,
+      "sha256": "ed3a78aa8ee74c5b9fd2bc3b24b0f253d670ff4360f1ac6e6962ff780ca53aa9"
+    },
+    {
+      "path": "drafts/assets/design/component-inventory.md",
+      "bytes": 736,
+      "sha256": "859a3ed052f637ee85f54ed13feadeca57791fcde050ba7ac21a36315466ff93"
+    },
+    {
+      "path": "drafts/assets/design/themes.css",
+      "bytes": 721,
+      "sha256": "5841daeb3766b98fbee8348492eb48be27598896220a4b54615a044d83c1b15e"
+    },
+    {
+      "path": "drafts/assets/design/tokens.json",
+      "bytes": 685,
+      "sha256": "17860fbead35d1139495e7d752821907b79b7e39789bed8a9a36196ffe104302"
+    },
+    {
+      "path": "drafts/assets/diagrams/capability-consent.mmd",
+      "bytes": 506,
+      "sha256": "8bc6899aa71c051dd53ce01e0e87292bc8220e34d85373eabfe4a70d0013f0bf"
+    },
+    {
+      "path": "drafts/assets/diagrams/container.mmd",
+      "bytes": 312,
+      "sha256": "1592e2c2cd064dfaa993d323dfb455de99f2bd2b62804a4a964b56f80c1156ca"
+    },
+    {
+      "path": "drafts/assets/diagrams/domain-model.puml",
+      "bytes": 586,
+      "sha256": "bb8a179753a9c6b74c519352b8379ae61a82c3994624214c6571293ff6a2b1b9"
+    },
+    {
+      "path": "drafts/assets/diagrams/render-flow.mmd",
+      "bytes": 492,
+      "sha256": "ff437aab70aa73a882aec0ab67310ea423b5be42d3e72acc75e7c99fdc45c265"
+    },
+    {
+      "path": "drafts/assets/diagrams/system-context.mmd",
+      "bytes": 390,
+      "sha256": "20bdf120901ae61c3d4e2179d5069ae7fe04f20863a614650fcf66d65fd0f5de"
+    },
+    {
+      "path": "drafts/assets/examples/data/addresses.json",
+      "bytes": 567,
+      "sha256": "7d5541c76582a4769cc8edb1414a304de192ee67856b96d0f992f04eeefdf92b"
+    },
+    {
+      "path": "drafts/assets/examples/data/sender-profiles.json",
+      "bytes": 599,
+      "sha256": "2ca8479f4fee249b9d06045b2b0cb527fd5778c2d2c7058a651ad5dcdb999796"
+    },
+    {
+      "path": "drafts/assets/examples/documents/email-letter.md",
+      "bytes": 347,
+      "sha256": "14488e7988edfee3ea30e409376f54b7d8df2bb3c4e512504fa542bb96f6e1f6"
+    },
+    {
+      "path": "drafts/assets/examples/documents/letter-din5008-b.md",
+      "bytes": 718,
+      "sha256": "da2931df1b804a983548167d078413f60aa44376baf85ac103eeec8fd7c95310"
+    },
+    {
+      "path": "drafts/assets/examples/documents/postcard-a6.md",
+      "bytes": 466,
+      "sha256": "38d6fd9ebad9f124c5f1f5b5627a74af2c8e706f70b08bea217b61ece1b15241"
+    },
+    {
+      "path": "drafts/assets/examples/print-profiles/a4-blank.json",
+      "bytes": 468,
+      "sha256": "ed7d1a7be23d054be26dd52b3717dd76b3747c042682ed8ccc09dcfcc9245b31"
+    },
+    {
+      "path": "drafts/assets/examples/print-profiles/a5-card.json",
+      "bytes": 635,
+      "sha256": "31d48870bb4007fca8e846a08bd92684f3e19f80ed45b3f30bdf14cfe4026a78"
+    },
+    {
+      "path": "drafts/assets/examples/print-profiles/din5008-a.json",
+      "bytes": 1004,
+      "sha256": "5a555783a3547bc7fc2b6659ffa0f17ce022fd3a5914f8f93889cdfd6a127f8a"
+    },
+    {
+      "path": "drafts/assets/examples/print-profiles/din5008-b.json",
+      "bytes": 1230,
+      "sha256": "d9e8181241f1e2dfd5971fe7148e7fa4e16b14e0dc9317cc06d4a899c162f91d"
+    },
+    {
+      "path": "drafts/assets/examples/print-profiles/photo-10x15.json",
+      "bytes": 740,
+      "sha256": "2e1eb4be5ebd2b2792aff0190be823f71c8b32c4270b4844143513f4efbf6709"
+    },
+    {
+      "path": "drafts/assets/examples/print-profiles/postcard-a6-landscape-duplex.json",
+      "bytes": 1207,
+      "sha256": "52cbc729eb7a0ee3216b4d961295db3351c6a9f832e7fd42183700e5cf48170c"
+    },
+    {
+      "path": "drafts/assets/examples/print-profiles/us-letter.json",
+      "bytes": 472,
+      "sha256": "5c22df9ca6d7152ec5f2584c2ed7667cb4d0013b35f26a30ada17a72f99b48cf"
+    },
+    {
+      "path": "drafts/assets/icons/README.md",
+      "bytes": 299,
+      "sha256": "4d25e533a95235f896027f1320c6c07b105489bf83bed00d542d80fba619ca67"
+    },
+    {
+      "path": "drafts/assets/icons/address-book.svg",
+      "bytes": 307,
+      "sha256": "96b448ab5bedf1d2aee5211b77dc2bdeaaa521721b8f8da834aaeed10c8c453a"
+    },
+    {
+      "path": "drafts/assets/icons/calibrate.svg",
+      "bytes": 309,
+      "sha256": "962c2429d75d900057274c1155f45b9a7c59f3b10ab444ba794fd118c0f44232"
+    },
+    {
+      "path": "drafts/assets/icons/connector.svg",
+      "bytes": 303,
+      "sha256": "118a7d09454e7cff645138b129ea5983337faa92ef095900e3487d178a55db5c"
+    },
+    {
+      "path": "drafts/assets/icons/duplex.svg",
+      "bytes": 302,
+      "sha256": "92f3dce681272b80323ac3c29faa586061f00105e0d7f628c5a6475229e66c68"
+    },
+    {
+      "path": "drafts/assets/icons/email.svg",
+      "bytes": 308,
+      "sha256": "69ca86638ec847b8d9030eec5d52101700f4220610e4a03ccfdafd9236d7fd19"
+    },
+    {
+      "path": "drafts/assets/icons/fold-mark.svg",
+      "bytes": 294,
+      "sha256": "e4c3214b6ec8bc8e181b3c26a19e69012236c683f7e1af8cb07110b9e7690da1"
+    },
+    {
+      "path": "drafts/assets/icons/hole-mark.svg",
+      "bytes": 316,
+      "sha256": "3185ef25140d0bca882776314f41867b3d82ced57436ba79ee43af6a8e1275ed"
+    },
+    {
+      "path": "drafts/assets/icons/image.svg",
+      "bytes": 346,
+      "sha256": "62d5850986330f170c4de2598af2851de2acf61b85052aae59aacb3251be5164"
+    },
+    {
+      "path": "drafts/assets/icons/letter.svg",
+      "bytes": 289,
+      "sha256": "c8df9a8c1e65046ba87e4986298ef29979f87b7afb4fed4bf0f955c45352a024"
+    },
+    {
+      "path": "drafts/assets/icons/license.svg",
+      "bytes": 313,
+      "sha256": "a809e6998bbd4e423cad0200d37f530d41c5d390faedfd7b91c01ce537a73f1a"
+    },
+    {
+      "path": "drafts/assets/icons/local-storage.svg",
+      "bytes": 364,
+      "sha256": "13eaddbbf7d257c6bb43751086717db89d339898ab571573dc9c1a7ea08e3995"
+    },
+    {
+      "path": "drafts/assets/icons/logo.svg",
+      "bytes": 312,
+      "sha256": "44bbedf67cccc3bccff5b88ad463114a55c2cca13fb7303eb637651aac4e143e"
+    },
+    {
+      "path": "drafts/assets/icons/pdf.svg",
+      "bytes": 320,
+      "sha256": "2a90b3f23ab0887e001d78a17fe7c4a2931fb6651499c8edd2096ee6bbd6d5dd"
+    },
+    {
+      "path": "drafts/assets/icons/postcard.svg",
+      "bytes": 329,
+      "sha256": "895be98399a68e0c8c288679fc3e45e4a209e599eab6af0ccbb0a288dd0d6ebd"
+    },
+    {
+      "path": "drafts/assets/icons/print-profile.svg",
+      "bytes": 334,
+      "sha256": "005b189265e702cb8eeb1aef38ebb4eb5a5a6571c61df996b22bd9e9df3d42ed"
+    },
+    {
+      "path": "drafts/assets/icons/print.svg",
+      "bytes": 376,
+      "sha256": "9806b6e1d9359ccfd6a2c1f566f601371435dba359ac2a3ea51bb3d7a832a5a0"
+    },
+    {
+      "path": "drafts/assets/icons/privacy.svg",
+      "bytes": 314,
+      "sha256": "5308540613e36a35e510ce3d1b198cd136cbc55c01b342d21f0da58af7f87599"
+    },
+    {
+      "path": "drafts/assets/icons/settings.svg",
+      "bytes": 507,
+      "sha256": "c6f54387f348934839f44a6bed1ea65b70763ffb30c93deb2c17ce87f5e38ce1"
+    },
+    {
+      "path": "drafts/assets/icons/signature.svg",
+      "bytes": 324,
+      "sha256": "d3539b5f2210229435653a8cf7803f0e8643ae152e3616060afa87e88f379edb"
+    },
+    {
+      "path": "drafts/assets/icons/theme.svg",
+      "bytes": 418,
+      "sha256": "cdf373f334475c9abbad2c54f4c28ccc6e1fd3d4b5503a13bab46e5091f3bf88"
+    },
+    {
+      "path": "drafts/assets/icons/warning.svg",
+      "bytes": 280,
+      "sha256": "2c417f6e58c0a7b40f0f2f3ade0170a4b96bfba18db5b4121d48d7e7c9d199ca"
+    },
+    {
+      "path": "drafts/assets/mockups/postcard-editor.png",
+      "bytes": 40229,
+      "sha256": "f9f37215d9628f70c29a342ec186c09d28f0ade912091b700d02fdbd5d21c043"
+    },
+    {
+      "path": "drafts/assets/mockups/postcard-editor.svg",
+      "bytes": 2375,
+      "sha256": "c88e29c3acee2a5fe015cd6d8a318f2e6c57aa6f5d9ad1514328f5f09162faf3"
+    },
+    {
+      "path": "drafts/assets/mockups/print-profile-editor.png",
+      "bytes": 26788,
+      "sha256": "3fbe4f260ae6a728c1a4642951236daf716e494a0f0c055255d3d7763dc85be5"
+    },
+    {
+      "path": "drafts/assets/mockups/print-profile-editor.svg",
+      "bytes": 2032,
+      "sha256": "e5ded0b0a6c3cc67daf68ea81036740ac29fe40546d87687b8b41c5cbd8a584e"
+    },
+    {
+      "path": "drafts/assets/mockups/privacy-center.png",
+      "bytes": 37471,
+      "sha256": "0e6c7026e2fb7b0b882ca4a63b42809e154c45a4d34af7e272879acc16e916aa"
+    },
+    {
+      "path": "drafts/assets/mockups/privacy-center.svg",
+      "bytes": 2203,
+      "sha256": "5d16ba1e166ff11fe6452da14b0ae4733c73d427cebad94bd98747e2c68609df"
+    },
+    {
+      "path": "drafts/assets/mockups/workspace-desktop.png",
+      "bytes": 30639,
+      "sha256": "4f5de9c8e0361137b6b96fe90203f4c6d9dd18afbcb3f002874648b7c0c12547"
+    },
+    {
+      "path": "drafts/assets/mockups/workspace-desktop.svg",
+      "bytes": 2794,
+      "sha256": "f2fadbae74f6e3b5277694e8c42c082462ef88323f8cff353bd3bd327d74394f"
+    },
+    {
+      "path": "drafts/notes/00-read-first.md",
+      "bytes": 908,
+      "sha256": "ffe6c2e3c3e2bac3fd2fcd26778b6514e93b417c3a28f2c0eec139bd03d4f699"
+    },
+    {
+      "path": "drafts/notes/01-product-vision.md",
+      "bytes": 1580,
+      "sha256": "fcd4c8f04321a1e6e0507a44dcf26809137df249a564d641c873f9f40ed51dca"
+    },
+    {
+      "path": "drafts/notes/02-personas-and-journeys.md",
+      "bytes": 1972,
+      "sha256": "92d4761a1226b00d525a11f68a83b564fda5cfbaeaa28787bf83e7edbd1e0e20"
+    },
+    {
+      "path": "drafts/notes/03-scope-and-roadmap.md",
+      "bytes": 1560,
+      "sha256": "713ef0bf5ee9a8d92e85a7df8a93a295c110417acfcbce7f4523d171ae4b8dc7"
+    },
+    {
+      "path": "drafts/notes/04-functional-requirements.md",
+      "bytes": 2560,
+      "sha256": "a0549b88fe416f2fd3ebffb7044b545b871a46ca20534d04d02448aab0b199b4"
+    },
+    {
+      "path": "drafts/notes/05-non-functional-requirements.md",
+      "bytes": 1919,
+      "sha256": "dfd185aa8e9eeaf55289c77d3432d97cf892a4fb0e2094efd015264a3711ad43"
+    },
+    {
+      "path": "drafts/notes/06-domain-model.md",
+      "bytes": 1850,
+      "sha256": "63570be0ee3764a952089406c655d10cdb2feed7c17dcdd8b586f2fc7513d53d"
+    },
+    {
+      "path": "drafts/notes/07-architecture-guidance.md",
+      "bytes": 1325,
+      "sha256": "48a2d37c4d3c318abcbde42086ebcf1095af2868d40258795b99448cd22b2be2"
+    },
+    {
+      "path": "drafts/notes/08-print-profile-and-marker-system.md",
+      "bytes": 1371,
+      "sha256": "4751ce1a342ab1a916ad405e18e8d25862988b31bd3d25a348f3a11dd5274cfb"
+    },
+    {
+      "path": "drafts/notes/09-markdown-yaml-format.md",
+      "bytes": 1001,
+      "sha256": "7a28f2249cde28a67713767868b39139dc24bcb0575db20b9de189a7fee2de9e"
+    },
+    {
+      "path": "drafts/notes/10-ui-ux-and-routes.md",
+      "bytes": 1282,
+      "sha256": "dd07437366ee8e53a2a63fe878c14135d6b55b792b35f4a6c7de46c48762be70"
+    },
+    {
+      "path": "drafts/notes/11-letter-layouts.md",
+      "bytes": 823,
+      "sha256": "3689c30dd10ec95ef7cc3df49362f9554f25419acd29e4a5a3faf1962c004bfc"
+    },
+    {
+      "path": "drafts/notes/12-postcard-duplex.md",
+      "bytes": 797,
+      "sha256": "c100c4153652c47f82ba7c887183e0f8f38a325b0d78e00f95745cc0b0d5c4c4"
+    },
+    {
+      "path": "drafts/notes/13-email-handoff.md",
+      "bytes": 779,
+      "sha256": "f2c8ed3d879119bf9fc96799dcdcced4b291ee98567bec46558fe41d54ea7e7c"
+    },
+    {
+      "path": "drafts/notes/14-address-book-and-connectors.md",
+      "bytes": 996,
+      "sha256": "7e3d145d5e62eeabdc1f9332f8d28b6808bc3ae8008d701a87aab5a11ad651cc"
+    },
+    {
+      "path": "drafts/notes/15-assets-signatures-and-letterhead.md",
+      "bytes": 938,
+      "sha256": "b25fd77e1dafe9d2791074ef449f853515bb949dba1a3cb4b1676ebde9685b66"
+    },
+    {
+      "path": "drafts/notes/16-settings-themes-and-licenses.md",
+      "bytes": 796,
+      "sha256": "3a410881c1cb85a1fdd359cd0fd3248505010620e68bafdcaba4c122421d8d4d"
+    },
+    {
+      "path": "drafts/notes/17-security-and-privacy.md",
+      "bytes": 1223,
+      "sha256": "d4d89fd20a579ee5d56932e0948949bcbadd3978e60bc5b8b6399782e3fd8235"
+    },
+    {
+      "path": "drafts/notes/18-testing-and-quality.md",
+      "bytes": 1142,
+      "sha256": "1f074e9aeed8022b7acda39c51da26334b2614c99021a0b92ba56d0446603749"
+    },
+    {
+      "path": "drafts/notes/19-mvp-acceptance-criteria.md",
+      "bytes": 1050,
+      "sha256": "415ca75f009553a5fd575e96dbbfad5918ba1caa85a5600f79384dffd249af32"
+    },
+    {
+      "path": "drafts/notes/20-future-ideas.md",
+      "bytes": 776,
+      "sha256": "cdca594465187f16bb1ae1ba3937fddb329775b6f1c6f217667a20a9db8c8dac"
+    },
+    {
+      "path": "drafts/notes/21-open-questions.md",
+      "bytes": 927,
+      "sha256": "be8a6598bfa236b0866088382dfcc5d339f18e15d41dc3a0addbad1ece25b9b5"
+    },
+    {
+      "path": "drafts/notes/22-glossary.md",
+      "bytes": 811,
+      "sha256": "aab9933714023d7032e1c97578a9bec17d7625c2bd36091f94780da6b29fd402"
+    },
+    {
+      "path": "drafts/notes/23-implementation-slices.md",
+      "bytes": 1307,
+      "sha256": "f4a7039d4c01f1fd8f502015a989c6c51972ba74ad88aace822e155a81cbfd97"
+    },
+    {
+      "path": "drafts/notes/24-brand-direction.md",
+      "bytes": 751,
+      "sha256": "2932b0ed3d98a04b626cca56b617319f325f27a34de0f593383cc59932f0d6f0"
+    },
+    {
+      "path": "drafts/notes/25-documentation-expectations.md",
+      "bytes": 680,
+      "sha256": "42dea6dc15761a3984b5bb338e866ecae632cc63339164f3ca464ba46121e58a"
+    },
+    {
+      "path": "template.config.foldmark.json",
+      "bytes": 802,
+      "sha256": "91f373410c4d736ec95da6c1626dd9791f8367cf0c670cacb53bea0a72f68be7"
+    }
+  ]
+}

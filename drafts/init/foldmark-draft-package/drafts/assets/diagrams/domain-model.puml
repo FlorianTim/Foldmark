@@ -1,0 +1,21 @@
+@startuml
+class FoldmarkDocument
+class Address
+class SenderProfile
+class PrintProfile
+class PrintMarker
+class DocumentAsset
+class PositionedAsset
+class RenderPlan
+class CapabilityManifest
+
+FoldmarkDocument "0..1" --> SenderProfile
+FoldmarkDocument "0..1" --> Address : recipient
+FoldmarkDocument "0..*" --> PositionedAsset
+PositionedAsset "*" --> "1" DocumentAsset
+PrintProfile "1" o-- "0..*" PrintMarker
+FoldmarkDocument --> PrintProfile : preferred
+RenderPlan --> FoldmarkDocument
+RenderPlan --> PrintProfile
+CapabilityManifest ..> FoldmarkDocument : optional adapter effects
+@enduml

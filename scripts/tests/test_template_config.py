@@ -24,11 +24,16 @@ class TemplateConfigTests(unittest.TestCase):
         self.config = json.loads((ROOT / "template.config.json").read_text(encoding="utf-8"))
 
     def test_accepts_template_configuration(self) -> None:
+        # Derived from the configuration rather than written out: the behaviour
+        # under test is "auto resolves to <slug>.<webAppsDomain>", which stays
+        # true after an app is initialized and would otherwise fail the moment
+        # `npm run template:init` runs.
+        application = self.config["application"]
+        organization = self.config["organization"]
+        expected = f"{application['slug']}.{organization['webAppsDomain']}"
+
         self.assertEqual(validate_config(self.config), self.config)
-        self.assertEqual(
-            resolve_custom_domain(self.config["application"], self.config["organization"]),
-            "web-app-template.webapps.lumbrecode.de",
-        )
+        self.assertEqual(resolve_custom_domain(application, organization), expected)
 
     def test_generated_json_matches_repository_locale_format(self) -> None:
         rendered = format_generated_json(self.config)

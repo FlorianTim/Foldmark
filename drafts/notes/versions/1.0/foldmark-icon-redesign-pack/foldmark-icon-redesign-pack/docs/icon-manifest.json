@@ -1,0 +1,896 @@
+{
+  "lambrocode-mark": {
+    "file": "assets/icons/brand/lambrocode-mark.svg",
+    "title": "Lambro Code mark",
+    "category": "brand",
+    "label_de": "Lambro-Code-Marke",
+    "label_en": "Lambro Code mark",
+    "contexts": [
+      "about",
+      "settings",
+      "external-link"
+    ],
+    "style": "stroke"
+  },
+  "lumbrecode-mark": {
+    "file": "assets/icons/brand/lumbrecode-mark.svg",
+    "title": "Lambro Code mark",
+    "category": "brand",
+    "label_de": "Lambro-Code-Marke",
+    "label_en": "Lambro Code mark",
+    "contexts": [
+      "about",
+      "settings",
+      "external-link"
+    ],
+    "style": "stroke"
+  },
+  "lambrocode-badge-dark": {
+    "file": "assets/icons/brand/lambrocode-badge-dark.svg",
+    "title": "lambrocode-badge-dark",
+    "category": "brand",
+    "label_de": "lambrocode-badge-dark",
+    "label_en": "lambrocode-badge-dark",
+    "contexts": [
+      "app-badge"
+    ],
+    "style": "multi"
+  },
+  "lambrocode-badge-light": {
+    "file": "assets/icons/brand/lambrocode-badge-light.svg",
+    "title": "lambrocode-badge-light",
+    "category": "brand",
+    "label_de": "lambrocode-badge-light",
+    "label_en": "lambrocode-badge-light",
+    "contexts": [
+      "app-badge"
+    ],
+    "style": "multi"
+  },
+  "foldmark-mark": {
+    "file": "assets/icons/app/foldmark-mark.svg",
+    "title": "Foldmark mark",
+    "category": "brand",
+    "label_de": "Foldmark-Marke",
+    "label_en": "Foldmark mark",
+    "contexts": [
+      "app-header",
+      "about"
+    ],
+    "style": "stroke"
+  },
+  "foldmark-mark-filled": {
+    "file": "assets/icons/app/foldmark-mark-filled.svg",
+    "title": "Foldmark mark filled badge",
+    "category": "brand",
+    "label_de": "Foldmark-Marke gefüllt",
+    "label_en": "Foldmark mark filled",
+    "contexts": [
+      "favicon",
+      "mobile-shell"
+    ],
+    "style": "mixed"
+  },
+  "documents": {
+    "file": "assets/icons/navigation/documents.svg",
+    "title": "Dokumente",
+    "category": "navigation",
+    "label_de": "Dokumente",
+    "label_en": "Documents",
+    "contexts": [
+      "top-nav",
+      "workspace"
+    ],
+    "style": "stroke"
+  },
+  "addresses": {
+    "file": "assets/icons/navigation/addresses.svg",
+    "title": "Adressen",
+    "category": "navigation",
+    "label_de": "Adressen",
+    "label_en": "Addresses",
+    "contexts": [
+      "top-nav",
+      "address-book"
+    ],
+    "style": "stroke"
+  },
+  "print-profiles": {
+    "file": "assets/icons/navigation/print-profiles.svg",
+    "title": "Druckprofile",
+    "category": "navigation",
+    "label_de": "Druckprofile",
+    "label_en": "Print profiles",
+    "contexts": [
+      "top-nav",
+      "profile-page"
+    ],
+    "style": "stroke"
+  },
+  "images": {
+    "file": "assets/icons/navigation/images.svg",
+    "title": "Bilder",
+    "category": "navigation",
+    "label_de": "Bilder",
+    "label_en": "Images",
+    "contexts": [
+      "top-nav",
+      "assets"
+    ],
+    "style": "stroke"
+  },
+  "settings": {
+    "file": "assets/icons/navigation/settings.svg",
+    "title": "Einstellungen",
+    "category": "navigation",
+    "label_de": "Einstellungen",
+    "label_en": "Settings",
+    "contexts": [
+      "top-nav",
+      "settings"
+    ],
+    "style": "stroke"
+  },
+  "about": {
+    "file": "assets/icons/navigation/about.svg",
+    "title": "Über",
+    "category": "navigation",
+    "label_de": "Über",
+    "label_en": "About",
+    "contexts": [
+      "top-nav",
+      "about"
+    ],
+    "style": "stroke"
+  },
+  "write-pane": {
+    "file": "assets/icons/navigation/write-pane.svg",
+    "title": "Schreiben",
+    "category": "navigation",
+    "label_de": "Schreiben",
+    "label_en": "Write",
+    "contexts": [
+      "mode-switch"
+    ],
+    "style": "stroke"
+  },
+  "preview-pane": {
+    "file": "assets/icons/navigation/preview-pane.svg",
+    "title": "Vorschau",
+    "category": "navigation",
+    "label_de": "Vorschau",
+    "label_en": "Preview",
+    "contexts": [
+      "mode-switch"
+    ],
+    "style": "stroke"
+  },
+  "document-pane": {
+    "file": "assets/icons/navigation/document-pane.svg",
+    "title": "Dokument",
+    "category": "navigation",
+    "label_de": "Dokument",
+    "label_en": "Document",
+    "contexts": [
+      "mode-switch"
+    ],
+    "style": "stroke"
+  },
+  "save": {
+    "file": "assets/icons/ui/save.svg",
+    "title": "Speichern",
+    "category": "ui",
+    "label_de": "Speichern",
+    "label_en": "Save",
+    "contexts": [
+      "primary-action"
+    ],
+    "style": "stroke"
+  },
+  "history": {
+    "file": "assets/icons/ui/history.svg",
+    "title": "Verlauf",
+    "category": "ui",
+    "label_de": "Verlauf",
+    "label_en": "History",
+    "contexts": [
+      "workspace-action",
+      "document-history"
+    ],
+    "style": "stroke"
+  },
+  "undo": {
+    "file": "assets/icons/ui/undo.svg",
+    "title": "Rückgängig",
+    "category": "ui",
+    "label_de": "Rückgängig",
+    "label_en": "Undo",
+    "contexts": [
+      "editor"
+    ],
+    "style": "stroke"
+  },
+  "redo": {
+    "file": "assets/icons/ui/redo.svg",
+    "title": "Wiederherstellen",
+    "category": "ui",
+    "label_de": "Wiederherstellen",
+    "label_en": "Redo",
+    "contexts": [
+      "editor"
+    ],
+    "style": "stroke"
+  },
+  "print": {
+    "file": "assets/icons/ui/print.svg",
+    "title": "Drucken",
+    "category": "ui",
+    "label_de": "Drucken",
+    "label_en": "Print",
+    "contexts": [
+      "workspace-action",
+      "output"
+    ],
+    "style": "stroke"
+  },
+  "export": {
+    "file": "assets/icons/ui/export.svg",
+    "title": "Exportieren",
+    "category": "ui",
+    "label_de": "Exportieren",
+    "label_en": "Export",
+    "contexts": [
+      "workspace-action",
+      "output"
+    ],
+    "style": "stroke"
+  },
+  "validation": {
+    "file": "assets/icons/ui/validation.svg",
+    "title": "Prüfen",
+    "category": "ui",
+    "label_de": "Prüfen",
+    "label_en": "Validate",
+    "contexts": [
+      "workspace-action",
+      "validation"
+    ],
+    "style": "stroke"
+  },
+  "error": {
+    "file": "assets/icons/ui/error.svg",
+    "title": "Fehler",
+    "category": "ui",
+    "label_de": "Fehler",
+    "label_en": "Errors",
+    "contexts": [
+      "validation"
+    ],
+    "style": "stroke"
+  },
+  "close": {
+    "file": "assets/icons/ui/close.svg",
+    "title": "Schließen",
+    "category": "ui",
+    "label_de": "Schließen",
+    "label_en": "Close",
+    "contexts": [
+      "workspace-action",
+      "dialog"
+    ],
+    "style": "stroke"
+  },
+  "search": {
+    "file": "assets/icons/ui/search.svg",
+    "title": "Suchen",
+    "category": "ui",
+    "label_de": "Suchen",
+    "label_en": "Search",
+    "contexts": [
+      "search-field"
+    ],
+    "style": "stroke"
+  },
+  "add": {
+    "file": "assets/icons/ui/add.svg",
+    "title": "Hinzufügen",
+    "category": "ui",
+    "label_de": "Hinzufügen",
+    "label_en": "Add",
+    "contexts": [
+      "create"
+    ],
+    "style": "stroke"
+  },
+  "edit": {
+    "file": "assets/icons/ui/edit.svg",
+    "title": "Bearbeiten",
+    "category": "ui",
+    "label_de": "Bearbeiten",
+    "label_en": "Edit",
+    "contexts": [
+      "edit"
+    ],
+    "style": "stroke"
+  },
+  "duplicate": {
+    "file": "assets/icons/ui/duplicate.svg",
+    "title": "Duplizieren",
+    "category": "ui",
+    "label_de": "Duplizieren",
+    "label_en": "Duplicate",
+    "contexts": [
+      "copy-record"
+    ],
+    "style": "stroke"
+  },
+  "copy": {
+    "file": "assets/icons/ui/copy.svg",
+    "title": "Kopieren",
+    "category": "ui",
+    "label_de": "Kopieren",
+    "label_en": "Copy",
+    "contexts": [
+      "editor",
+      "record"
+    ],
+    "style": "stroke"
+  },
+  "delete": {
+    "file": "assets/icons/ui/delete.svg",
+    "title": "Löschen",
+    "category": "ui",
+    "label_de": "Löschen",
+    "label_en": "Delete",
+    "contexts": [
+      "destructive"
+    ],
+    "style": "stroke"
+  },
+  "delete-all-data": {
+    "file": "assets/icons/ui/delete-all-data.svg",
+    "title": "Alle Daten löschen",
+    "category": "ui",
+    "label_de": "Alle Daten löschen",
+    "label_en": "Delete all data",
+    "contexts": [
+      "settings",
+      "privacy"
+    ],
+    "style": "stroke"
+  },
+  "favorite": {
+    "file": "assets/icons/ui/favorite.svg",
+    "title": "Favorit",
+    "category": "ui",
+    "label_de": "Favorit",
+    "label_en": "Favorite",
+    "contexts": [
+      "address-book"
+    ],
+    "style": "stroke"
+  },
+  "home": {
+    "file": "assets/icons/ui/home.svg",
+    "title": "Heimatadresse",
+    "category": "ui",
+    "label_de": "Heimatadresse",
+    "label_en": "Home address",
+    "contexts": [
+      "address-book"
+    ],
+    "style": "stroke"
+  },
+  "primary": {
+    "file": "assets/icons/ui/primary.svg",
+    "title": "Primär",
+    "category": "ui",
+    "label_de": "Primär",
+    "label_en": "Primary",
+    "contexts": [
+      "address-book"
+    ],
+    "style": "stroke"
+  },
+  "mail": {
+    "file": "assets/icons/ui/mail.svg",
+    "title": "E-Mail",
+    "category": "ui",
+    "label_de": "E-Mail",
+    "label_en": "Email",
+    "contexts": [
+      "metadata",
+      "contact"
+    ],
+    "style": "stroke"
+  },
+  "sender": {
+    "file": "assets/icons/ui/sender.svg",
+    "title": "Absender",
+    "category": "ui",
+    "label_de": "Absender",
+    "label_en": "Sender",
+    "contexts": [
+      "metadata"
+    ],
+    "style": "stroke"
+  },
+  "recipient": {
+    "file": "assets/icons/ui/recipient.svg",
+    "title": "Empfänger",
+    "category": "ui",
+    "label_de": "Empfänger",
+    "label_en": "Recipient",
+    "contexts": [
+      "metadata"
+    ],
+    "style": "stroke"
+  },
+  "language": {
+    "file": "assets/icons/ui/language.svg",
+    "title": "Sprache",
+    "category": "ui",
+    "label_de": "Sprache",
+    "label_en": "Language",
+    "contexts": [
+      "header",
+      "settings"
+    ],
+    "style": "stroke"
+  },
+  "theme-cycle": {
+    "file": "assets/icons/ui/theme-cycle.svg",
+    "title": "Theme wechseln",
+    "category": "ui",
+    "label_de": "Theme wechseln",
+    "label_en": "Cycle theme",
+    "contexts": [
+      "header",
+      "settings"
+    ],
+    "style": "stroke"
+  },
+  "theme-cycle-color": {
+    "file": "assets/icons/ui/theme-cycle-color.svg",
+    "title": "Theme wechseln farbig",
+    "category": "ui",
+    "label_de": "Theme wechseln farbig",
+    "label_en": "Cycle theme colorful",
+    "contexts": [
+      "header",
+      "settings"
+    ],
+    "style": "multi"
+  },
+  "chevron-down": {
+    "file": "assets/icons/ui/chevron-down.svg",
+    "title": "Öffnen",
+    "category": "ui",
+    "label_de": "Öffnen",
+    "label_en": "Open",
+    "contexts": [
+      "select",
+      "disclosure"
+    ],
+    "style": "stroke"
+  },
+  "menu": {
+    "file": "assets/icons/ui/menu.svg",
+    "title": "Menü",
+    "category": "ui",
+    "label_de": "Menü",
+    "label_en": "Menu",
+    "contexts": [
+      "mobile-nav"
+    ],
+    "style": "stroke"
+  },
+  "pro": {
+    "file": "assets/icons/ui/pro.svg",
+    "title": "Pro-Funktion",
+    "category": "ui",
+    "label_de": "Pro-Funktion",
+    "label_en": "Pro feature",
+    "contexts": [
+      "future",
+      "badges"
+    ],
+    "style": "stroke"
+  },
+  "cloud-sync": {
+    "file": "assets/icons/ui/cloud-sync.svg",
+    "title": "Synchronisieren",
+    "category": "ui",
+    "label_de": "Synchronisieren",
+    "label_en": "Sync",
+    "contexts": [
+      "future",
+      "sync"
+    ],
+    "style": "stroke"
+  },
+  "repository": {
+    "file": "assets/icons/ui/repository.svg",
+    "title": "Repository",
+    "category": "ui",
+    "label_de": "Repository",
+    "label_en": "Repository",
+    "contexts": [
+      "future",
+      "github-like"
+    ],
+    "style": "stroke"
+  },
+  "lock": {
+    "file": "assets/icons/ui/lock.svg",
+    "title": "Sicher",
+    "category": "ui",
+    "label_de": "Sicher",
+    "label_en": "Secure",
+    "contexts": [
+      "security"
+    ],
+    "style": "stroke"
+  },
+  "certificate": {
+    "file": "assets/icons/ui/certificate.svg",
+    "title": "Zertifikat",
+    "category": "ui",
+    "label_de": "Zertifikat",
+    "label_en": "Certificate",
+    "contexts": [
+      "future",
+      "signing"
+    ],
+    "style": "stroke"
+  },
+  "watermark": {
+    "file": "assets/icons/ui/watermark.svg",
+    "title": "Wasserzeichen",
+    "category": "ui",
+    "label_de": "Wasserzeichen",
+    "label_en": "Watermark",
+    "contexts": [
+      "future",
+      "document-effect"
+    ],
+    "style": "stroke"
+  },
+  "signature": {
+    "file": "assets/icons/ui/signature.svg",
+    "title": "Unterschrift",
+    "category": "ui",
+    "label_de": "Unterschrift",
+    "label_en": "Signature",
+    "contexts": [
+      "future",
+      "editor"
+    ],
+    "style": "stroke"
+  },
+  "fold-lines": {
+    "file": "assets/icons/ui/fold-lines.svg",
+    "title": "Falzlinien",
+    "category": "ui",
+    "label_de": "Falzlinien",
+    "label_en": "Fold lines",
+    "contexts": [
+      "print-profile",
+      "preview"
+    ],
+    "style": "stroke"
+  },
+  "guides-visible": {
+    "file": "assets/icons/ui/guides-visible.svg",
+    "title": "Hilfslinien einblenden",
+    "category": "ui",
+    "label_de": "Hilfslinien einblenden",
+    "label_en": "Show guides",
+    "contexts": [
+      "preview"
+    ],
+    "style": "stroke"
+  },
+  "guides-hidden": {
+    "file": "assets/icons/ui/guides-hidden.svg",
+    "title": "Hilfslinien ausblenden",
+    "category": "ui",
+    "label_de": "Hilfslinien ausblenden",
+    "label_en": "Hide guides",
+    "contexts": [
+      "preview"
+    ],
+    "style": "stroke"
+  },
+  "fit-page": {
+    "file": "assets/icons/ui/fit-page.svg",
+    "title": "Ganze Seite",
+    "category": "ui",
+    "label_de": "Ganze Seite",
+    "label_en": "Fit page",
+    "contexts": [
+      "preview"
+    ],
+    "style": "stroke"
+  },
+  "fit-width": {
+    "file": "assets/icons/ui/fit-width.svg",
+    "title": "Breite",
+    "category": "ui",
+    "label_de": "Breite",
+    "label_en": "Fit width",
+    "contexts": [
+      "preview"
+    ],
+    "style": "stroke"
+  },
+  "bold": {
+    "file": "assets/icons/editor/bold.svg",
+    "title": "Fett",
+    "category": "editor",
+    "label_de": "Fett",
+    "label_en": "Bold",
+    "contexts": [
+      "editor-toolbar"
+    ],
+    "style": "stroke"
+  },
+  "italic": {
+    "file": "assets/icons/editor/italic.svg",
+    "title": "Kursiv",
+    "category": "editor",
+    "label_de": "Kursiv",
+    "label_en": "Italic",
+    "contexts": [
+      "editor-toolbar"
+    ],
+    "style": "stroke"
+  },
+  "code": {
+    "file": "assets/icons/editor/code.svg",
+    "title": "Code",
+    "category": "editor",
+    "label_de": "Code",
+    "label_en": "Code",
+    "contexts": [
+      "editor-toolbar"
+    ],
+    "style": "stroke"
+  },
+  "small-text": {
+    "file": "assets/icons/editor/small-text.svg",
+    "title": "Klein",
+    "category": "editor",
+    "label_de": "Klein",
+    "label_en": "Small text",
+    "contexts": [
+      "editor-toolbar"
+    ],
+    "style": "stroke"
+  },
+  "heading": {
+    "file": "assets/icons/editor/heading.svg",
+    "title": "Überschrift",
+    "category": "editor",
+    "label_de": "Überschrift",
+    "label_en": "Heading",
+    "contexts": [
+      "editor-toolbar"
+    ],
+    "style": "stroke"
+  },
+  "list-bulleted": {
+    "file": "assets/icons/editor/list-bulleted.svg",
+    "title": "Liste",
+    "category": "editor",
+    "label_de": "Liste",
+    "label_en": "Bulleted list",
+    "contexts": [
+      "editor-toolbar"
+    ],
+    "style": "stroke"
+  },
+  "list-numbered": {
+    "file": "assets/icons/editor/list-numbered.svg",
+    "title": "Nummerierte Liste",
+    "category": "editor",
+    "label_de": "Nummerierte Liste",
+    "label_en": "Numbered list",
+    "contexts": [
+      "editor-toolbar"
+    ],
+    "style": "stroke"
+  },
+  "quote": {
+    "file": "assets/icons/editor/quote.svg",
+    "title": "Zitat",
+    "category": "editor",
+    "label_de": "Zitat",
+    "label_en": "Quote",
+    "contexts": [
+      "editor-toolbar"
+    ],
+    "style": "stroke"
+  },
+  "link": {
+    "file": "assets/icons/editor/link.svg",
+    "title": "Link",
+    "category": "editor",
+    "label_de": "Link",
+    "label_en": "Link",
+    "contexts": [
+      "editor-toolbar"
+    ],
+    "style": "stroke"
+  },
+  "table": {
+    "file": "assets/icons/editor/table.svg",
+    "title": "Tabelle",
+    "category": "editor",
+    "label_de": "Tabelle",
+    "label_en": "Table",
+    "contexts": [
+      "editor-toolbar"
+    ],
+    "style": "stroke"
+  },
+  "page-break": {
+    "file": "assets/icons/editor/page-break.svg",
+    "title": "Seitenumbruch",
+    "category": "editor",
+    "label_de": "Seitenumbruch",
+    "label_en": "Page break",
+    "contexts": [
+      "editor-toolbar",
+      "print"
+    ],
+    "style": "stroke"
+  },
+  "image": {
+    "file": "assets/icons/editor/image.svg",
+    "title": "Bild",
+    "category": "editor",
+    "label_de": "Bild",
+    "label_en": "Image",
+    "contexts": [
+      "editor-toolbar"
+    ],
+    "style": "stroke"
+  },
+  "date": {
+    "file": "assets/icons/editor/date.svg",
+    "title": "Datum",
+    "category": "editor",
+    "label_de": "Datum",
+    "label_en": "Date",
+    "contexts": [
+      "editor-toolbar",
+      "metadata"
+    ],
+    "style": "stroke"
+  },
+  "greeting": {
+    "file": "assets/icons/editor/greeting.svg",
+    "title": "Anrede",
+    "category": "editor",
+    "label_de": "Anrede",
+    "label_en": "Greeting",
+    "contexts": [
+      "editor-toolbar",
+      "templates"
+    ],
+    "style": "stroke"
+  },
+  "signoff": {
+    "file": "assets/icons/editor/signoff.svg",
+    "title": "Grußformel",
+    "category": "editor",
+    "label_de": "Grußformel",
+    "label_en": "Sign-off",
+    "contexts": [
+      "editor-toolbar",
+      "templates"
+    ],
+    "style": "stroke"
+  },
+  "visual-mode": {
+    "file": "assets/icons/editor/visual-mode.svg",
+    "title": "Visueller Editor",
+    "category": "editor",
+    "label_de": "Visueller Editor",
+    "label_en": "Visual editor",
+    "contexts": [
+      "editor-mode"
+    ],
+    "style": "stroke"
+  },
+  "markdown-mode": {
+    "file": "assets/icons/editor/markdown-mode.svg",
+    "title": "Markdown",
+    "category": "editor",
+    "label_de": "Markdown",
+    "label_en": "Markdown",
+    "contexts": [
+      "editor-mode"
+    ],
+    "style": "stroke"
+  },
+  "pdf-attachment": {
+    "file": "assets/icons/mail/pdf-attachment.svg",
+    "title": "PDF-Anhang",
+    "category": "future",
+    "label_de": "PDF-Anhang",
+    "label_en": "PDF attachment",
+    "contexts": [
+      "mail-option"
+    ],
+    "style": "stroke"
+  },
+  "html-mail": {
+    "file": "assets/icons/mail/html-mail.svg",
+    "title": "HTML-Mail",
+    "category": "future",
+    "label_de": "HTML-Mail",
+    "label_en": "HTML mail",
+    "contexts": [
+      "mail-option"
+    ],
+    "style": "stroke"
+  },
+  "plain-mail": {
+    "file": "assets/icons/mail/plain-mail.svg",
+    "title": "Plain-Text-Mail",
+    "category": "future",
+    "label_de": "Plain-Text-Mail",
+    "label_en": "Plain text mail",
+    "contexts": [
+      "mail-option"
+    ],
+    "style": "stroke"
+  },
+  "template": {
+    "file": "assets/icons/future/template.svg",
+    "title": "Vorlage",
+    "category": "future",
+    "label_de": "Vorlage",
+    "label_en": "Template",
+    "contexts": [
+      "future"
+    ],
+    "style": "stroke"
+  },
+  "letterhead": {
+    "file": "assets/icons/future/letterhead.svg",
+    "title": "Briefpapier",
+    "category": "future",
+    "label_de": "Briefpapier",
+    "label_en": "Letterhead",
+    "contexts": [
+      "future"
+    ],
+    "style": "stroke"
+  },
+  "encrypted-export": {
+    "file": "assets/icons/future/encrypted-export.svg",
+    "title": "Verschlüsselter Export",
+    "category": "future",
+    "label_de": "Verschlüsselter Export",
+    "label_en": "Encrypted export",
+    "contexts": [
+      "future",
+      "security"
+    ],
+    "style": "stroke"
+  },
+  "address-api": {
+    "file": "assets/icons/future/address-api.svg",
+    "title": "Adress-API",
+    "category": "future",
+    "label_de": "Adress-API",
+    "label_en": "Address API",
+    "contexts": [
+      "future"
+    ],
+    "style": "stroke"
+  }
+}

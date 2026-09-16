@@ -23,6 +23,8 @@ export default defineConfig({
   },
   webServer: {
     command: 'npm run build && npm run preview -- --host 127.0.0.1 --port 4173',
+    // The demo-data actions (change 0026) are compiled in for this build only.
+    env: { VITE_DEMO_DATA: 'true' },
     url: baseUrl,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

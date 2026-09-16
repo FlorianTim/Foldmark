@@ -1,0 +1,9 @@
+flowchart TB
+  UI[Vue Presentation] --> APP[Application Use Cases]
+  APP --> DOMAIN[Domain Model]
+  INFRA[Infrastructure Adapters] --> APP
+  INFRA --> DOMAIN
+  UI --> STORE[Pinia Workspace State]
+  INFRA --> DB[(IndexedDB)]
+  INFRA --> FILES[Browser File APIs]
+  INFRA -. consent .-> EXT[Optional External APIs]

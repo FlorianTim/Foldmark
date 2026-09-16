@@ -1,0 +1,26 @@
+%% From an open document to paper.
+%% The two plans are the point: what is displayed and what is printed are built
+%% separately from the same inputs, so a display concern cannot reach the page.
+sequenceDiagram
+  actor User
+  participant WS as Workspace store
+  participant Plan as buildRenderPlan
+  participant Check as validateForTarget
+  participant Screen as PaperPreview
+  participant Paper as print-root
+  participant Browser as Print dialog
+
+  User->>WS: Edit document, choose profile and target
+  WS->>Plan: mode = screen
+  Plan-->>WS: RenderPlan with preview guides
+  WS->>Check: document + profile + target
+  Check-->>WS: errors, warnings, notes
+  WS->>Screen: Draw in CSS millimetres
+  Note over Screen: Zoom is a CSS transform on a parent,<br/>so it cannot change a coordinate
+
+  User->>WS: Print
+  WS->>Plan: mode = paper
+  Plan-->>WS: RenderPlan with printed marks only
+  WS->>Paper: Draw the print-only copy
+  Paper->>Browser: window.print() with a runtime @page size
+  Browser-->>User: Sheet, or "Save as PDF"

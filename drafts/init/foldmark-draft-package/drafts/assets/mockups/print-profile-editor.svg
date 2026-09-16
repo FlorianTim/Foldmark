@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img">
+
+<title>Print profile editor wireframe</title>
+<rect width="1200" height="760" fill="#eef2f3"/>
+<rect x="24" y="24" width="1152" height="712" rx="16" fill="#fff"/>
+<text x="54" y="72" font-family="system-ui" font-size="28" font-weight="750" fill="#182126">Druckprofil bearbeiten</text>
+<rect x="54" y="100" width="350" height="590" rx="12" fill="#f8faf9" stroke="#c9d2d5"/>
+<text x="78" y="140" font-family="system-ui" font-size="17" font-weight="700" fill="#174A5B">Geometrie</text>
+<text x="78" y="185" font-family="system-ui" font-size="13" fill="#59666c">Format: 210 × 297 mm</text>
+<text x="78" y="220" font-family="system-ui" font-size="13" fill="#59666c">Ausrichtung: Hochformat</text>
+<text x="78" y="270" font-family="system-ui" font-size="17" font-weight="700" fill="#174A5B">Marker</text>
+<rect x="78" y="292" width="300" height="50" rx="8" fill="#fff" stroke="#c9d2d5"/>
+<text x="95" y="322" font-family="system-ui" font-size="13">Falzmarke · y 105 mm</text>
+<rect x="78" y="352" width="300" height="50" rx="8" fill="#fff" stroke="#c9d2d5"/>
+<text x="95" y="382" font-family="system-ui" font-size="13">Lochmarke · y 148,5 mm</text>
+<rect x="78" y="412" width="300" height="50" rx="8" fill="#fff" stroke="#c9d2d5"/>
+<text x="95" y="442" font-family="system-ui" font-size="13">Falzmarke · y 210 mm</text>
+<rect x="470" y="100" width="650" height="590" rx="12" fill="#e1e7e8"/>
+<rect x="665" y="125" width="300" height="424" fill="#fff"/>
+<path d="M645 275h28M645 337h38M645 425h28" stroke="#2F7D8C" stroke-width="4" stroke-linecap="round"/>
+<line x1="665" y1="274" x2="965" y2="274" stroke="#e9eeee" stroke-dasharray="4 4"/>
+<line x1="665" y1="337" x2="965" y2="337" stroke="#e9eeee" stroke-dasharray="4 4"/>
+<line x1="665" y1="425" x2="965" y2="425" stroke="#e9eeee" stroke-dasharray="4 4"/>
+<text x="685" y="590" font-family="system-ui" font-size="13" fill="#59666c">100 % · Vorschauhilfen sichtbar</text>
+
+</svg>

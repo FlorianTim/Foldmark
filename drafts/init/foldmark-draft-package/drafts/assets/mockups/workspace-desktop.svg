@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img">
+
+<title>Foldmark desktop workspace wireframe</title>
+<rect width="1440" height="900" fill="#edf1f2"/>
+<rect x="0" y="0" width="1440" height="64" fill="#174A5B"/>
+<text x="30" y="42" font-family="system-ui" font-size="26" font-weight="700" fill="#fff">Foldmark</text>
+<rect x="18" y="82" width="390" height="790" rx="14" fill="#fff"/>
+<text x="42" y="122" font-family="system-ui" font-size="20" font-weight="700" fill="#182126">Dokument</text>
+<rect x="42" y="145" width="342" height="42" rx="8" fill="#f2f5f5" stroke="#c9d2d5"/>
+<text x="56" y="172" font-family="system-ui" font-size="14" fill="#59666c">DIN-Stil Form B · A4</text>
+<rect x="42" y="210" width="342" height="120" rx="8" fill="#f9faf9" stroke="#c9d2d5"/>
+<text x="56" y="238" font-family="system-ui" font-size="14" fill="#59666c">Empfänger / Betreff / Datum</text>
+<rect x="42" y="350" width="342" height="430" rx="8" fill="#f9faf9" stroke="#c9d2d5"/>
+<text x="56" y="380" font-family="ui-monospace" font-size="14" fill="#59666c">Markdown-Editor</text>
+<rect x="442" y="82" width="716" height="790" rx="14" fill="#dfe6e7"/>
+<rect x="590" y="112" width="420" height="594" fill="#fff" stroke="#c9d2d5"/>
+<path d="M570 322h32M570 408h42M570 532h32" stroke="#2F7D8C" stroke-width="3" stroke-linecap="round"/>
+<rect x="630" y="225" width="170" height="82" fill="#f8f8f8" stroke="#bbb"/>
+<text x="646" y="250" font-family="system-ui" font-size="12" fill="#555">Stadt Beispielstadt</text>
+<text x="646" y="272" font-family="system-ui" font-size="12" fill="#555">Rathausplatz 1</text>
+<text x="646" y="294" font-family="system-ui" font-size="12" fill="#555">12345 Beispielstadt</text>
+<text x="630" y="350" font-family="system-ui" font-size="15" font-weight="700" fill="#222">Antrag auf Bescheinigung</text>
+<line x1="630" y1="380" x2="955" y2="380" stroke="#ddd"/>
+<text x="630" y="420" font-family="system-ui" font-size="13" fill="#333">Sehr geehrte Damen und Herren,</text>
+<text x="630" y="455" font-family="system-ui" font-size="13" fill="#333">hiermit beantrage ich ...</text>
+<rect x="1182" y="82" width="240" height="790" rx="14" fill="#fff"/>
+<text x="1208" y="122" font-family="system-ui" font-size="20" font-weight="700" fill="#182126">Prüfung</text>
+<rect x="1208" y="145" width="188" height="70" rx="8" fill="#eef7f2" stroke="#87b69b"/>
+<text x="1224" y="174" font-family="system-ui" font-size="13" fill="#287a4a">✓ Druckbereit</text>
+<text x="1224" y="197" font-family="system-ui" font-size="11" fill="#59666c">1 Hinweis</text>
+<rect x="1208" y="750" width="188" height="48" rx="9" fill="#E3A53B"/>
+<text x="1256" y="780" font-family="system-ui" font-size="15" font-weight="700" fill="#222">Exportieren</text>
+
+</svg>
