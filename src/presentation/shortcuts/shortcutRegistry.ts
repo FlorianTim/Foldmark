@@ -119,6 +119,17 @@ export const SHORTCUTS: readonly ShortcutDefinition[] = [
     descriptionKey: 'shortcuts.selectAll',
   },
   {
+    // `Ctrl+H` is the replace key of every word processor; caught only inside
+    // an editing surface, like `Ctrl+U`, so the browser keeps it elsewhere.
+    id: 'find',
+    command: 'editor:find',
+    windowsLinux: ['Ctrl+H'],
+    mac: ['Meta+Alt+F'],
+    scope: 'editor',
+    preventBrowserDefault: true,
+    descriptionKey: 'shortcuts.find',
+  },
+  {
     id: 'pageBreak',
     command: 'editor:pageBreak',
     ...both('Ctrl+Enter'),

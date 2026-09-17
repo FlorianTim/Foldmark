@@ -7,6 +7,72 @@ All notable changes to Foldmark are documented here. The format follows
 Foldmark was generated from the LumbreCode Web App Template `1.0.0`; see
 `docs/development/GENERATED_FROM_TEMPLATE.md`. The template's own history is not this application's.
 
+## [Unreleased]
+
+### Added
+
+- **QR codes.** Insert → QR code (or the toolbar) puts a code into the body: a web address, an
+  e-mail address with an optional subject, a phone number or a line of text, sized in millimetres
+  with the quiet zone included, aligned left, centred or right, with the error-correction level. The
+  dialog shows the code as it prints, its module size, and warns when a printer would not resolve
+  it. The file carries only the text — `::qr[https://example.org]{size=40mm align=center}` — and the
+  code is generated locally every time it is drawn, in the editor, the preview and the print copy
+  alike; a click on a code opens its alignment and "Edit…". Five codes are free, further ones are
+  marked "Premium — free during the test phase" and work (change 0040).
+- **Page-number extensions.** Document settings → Page numbers: a first page number (for a letter
+  that continues an earlier one; "of Y" counts up to the last sheet), a switch that swaps left and
+  right on even sheets so double-sided prints keep the number on the outer edge, and the format "own
+  wording" with `{page}` and `{pages}` — `Blatt {page} von {pages}`. The file carries only what
+  differs from the default; a malformed value is dropped on reading, never repaired (change 0041).
+- **Contact export.** Contact directory → Export writes the whole directory as a vCard 4.0 file or
+  as a CSV in Google Contacts column spelling — names, organisation, every address, e-mail, phone
+  and website with its label, notes and tags; roles and stationery stay in Foldmark. Importing the
+  file back recognises every entry as "probably existing" instead of doubling it. A CSV cell that a
+  spreadsheet would read as a formula is guarded with a leading space (change 0042).
+- **Calibration sheet.** Print profiles → "Print calibration sheet" prints known distances on the
+  selected profile's paper: a frame 10 mm from every edge, ticks every 10 mm (labelled every 50), a
+  centre cross and the profile's fold, punch and cut marks where a letter prints them, with
+  instructions. Measure the frame with a ruler and you have your printer's offset and scale; the
+  sheet goes through the same print copy as a letter, so what is true for it is true for the marks
+  (change 0043).
+- **Own-sender onboarding.** While no contact is marked primary, the start view asks once whether to
+  store your sender details: "Set up now" opens the contact form as a sender and makes the contact
+  the primary sender every new letter starts with; "Later" waits until the next start; "Don't ask
+  again" is for good. An e-mail address is not required (change 0044).
+- **Landscape.** Three new profiles — A4 landscape, A5 landscape, US Letter landscape — and an
+  orientation switch in the editor of your own profiles: turning swaps width and height, keeps the
+  margins and the marks where they are, and is refused when a mark would end up outside the sheet
+  (turn a copy of a blank profile instead). The preview, the print copy and the calibration sheet
+  follow the wide sheet (change 0045).
+- **Draw a signature.** Images → "Draw signature" opens a pad for pen, finger or mouse, with undo
+  and clear. Saving crops the drawing to the ink, renders it sharp at three times the pad size with
+  a transparent background and stores it as a signature image — the same rules as an imported file,
+  and placed in a letter through Insert → Image like any picture (change 0046).
+- **Marker editor.** The helper marks of your own print profiles are edited by number: kind, label,
+  x and y, length and direction (or width and height for an area), line style, stroke, printed and
+  preview switches. Add a mark, move it up or down, remove it; the checks are shown while you type
+  and "Save marks" waits until no mark lies outside the sheet. A built-in profile still shows its
+  marks read-only — copy it to edit (change 0047).
+- **Find and replace.** Edit → "Find and replace…" or `Ctrl+H` in the writing area opens a bar with
+  find, previous/next, a counter, Match case, Whole word, Replace and Replace all — in the visual
+  editor, where the current match is highlighted, and in the Markdown source. Plain text only: a
+  bracket finds a bracket (change 0048).
+
+### Fixed
+
+- A copy of US Letter did not let its body follow the margins: the margin-box check compared
+  inch-derived millimetres exactly and a float ulp made it fail. It now tolerates 0.01 mm (change
+  0045).
+
+### Changed
+
+- A file-manager row menu near the bottom of the window opens upward instead of hanging below the
+  viewport, where it could not be clicked (change 0044).
+- The payload of a QR code is read from the file as typed: nothing inside `::qr[…]` is parsed as a
+  directive, an emphasis or a link, and only brackets and backslashes are escaped (change 0040).
+- New dependency `uqr` 0.1.3 (MIT, no dependencies) for the QR encoding; the SVG is drawn by
+  Foldmark from the module matrix, never from generated markup.
+
 ## [1.0.0] — 2026-09-17
 
 The first release of Foldmark: everything from the MVP through the two post-release correction

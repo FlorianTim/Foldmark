@@ -14,6 +14,7 @@ import {
   ptToMm,
   type DocumentTheme,
 } from '@/domain/document/DocumentTheme';
+import { applyPageNumberPattern } from '@/domain/document/FoldmarkDocument';
 import { isRegionMarker, type PrintMarker } from '@/domain/print/PrintMarker';
 import SafeMarkdown from '@/presentation/components/SafeMarkdown.vue';
 import { themeVariables } from '@/presentation/markdown/themeVariables';
@@ -114,6 +115,10 @@ function pageNumberText(block: Extract<RenderBlock, { kind: 'pageNumber' }>): st
       return `${block.page} / ${block.total}`;
     case 'of':
       return t('render.pageNumber.of', { page: block.page, total: block.total });
+    case 'custom':
+      return block.pattern
+        ? applyPageNumberPattern(block.pattern, block.page, block.total)
+        : t('render.pageNumber.pageOf', { page: block.page, total: block.total });
     default:
       return t('render.pageNumber.pageOf', { page: block.page, total: block.total });
   }

@@ -29,6 +29,8 @@ import {
   PRESERVED_KEYS_MAX_COUNT,
   TAGS_MAX_COUNT,
   TITLE_MAX_LENGTH,
+  PAGE_NUMBER_PATTERN_MAX_LENGTH,
+  PAGE_NUMBER_START_MAX,
 } from '@/domain/document/FoldmarkDocument';
 
 /**
@@ -90,7 +92,7 @@ export const SenderSnapshotSchema = z
 /** Page numbering; defaults so documents stored before change 0012 still parse. */
 export const PageNumberOptionsSchema = z
   .object({
-    format: z.enum(['none', 'number', 'page', 'page-of', 'slash', 'of']),
+    format: z.enum(['none', 'number', 'page', 'page-of', 'slash', 'of', 'custom']),
     position: z.enum([
       'top-left',
       'top-center',
@@ -100,6 +102,9 @@ export const PageNumberOptionsSchema = z
       'bottom-right',
     ]),
     hideOnFirstPage: z.boolean(),
+    startAt: z.number().int().min(1).max(PAGE_NUMBER_START_MAX).optional(),
+    mirrorOnEvenPages: z.boolean().optional(),
+    pattern: z.string().max(PAGE_NUMBER_PATTERN_MAX_LENGTH).optional(),
   })
   .strict();
 

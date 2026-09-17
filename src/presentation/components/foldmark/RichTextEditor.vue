@@ -10,6 +10,7 @@ import type {
   RichTextEditorPort,
 } from '@/application/ports/RichTextEditorPort';
 import { serializeImageLayout, type ImageAlignment } from '@/domain/markdown/directives';
+import { serializeQrDirective, type QrCodeSpec } from '@/domain/qr/qrCode';
 import type { DocumentAsset } from '@/domain/asset/DocumentAsset';
 import {
   COLOR_ALIASES,
@@ -28,7 +29,11 @@ import EditorModeSwitch from '@/presentation/components/foldmark/EditorModeSwitc
 import ImageDialog from '@/presentation/components/foldmark/ImageDialog.vue';
 import ImageToolbar from '@/presentation/components/foldmark/ImageToolbar.vue';
 import LinkDialog from '@/presentation/components/foldmark/LinkDialog.vue';
+import type { TextSearchOptions } from '@/domain/markdown/textSearch';
+import FindReplaceBar from '@/presentation/components/foldmark/FindReplaceBar.vue';
 import MarkdownEditor from '@/presentation/components/foldmark/MarkdownEditor.vue';
+import QrCodeDialog from '@/presentation/components/foldmark/QrCodeDialog.vue';
+import QrToolbar from '@/presentation/components/foldmark/QrToolbar.vue';
 import TablePopover from '@/presentation/components/foldmark/TablePopover.vue';
 import { themeVariables } from '@/presentation/markdown/themeVariables';
 import {
@@ -96,6 +101,12 @@ const tableOpen = ref(false);
 const layoutOpen = ref(false);
 const linkOpen = ref(false);
 const imageOpen = ref(false);
+const qrOpen = ref(false);
+/** Find and replace (change 0048): the bar and the last result it shows. */
+const findOpen = ref(false);
+const findResult = ref<{ readonly index: number; readonly total: number } | null>(null);
+/** The code the QR dialog edits; `null` when it inserts a new one (change 0040). */
+const qrEditing = ref<QrCodeSpec | null>(null);
 
 const canUndo = ref(false);
 const canRedo = ref(false);
@@ -117,6 +128,7 @@ const selection = ref<EditorSelectionState>({
   selectedText: '',
   linkHref: null,
   image: null,
+  qr: null,
 });
 
 /** What the editor last reported; a prop equal to it is our own echo, not an external change. */
@@ -204,6 +216,7 @@ const currentSwatch = computed(() =>
 // --- availability (R13-021, AC-EDIT-010) -----------------------------------
 /** Whether a command can run right now, given the mode and the node under the cursor. */
 function canRun(id: string): boolean {
+  if (id === 'find') return true;
   if (!visual.value) {
     // The source view has no editor history of its own; the textarea's
     // native undo and select-all stay the browser's.
@@ -221,6 +234,7 @@ function canRun(id: string): boolean {
     case 'table':
     case 'image':
     case 'pageBreak':
+    case 'qr':
     case 'layout':
     case 'align':
       return !state.inTable;
@@ -268,7 +282,12 @@ async function mountEditor(): Promise<void> {
       onStateChange: refreshState,
       locale: props.locale,
       resolveAssetUrl,
-      labels: { pageBreak: t('editor.pageBreak'), missingAsset: t('render.assetMissingInline') },
+      labels: {
+        pageBreak: t('editor.pageBreak'),
+        missingAsset: t('render.assetMissingInline'),
+        qrCode: t('render.qrCode'),
+        qrEmpty: t('editor.qrEmpty'),
+      },
     });
     lastEmitted = props.modelValue;
     refreshState();
@@ -386,6 +405,9 @@ async function sourceCommand(
       const block = serializeImageLayout(argument);
       return field.insertText(`![${argument.alt ?? ''}](asset:${argument.assetId})${block}`);
     }
+    case 'qr':
+      if (typeof argument !== 'object' || !('payload' in argument)) return;
+      return field.insertBlock(serializeQrDirective(argument));
     case 'align':
       return field.wrapBlock(`:::align{to=${text || 'left'}}`, ':::');
     case 'indent':
@@ -447,6 +469,21 @@ function changeImageLayout(layout: ImageLayoutChange['layout']): void {
   run('imageLayout', { layout });
 }
 
+/** Opens the QR dialog for a new code, or for the selected one (change 0040). */
+function openQrDialog(edit: boolean): void {
+  qrEditing.value = edit ? selection.value.qr : null;
+  qrOpen.value = true;
+}
+
+function insertQr(spec: QrCodeSpec): void {
+  run('qr', spec);
+}
+
+/** A change to the selected code — from the dialog or the toolbar's alignment buttons. */
+function updateQr(spec: QrCodeSpec): void {
+  run('qrUpdate', spec);
+}
+
 /** The selected text for the link dialog, in either view. */
 const linkSeed = computed(() => ({
   text: visual.value ? selection.value.selectedText : (source.value?.selectedText() ?? ''),
@@ -463,12 +500,61 @@ function insertText(text: string): void {
  * Commands from the application menu (R13-015), by id. The menu is the same
  * vocabulary as the toolbar, so every entry here maps onto a toolbar action.
  */
+// --- find and replace (change 0048) ------------------------------------------
+function openFind(): void {
+  findOpen.value = true;
+  findResult.value = null;
+}
+
+function closeFind(): void {
+  findOpen.value = false;
+  findResult.value = null;
+  editor.value?.clearMatchHighlight();
+  if (visual.value) editor.value?.focus();
+}
+
+function findText(query: string, options: TextSearchOptions, direction: 1 | -1): void {
+  const result = visual.value
+    ? (editor.value?.selectMatch(query, options, direction) ?? null)
+    : (source.value?.findMatch(query, options, direction) ?? null);
+  findResult.value = result ?? { index: -1, total: 0 };
+  if (visual.value) refreshState();
+}
+
+function replaceText(query: string, replacement: string, options: TextSearchOptions): void {
+  const replaced = visual.value
+    ? (editor.value?.replaceMatch(query, replacement, options) ?? false)
+    : (source.value?.replaceMatch(query, replacement, options) ?? false);
+  // Nothing selected yet: the first click selects, the next replaces.
+  if (!replaced) {
+    findText(query, options, 1);
+    return;
+  }
+  const total = visual.value
+    ? (editor.value?.countMatches(query, options) ?? 0)
+    : (source.value?.countMatches(query, options) ?? 0);
+  findResult.value = total
+    ? { index: findResult.value ? Math.min(findResult.value.index, total - 1) : 0, total }
+    : { index: -1, total: 0 };
+  if (visual.value) refreshState();
+}
+
+function replaceAllText(query: string, replacement: string, options: TextSearchOptions): void {
+  if (visual.value) editor.value?.replaceAllMatches(query, replacement, options);
+  else source.value?.replaceAllMatches(query, replacement, options);
+  findResult.value = { index: -1, total: 0 };
+  if (visual.value) refreshState();
+}
+
 function menuCommand(id: string): void {
   if (id.startsWith('align:')) {
     run('align', id.slice(6));
     return;
   }
   switch (id) {
+    case 'find':
+      openFind();
+      break;
     case 'undo':
       editor.value?.undo();
       break;
@@ -493,6 +579,9 @@ function menuCommand(id: string): void {
       break;
     case 'image':
       imageOpen.value = true;
+      break;
+    case 'qr':
+      openQrDialog(false);
       break;
     case 'color':
       colorOpen.value = true;
@@ -868,6 +957,17 @@ onBeforeUnmount(() => void unmountEditor());
         <button
           type="button"
           class="btn btn-ghost btn-sm btn-square"
+          :disabled="!canRun('qr')"
+          :title="t('editor.qr')"
+          :aria-label="t('editor.qr')"
+          data-testid="editor-qr"
+          @click="openQrDialog(false)"
+        >
+          <AppIcon name="qr-code" />
+        </button>
+        <button
+          type="button"
+          class="btn btn-ghost btn-sm btn-square"
           :disabled="!canRun('pageBreak')"
           :title="tip('editor.pageBreak', 'pageBreak')"
           :aria-label="t('editor.pageBreak')"
@@ -967,13 +1067,35 @@ onBeforeUnmount(() => void unmountEditor());
       @close="imageOpen = false"
       @insert="insertImage"
     />
+    <QrCodeDialog
+      :open="qrOpen"
+      :initial="qrEditing"
+      @close="qrOpen = false"
+      @insert="insertQr"
+      @update="updateQr"
+    />
 
     <p v-if="failed" class="alert alert-warning" role="status">{{ t('editor.failed') }}</p>
 
+    <FindReplaceBar
+      :open="findOpen"
+      :result="findResult"
+      @close="closeFind"
+      @find="findText"
+      @replace="replaceText"
+      @replace-all="replaceAllText"
+    />
     <div v-if="visual" class="rich-host-wrap" :style="hostStyle">
       <p v-if="loading" class="editor-hint">{{ t('editor.loading') }}</p>
       <!-- Alignment and size of the selected image (R14-015). -->
       <ImageToolbar v-if="selection.image" :layout="selection.image" @change="changeImageLayout" />
+      <!-- Alignment and the way into the dialog for the selected QR code (change 0040). -->
+      <QrToolbar
+        v-if="selection.qr"
+        :spec="selection.qr"
+        @change="updateQr"
+        @edit="openQrDialog(true)"
+      />
       <!-- A click moves the caret without a document transaction, so the
            toolbar state is refreshed on pointer and key events as well. -->
       <div

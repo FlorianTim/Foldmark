@@ -6,7 +6,14 @@ import {
   findBuiltInProfile,
 } from '@/domain/print/builtInProfiles';
 import { markerBounds } from '@/domain/print/PrintMarker';
-import { cloneProfile, markersFor, pageCount, region } from '@/domain/print/PrintProfile';
+import {
+  bodyFollowsMargins,
+  cloneProfile,
+  markersFor,
+  pageCount,
+  region,
+  turnProfile,
+} from '@/domain/print/PrintProfile';
 import { PrintProfileSchema } from '@/domain/print/PrintProfileSchema';
 import { validateProfile } from '@/domain/print/validateProfile';
 
@@ -186,5 +193,39 @@ describe('profile validation', () => {
     expect(
       validateProfile(odd).some((issue) => issue.code === 'profile.photoFoldMarksUnexpected'),
     ).toBe(true);
+  });
+});
+
+describe('landscape (change 0045)', () => {
+  it('ships A4, A5 and US Letter sideways with the body inside the margins', () => {
+    for (const [id, width, height] of [
+      ['a4-landscape', 297, 210],
+      ['a5-landscape', 210, 148],
+      ['us-letter-landscape', 279.4, 215.9],
+    ] as const) {
+      const profile = findBuiltInProfile(id)!;
+      expect(profile.page).toEqual({ widthMm: width, heightMm: height, orientation: 'landscape' });
+      expect(bodyFollowsMargins(profile)).toBe(true);
+      expect(profile.category).toBe('letter');
+    }
+  });
+
+  it('turns a profile by swapping the sheet and keeping the millimetres of everything else', () => {
+    const blank = findBuiltInProfile('a4-blank')!;
+    const wide = turnProfile(blank, 'landscape', new Date('2026-09-17T00:00:00Z'));
+    expect(wide.page).toEqual({ widthMm: 297, heightMm: 210, orientation: 'landscape' });
+    expect(wide.margins).toEqual(blank.margins);
+    expect(wide.regions.body).toMatchObject({ xMm: 20, yMm: 20, widthMm: 257, heightMm: 170 });
+    expect(turnProfile(blank, 'portrait')).toBe(blank);
+    expect(turnProfile(wide, 'portrait').regions.body).toEqual(blank.regions.body);
+
+    // A structured body stays where it is; the DIN marks stay too and the
+    // validation, not the turn, says the sheet no longer holds them.
+    const din = findBuiltInProfile('din5008-b')!;
+    const dinWide = turnProfile(din, 'landscape');
+    expect(dinWide.regions.body).toEqual(din.regions.body);
+    expect(dinWide.markers).toEqual(din.markers);
+    expect(hasBlockingIssue(validateProfile(dinWide))).toBe(true);
+    expect(hasBlockingIssue(validateProfile(wide))).toBe(false);
   });
 });

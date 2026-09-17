@@ -3,12 +3,13 @@ import { returnAddressLine, type SenderProfile } from '@/domain/address/SenderPr
 import { effectiveDpi, MIN_PRINT_DPI, type DocumentAsset } from '@/domain/asset/DocumentAsset';
 import { contentBox, type BoxMm } from '@/domain/common/Units';
 import type { ValidationIssue } from '@/domain/common/ValidationIssue';
-import type {
-  AssetPlacement,
-  FoldmarkDocument,
-  PageNumberOptions,
+import {
+  isValidPageNumberPattern,
+  type AssetPlacement,
+  type DateFormat,
+  type FoldmarkDocument,
+  type PageNumberOptions,
 } from '@/domain/document/FoldmarkDocument';
-import type { DateFormat } from '@/domain/document/FoldmarkDocument';
 import type { ExportTarget } from '@/domain/export/ExportTarget';
 import type { PrintMarker, SurfaceScope } from '@/domain/print/PrintMarker';
 import {
@@ -264,10 +265,20 @@ export function pageNumberBlock(
 ): RenderBlock | null {
   if (options.format === 'none') return null;
   if (options.hideOnFirstPage && page === 1) return null;
-  const [vertical, horizontal] = options.position.split('-') as [
+  const [vertical, side] = options.position.split('-') as [
     'top' | 'bottom',
     'left' | 'center' | 'right',
   ];
+  // Double-sided printing: the number stays on the outer edge, so left and
+  // right swap on even sheets (R12-003). The sheet index decides, not the
+  // number printed on it — a start at 2 does not turn the first sheet around.
+  const mirrored = options.mirrorOnEvenPages === true && page % 2 === 0;
+  const horizontal = mirrored && side !== 'center' ? (side === 'left' ? 'right' : 'left') : side;
+  const offset = (options.startAt ?? 1) - 1;
+  const pattern =
+    options.format === 'custom' && options.pattern && isValidPageNumberPattern(options.pattern)
+      ? options.pattern
+      : undefined;
   const { margins, page: size } = profile;
   const yMm =
     vertical === 'top'
@@ -285,9 +296,10 @@ export function pageNumberBlock(
       widthMm: size.widthMm - margins.leftMm - margins.rightMm,
       heightMm: PAGE_NUMBER_LINE_MM,
     },
-    page,
-    total,
-    format: options.format,
+    page: page + offset,
+    total: total + offset,
+    format: pattern ? 'custom' : options.format === 'custom' ? 'page-of' : options.format,
+    ...(pattern ? { pattern } : {}),
     align: horizontal,
     style: 'footer',
   };

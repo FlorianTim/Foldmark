@@ -7,6 +7,9 @@ import type { SenderSnapshot } from '@/domain/address/SenderProfile';
 import { groupProfiles } from '@/domain/print/builtInProfiles';
 import {
   PAGE_NUMBER_FORMATS,
+  PAGE_NUMBER_PATTERN_MAX_LENGTH,
+  PAGE_NUMBER_START_MAX,
+  isValidPageNumberPattern,
   type PageNumberOptions,
   type PageNumberPosition,
   type PostalAddress,
@@ -255,6 +258,33 @@ function setPageNumbers(changes: Partial<PageNumberOptions>): void {
   setPrintOption('pageNumbers', { ...document.value.printOptions.pageNumbers, ...changes });
 }
 
+/** The first sheet's number as typed; blank, 1 or nonsense means "start at 1". */
+function setPageNumberStart(raw: string): void {
+  const value = Number.parseInt(raw, 10);
+  if (!Number.isInteger(value) || value <= 1) {
+    setPageNumbers({ startAt: undefined });
+    return;
+  }
+  setPageNumbers({ startAt: Math.min(value, PAGE_NUMBER_START_MAX) });
+}
+
+/** Mirroring only means something for a number that sits at a side. */
+const pageNumberMirrorAvailable = computed(() => {
+  const options = document.value?.printOptions.pageNumbers;
+  return !!options && options.format !== 'none' && !options.position.endsWith('center');
+});
+
+const pageNumberPattern = computed(() => document.value?.printOptions.pageNumbers.pattern ?? '');
+
+/** Whether the own wording as typed would print; the render plan falls back otherwise. */
+const pageNumberPatternValid = computed(() => isValidPageNumberPattern(pageNumberPattern.value));
+
+/** An own wording is kept as typed (bounded); the render plan decides whether it is usable. */
+function setPageNumberPattern(raw: string): void {
+  const value = raw.slice(0, PAGE_NUMBER_PATTERN_MAX_LENGTH);
+  setPageNumbers({ pattern: value === '' ? undefined : value });
+}
+
 // --- font theme ------------------------------------------------------------
 const documentTheme = computed(() => resolveTheme(document.value?.printOptions.theme));
 
@@ -358,6 +388,7 @@ const THEME_NUMBERS: readonly { key: ThemeNumberKey; step: string }[] = [
         <select
           class="select select-bordered"
           :value="document.printProfileId"
+          data-testid="print-profile"
           @change="workspace.selectProfile(($event.target as HTMLSelectElement).value)"
         >
           <optgroup
@@ -500,6 +531,60 @@ const THEME_NUMBERS: readonly { key: ThemeNumberKey; step: string }[] = [
           @change="setPageNumbers({ hideOnFirstPage: ($event.target as HTMLInputElement).checked })"
         />
         <span>{{ t('metadata.pageNumbers.hideOnFirstPage') }}</span>
+      </label>
+
+      <!-- Own wording (R12-003): `{page}` and `{pages}` are filled, the rest prints as typed. -->
+      <label v-if="document.printOptions.pageNumbers.format === 'custom'" class="field">
+        <span>{{ t('metadata.pageNumbers.pattern') }}</span>
+        <input
+          class="input input-bordered"
+          type="text"
+          :maxlength="PAGE_NUMBER_PATTERN_MAX_LENGTH"
+          :value="pageNumberPattern"
+          :placeholder="t('metadata.pageNumbers.patternPlaceholder')"
+          :aria-invalid="pageNumberPatternValid ? undefined : 'true'"
+          data-testid="page-number-pattern"
+          @input="setPageNumberPattern(($event.target as HTMLInputElement).value)"
+        />
+        <small class="field-hint">
+          {{
+            pageNumberPatternValid
+              ? t('metadata.pageNumbers.patternHint')
+              : t('metadata.pageNumbers.patternInvalid')
+          }}
+        </small>
+      </label>
+
+      <label class="field">
+        <span>{{ t('metadata.pageNumbers.startAt') }}</span>
+        <input
+          class="input input-bordered"
+          type="number"
+          min="1"
+          :max="PAGE_NUMBER_START_MAX"
+          step="1"
+          :value="document.printOptions.pageNumbers.startAt ?? 1"
+          :disabled="document.printOptions.pageNumbers.format === 'none'"
+          data-testid="page-number-start"
+          @change="setPageNumberStart(($event.target as HTMLInputElement).value)"
+        />
+        <small class="field-hint">{{ t('metadata.pageNumbers.startAtHint') }}</small>
+      </label>
+
+      <label class="field-inline">
+        <input
+          type="checkbox"
+          class="checkbox"
+          :checked="document.printOptions.pageNumbers.mirrorOnEvenPages === true"
+          :disabled="!pageNumberMirrorAvailable"
+          data-testid="page-number-mirror"
+          @change="
+            setPageNumbers({
+              mirrorOnEvenPages: ($event.target as HTMLInputElement).checked || undefined,
+            })
+          "
+        />
+        <span>{{ t('metadata.pageNumbers.mirrorOnEvenPages') }}</span>
       </label>
 
       <label class="field-inline">

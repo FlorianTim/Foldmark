@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { nextTick, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import {
+  findInText,
+  nextMatchIndex,
+  replaceMatches,
+  selectedMatchIndex,
+  type TextSearchOptions,
+} from '@/domain/markdown/textSearch';
 import { BODY_MAX_LENGTH } from '@/domain/document/FoldmarkDocument';
 import { stripInlineMarks } from '@/domain/markdown/clearFormatting';
 
@@ -177,6 +184,58 @@ function selectAll(): void {
   editor.value?.select();
 }
 
+// --- find and replace (change 0048) ------------------------------------------
+function textSelection(field: HTMLTextAreaElement): { from: number; to: number } {
+  return { from: field.selectionStart, to: field.selectionEnd };
+}
+
+/** Selects the next or previous occurrence in the source; `null` without one. */
+function findMatch(
+  query: string,
+  options: TextSearchOptions,
+  direction: 1 | -1,
+): { index: number; total: number } | null {
+  const field = editor.value;
+  if (!field) return null;
+  const matches = findInText(draft.value, query, options);
+  const index = nextMatchIndex(matches, textSelection(field), direction);
+  if (index < 0) return null;
+  const match = matches[index]!;
+  field.focus();
+  field.setSelectionRange(match.from, match.to);
+  return { index, total: matches.length };
+}
+
+/** Replaces the selected occurrence and moves on to the next; `false` when none is selected. */
+function replaceMatch(query: string, replacement: string, options: TextSearchOptions): boolean {
+  const field = editor.value;
+  if (!field) return false;
+  const matches = findInText(draft.value, query, options);
+  const index = selectedMatchIndex(matches, textSelection(field));
+  if (index < 0) return false;
+  const match = matches[index]!;
+  draft.value = `${draft.value.slice(0, match.from)}${replacement}${draft.value.slice(match.to)}`;
+  commit();
+  const caret = match.from + replacement.length;
+  field.setSelectionRange(caret, caret);
+  findMatch(query, options, 1);
+  return true;
+}
+
+/** Replaces every occurrence at once and reports how many. */
+function replaceAllMatches(query: string, replacement: string, options: TextSearchOptions): number {
+  const matches = findInText(draft.value, query, options);
+  if (!matches.length) return 0;
+  draft.value = replaceMatches(draft.value, matches, replacement);
+  commit();
+  return matches.length;
+}
+
+/** How often the query occurs in the source. */
+function countMatches(query: string, options: TextSearchOptions): number {
+  return findInText(draft.value, query, options).length;
+}
+
 defineExpose({
   insertText,
   wrapSelection,
@@ -186,6 +245,10 @@ defineExpose({
   selectedText,
   stripMarks,
   selectAll,
+  findMatch,
+  replaceMatch,
+  replaceAllMatches,
+  countMatches,
 });
 
 async function makeList(): Promise<void> {

@@ -5,14 +5,22 @@ import {
 } from '@/application/errors/FoldmarkErrors';
 import type { PrintProfileRepository } from '@/application/ports/LibraryRepositories';
 import { slugifyId } from '@/domain/common/Ids';
-import type { MarginsMm } from '@/domain/common/Units';
+import type { MarginsMm, PageSizeMm } from '@/domain/common/Units';
 import { hasBlockingIssue, type ValidationIssue } from '@/domain/common/ValidationIssue';
 import {
   BUILT_IN_PROFILES,
   DEFAULT_PROFILE_ID,
   findBuiltInProfile,
 } from '@/domain/print/builtInProfiles';
-import { cloneProfile, type LocalizedName, type PrintProfile } from '@/domain/print/PrintProfile';
+import {
+  bodyFollowsMargins,
+  cloneProfile,
+  turnProfile,
+  type LocalizedName,
+  type PrintProfile,
+} from '@/domain/print/PrintProfile';
+import { capabilitiesFor, MARKERS_MAX } from '@/domain/print/markerEditing';
+import type { PrintMarker } from '@/domain/print/PrintMarker';
 import { PrintProfileSchema } from '@/domain/print/PrintProfileSchema';
 import { validateProfile } from '@/domain/print/validateProfile';
 
@@ -109,22 +117,25 @@ export class PrintProfileService {
    */
   public async update(
     id: string,
-    changes: { name?: LocalizedName; margins?: MarginsMm },
+    changes: {
+      name?: LocalizedName;
+      margins?: MarginsMm;
+      /** Turning the sheet (change 0045); refused when a marker or region would leave it. */
+      orientation?: PageSizeMm['orientation'];
+    },
     now = new Date(),
   ): Promise<PrintProfile> {
-    const current = await this.repository.get(id);
-    if (!current) {
+    const stored = await this.repository.get(id);
+    if (!stored) {
       if (findBuiltInProfile(id)) throw new ImmutableRecordError('printProfile');
       throw new NotFoundError('printProfile');
     }
+    // The turn comes first, so the body that follows the margins is measured
+    // against the sheet the margins will be applied to.
+    const current = changes.orientation ? turnProfile(stored, changes.orientation, now) : stored;
     const margins = changes.margins ?? current.margins;
     const body = current.regions.body;
-    const followedMargins =
-      body !== undefined &&
-      body.xMm === current.margins.leftMm &&
-      body.yMm === current.margins.topMm &&
-      body.widthMm === current.page.widthMm - current.margins.leftMm - current.margins.rightMm &&
-      body.heightMm === current.page.heightMm - current.margins.topMm - current.margins.bottomMm;
+    const followedMargins = bodyFollowsMargins(current);
     const regions =
       changes.margins && body && followedMargins
         ? {
@@ -143,6 +154,37 @@ export class PrintProfileService {
       name: changes.name ?? current.name,
       margins,
       regions,
+      updatedAt: now.toISOString(),
+    };
+    await this.save(next);
+    return next;
+  }
+
+  /**
+   * Replaces the markers of a user-owned profile (change 0047, R02-001). The
+   * fold and bleed claims follow the markers; the geometry check on save
+   * refuses a list with a mark outside the sheet or an invalid id, so the
+   * stored profile is always one the renderer can draw.
+   *
+   * @throws {NotFoundError} When no profile has the id.
+   * @throws {ImmutableRecordError} When the profile is a built-in.
+   * @throws {InvalidInputError} When the markers fail the schema or the geometry check.
+   */
+  public async updateMarkers(
+    id: string,
+    markers: readonly PrintMarker[],
+    now = new Date(),
+  ): Promise<PrintProfile> {
+    const current = await this.repository.get(id);
+    if (!current) {
+      if (findBuiltInProfile(id)) throw new ImmutableRecordError('printProfile');
+      throw new NotFoundError('printProfile');
+    }
+    if (markers.length > MARKERS_MAX) throw new InvalidInputError('markers');
+    const next: PrintProfile = {
+      ...current,
+      markers: markers.map((marker) => ({ ...marker, locked: false })),
+      capabilities: capabilitiesFor(current, markers),
       updatedAt: now.toISOString(),
     };
     await this.save(next);

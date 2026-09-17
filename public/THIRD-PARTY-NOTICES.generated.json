@@ -2944,6 +2944,14 @@
     "runtime": true
   },
   {
+    "name": "uqr",
+    "version": "0.1.3",
+    "license": "MIT",
+    "homepage": "https://github.com/unjs/uqr#readme",
+    "repository": "git+https://github.com/unjs/uqr.git",
+    "runtime": true
+  },
+  {
     "name": "uri-js",
     "version": "4.4.1",
     "license": "BSD-2-Clause",

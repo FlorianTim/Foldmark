@@ -67,9 +67,13 @@ export type RenderBlock =
       readonly kind: 'pageNumber';
       readonly region: string;
       readonly box: BoxMm;
+      /** The number this sheet carries — the sheet index plus the start offset. */
       readonly page: number;
+      /** The number the last sheet carries. */
       readonly total: number;
-      readonly format: 'number' | 'page' | 'page-of' | 'slash' | 'of';
+      readonly format: 'number' | 'page' | 'page-of' | 'slash' | 'of' | 'custom';
+      /** The writer's own wording for `custom`, already validated. */
+      readonly pattern?: string;
       readonly align: 'left' | 'center' | 'right';
       readonly style: RenderTextStyle;
     }

@@ -1,13 +1,20 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { services } from '@/app/compositionRoot';
-import { roundMm } from '@/domain/common/Units';
+import { buildCalibrationPage, CALIBRATION_INSET_MM } from '@/application/render/calibrationSheet';
+import type { RenderPage } from '@/application/render/RenderPlan';
+import { appConfig } from '@/config';
+import { roundMm, type PageSizeMm } from '@/domain/common/Units';
 import type { ValidationIssue } from '@/domain/common/ValidationIssue';
 import { groupProfiles } from '@/domain/print/builtInProfiles';
 import { markerBounds, type PrintMarker } from '@/domain/print/PrintMarker';
-import type { PrintProfile } from '@/domain/print/PrintProfile';
+import { markersFor, turnProfile, type PrintProfile } from '@/domain/print/PrintProfile';
 import ConfirmDialog from '@/presentation/components/ConfirmDialog.vue';
+import MarkerEditor from '@/presentation/components/foldmark/MarkerEditor.vue';
+import PaperSurface from '@/presentation/components/foldmark/PaperSurface.vue';
+import { usePrintPageSize } from '@/presentation/composables/usePrintPageSize';
+import { printPage } from '@/presentation/printPage';
 import { appSettings, readSetting, writeSetting } from '@/presentation/settings/settingsRegistry';
 import { useLibraryStore } from '@/presentation/stores/libraryStore';
 
@@ -51,7 +58,27 @@ const issues = computed<readonly ValidationIssue[]>(() =>
 );
 
 /** The editable fields of a user-owned profile, as text so a half-typed number survives. */
-const draft = ref({ name: '', topMm: '', rightMm: '', bottomMm: '', leftMm: '' });
+const draft = ref({
+  name: '',
+  topMm: '',
+  rightMm: '',
+  bottomMm: '',
+  leftMm: '',
+  orientation: 'portrait' as PageSizeMm['orientation'],
+});
+
+/**
+ * Whether the selected own profile can be turned: a plain profile always, a
+ * structured one only while its marks and regions still fit the turned sheet.
+ */
+const turnBlocked = computed(() => {
+  const profile = selected.value;
+  if (!profile || profile.builtIn) return false;
+  const other = profile.page.orientation === 'portrait' ? 'landscape' : 'portrait';
+  return services.printProfiles
+    .validate(turnProfile(profile, other))
+    .some((issue) => issue.severity === 'error');
+});
 
 watch(
   selected,
@@ -63,6 +90,7 @@ watch(
       rightMm: String(profile.margins.rightMm),
       bottomMm: String(profile.margins.bottomMm),
       leftMm: String(profile.margins.leftMm),
+      orientation: profile.page.orientation,
     };
   },
   { immediate: true },
@@ -86,6 +114,56 @@ function markerPosition(marker: PrintMarker): string {
         ? ` · ${roundMm(bounds.widthMm || bounds.heightMm)} mm`
         : '';
   return `x ${roundMm(marker.xMm)} mm · y ${roundMm(marker.yMm)} mm${size}`;
+}
+
+// --- calibration sheet (R02-002, change 0043) --------------------------------
+/**
+ * The sheet for the selected profile, worded in the UI language. Built on
+ * demand: it is a function of the profile, and the profile list is small.
+ */
+const calibrationPage = computed<RenderPage | null>(() => {
+  const profile = selected.value;
+  if (!profile) return null;
+  const { widthMm, heightMm } = profile.page;
+  const marks = markersFor(profile, 'front', 'print');
+  return buildCalibrationPage(profile, {
+    title: t('profiles.calibration.title'),
+    subtitle: `${profileName(profile)} · ${roundMm(widthMm)} × ${roundMm(heightMm)} mm`,
+    instructions: t('profiles.calibration.instructions', {
+      inset: CALIBRATION_INSET_MM,
+      width: roundMm(widthMm - 2 * CALIBRATION_INSET_MM),
+      height: roundMm(heightMm - 2 * CALIBRATION_INSET_MM),
+    }),
+    marksHeading: t('profiles.calibration.marksHeading'),
+    markLines: marks.map(
+      (marker) => `${t(`marker.kind.${marker.kind}`)}: ${markerPosition(marker)}`,
+    ),
+  });
+});
+
+/** The sheet is rendered into the print copy only while a print is running. */
+const printingCalibration = ref(false);
+const calibrationPageSize = computed<PageSizeMm | null>(() =>
+  printingCalibration.value ? (calibrationPage.value?.page ?? null) : null,
+);
+usePrintPageSize(calibrationPageSize);
+
+async function printCalibrationSheet(): Promise<void> {
+  const profile = selected.value;
+  if (!profile || printingCalibration.value) return;
+  printingCalibration.value = true;
+  try {
+    await nextTick();
+    await printPage({
+      document: {
+        title: `${t('profiles.calibration.title')} – ${profileName(profile)}`,
+        metadata: {},
+      },
+      appName: appConfig.name,
+    });
+  } finally {
+    printingCalibration.value = false;
+  }
 }
 
 async function cloneSelected(): Promise<void> {
@@ -117,6 +195,7 @@ async function saveDraft(): Promise<void> {
     () =>
       services.printProfiles.update(source.id, {
         name: { de: name, en: name },
+        orientation: draft.value.orientation,
         margins: {
           topMm: number(draft.value.topMm, source.margins.topMm),
           rightMm: number(draft.value.rightMm, source.margins.rightMm),
@@ -129,6 +208,19 @@ async function saveDraft(): Promise<void> {
   if (!updated) return;
   await library.refreshProfiles();
   notice.value = 'profiles.saved';
+}
+
+/** Stores the edited marker list of the selected own profile (change 0047). */
+async function saveMarkers(markers: readonly PrintMarker[]): Promise<void> {
+  const source = selected.value;
+  if (!source || source.builtIn) return;
+  const updated = await library.run(
+    () => services.printProfiles.updateMarkers(source.id, markers),
+    'errors.invalidInput',
+  );
+  if (!updated) return;
+  await library.refreshProfiles();
+  notice.value = 'profiles.markerEditor.saved';
 }
 
 async function removeSelected(): Promise<void> {
@@ -148,6 +240,7 @@ function setDefaultProfile(id: string): void {
 }
 
 const MARGIN_FIELDS = ['topMm', 'rightMm', 'bottomMm', 'leftMm'] as const;
+const ORIENTATIONS = ['portrait', 'landscape'] as const;
 </script>
 
 <template>
@@ -232,6 +325,25 @@ const MARGIN_FIELDS = ['topMm', 'rightMm', 'bottomMm', 'leftMm'] as const;
               data-testid="profile-name"
             />
           </label>
+          <!-- Orientation (change 0045): the sheet turns, the margins stay. -->
+          <fieldset class="field profile-orientation" data-testid="profile-orientation">
+            <legend>{{ t('profiles.orientation.label') }}</legend>
+            <label v-for="option in ORIENTATIONS" :key="option" class="field-inline">
+              <input
+                v-model="draft.orientation"
+                type="radio"
+                class="radio"
+                name="profile-orientation"
+                :value="option"
+                :disabled="turnBlocked && option !== selected.page.orientation"
+                :data-testid="`profile-orientation-${option}`"
+              />
+              <span>{{ t(`profiles.orientation.${option}`) }}</span>
+            </label>
+            <small v-if="turnBlocked" class="field-hint">{{
+              t('profiles.orientation.blocked')
+            }}</small>
+          </fieldset>
           <div class="field-grid profile-margins">
             <label v-for="field in MARGIN_FIELDS" :key="field" class="field">
               <span>{{ t(`profiles.margin.${field}`) }}</span>
@@ -263,7 +375,9 @@ const MARGIN_FIELDS = ['topMm', 'rightMm', 'bottomMm', 'leftMm'] as const;
         </form>
 
         <h3>{{ t('profiles.markers') }}</h3>
-        <ul v-if="selected.markers.length" class="marker-list">
+        <!-- An own profile edits its marks by number (R02-001); a built-in lists them. -->
+        <MarkerEditor v-if="!selected.builtIn" :profile="selected" @save="saveMarkers" />
+        <ul v-else-if="selected.markers.length" class="marker-list">
           <li v-for="marker in selected.markers" :key="marker.id" class="marker-row">
             <span class="marker-kind">{{ t(`marker.kind.${marker.kind}`) }}</span>
             <span class="marker-position">{{ markerPosition(marker) }}</span>
@@ -315,8 +429,62 @@ const MARGIN_FIELDS = ['topMm', 'rightMm', 'bottomMm', 'leftMm'] as const;
         </div>
 
         <p v-if="selected.builtIn" class="profile-note">{{ t('profiles.builtInNote') }}</p>
+
+        <!-- The calibration sheet (R02-002): known distances on this profile's
+             paper, printed through the same print copy as a letter. -->
+        <h3 class="profile-subhead">{{ t('profiles.calibration.title') }}</h3>
+        <p class="profile-note">{{ t('profiles.calibration.description') }}</p>
+        <div class="profile-actions">
+          <button
+            class="btn btn-outline"
+            type="button"
+            data-testid="profile-calibration-print"
+            :disabled="printingCalibration"
+            @click="printCalibrationSheet"
+          >
+            {{ t('profiles.calibration.print') }}
+          </button>
+        </div>
+        <div
+          v-if="calibrationPage"
+          class="calibration-preview"
+          data-testid="profile-calibration-preview"
+          :style="{
+            '--calibration-width': `${roundMm(calibrationPage.page.widthMm)}mm`,
+            '--calibration-height': `${roundMm(calibrationPage.page.heightMm)}mm`,
+          }"
+        >
+          <div class="calibration-preview-stage">
+            <PaperSurface
+              :page="calibrationPage"
+              :asset-urls="{}"
+              :show-guides="true"
+              medium="screen"
+              :locale="locale"
+            />
+          </div>
+        </div>
       </div>
     </div>
+
+    <!-- The print copy of the sheet, next to the app shell (R14-001); the
+         profile view has no document print root, so this is the only one. -->
+    <Teleport to="body">
+      <div
+        v-if="printingCalibration && calibrationPage"
+        class="print-root"
+        aria-hidden="true"
+        data-testid="calibration-print-root"
+      >
+        <PaperSurface
+          :page="calibrationPage"
+          :asset-urls="{}"
+          :show-guides="true"
+          medium="print"
+          :locale="locale"
+        />
+      </div>
+    </Teleport>
 
     <ConfirmDialog
       :open="deleteAsk"

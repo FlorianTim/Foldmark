@@ -58,6 +58,15 @@ between paper edge and content. The presentation layer words it in the UI langua
 or `@page` margin box is involved, so preview, print copy and PDF agree. The preview shows every
 page of the plan stacked in print order; selecting a page scrolls to it.
 
+Three extensions (change 0041, R12-003), each absent by default and written to the file only when
+set: `startAt` (1–9999) is the number the first sheet carries, and "of Y" counts up to the last
+sheet's number; `mirrorOnEvenPages` swaps left and right on even sheets for double-sided printing,
+never the centre, and follows the sheet index, not the printed number; format `custom` prints the
+writer's own `pattern` (≤ 40 characters, one line, `{page}` required, `{pages}` optional) as typed,
+and falls back to "Page X of Y" while the wording is unusable. The render plan resolves all three
+into the block; the codec drops a malformed value instead of repairing it. `custom` is not offered
+as a global default, because the wording belongs to one document.
+
 ### Print isolation
 
 The print copy is the only thing on paper (change 0029). It is rendered next to the app shell, as a

@@ -3,7 +3,7 @@ import remarkDirective from 'remark-directive';
 import remarkGfm from 'remark-gfm';
 import remarkParse from 'remark-parse';
 import { unified, type Plugin, type Processor } from 'unified';
-import { DIRECTIVE_NAME } from '@/domain/markdown/directives';
+import { DIRECTIVE_NAME, unescapeDirectiveLabel } from '@/domain/markdown/directives';
 
 /**
  * The one Markdown dialect Foldmark speaks (change 0016).
@@ -126,18 +126,53 @@ function transformPhrasing(parent: Parent): void {
   parent.children = next;
 }
 
-function walk(node: Parent): void {
+/** A `remark-directive` leaf, typed locally for the QR label transform. */
+interface LeafDirectiveNode extends Parent {
+  readonly type: 'leafDirective';
+  readonly name: string;
+  children: PhrasingContent[];
+}
+
+const isQrLeaf = (node: unknown): node is LeafDirectiveNode =>
+  typeof node === 'object' &&
+  node !== null &&
+  (node as { type?: string }).type === 'leafDirective' &&
+  (node as { name?: string }).name === 'qr';
+
+/**
+ * `::qr[payload]` (change 0040): the label is the payload, and a payload is
+ * not prose. `mailto:info@example.org` would otherwise be text plus a
+ * directive named `info`, `a*b*c` an emphasis — and the code would open
+ * something else. So the label is taken from the source as typed, backslash
+ * escapes resolved, and replaces the parsed children with one text node.
+ * Both parsers (renderer and editor) run this plugin, so both see the same
+ * payload. Without the source (a caller that ran the tree alone) the parsed
+ * text stands.
+ */
+function literalQrLabel(node: LeafDirectiveNode, source: string | undefined): void {
+  if (source === undefined || node.children.length === 0) return;
+  const start = node.children[0]?.position?.start.offset;
+  const end = node.children.at(-1)?.position?.end.offset;
+  if (start === undefined || end === undefined) return;
+  node.children = [{ type: 'text', value: unescapeDirectiveLabel(source.slice(start, end)) }];
+}
+
+function walk(node: Parent, source: string | undefined): void {
   for (const child of node.children) {
-    if ('children' in child && Array.isArray((child as Parent).children)) walk(child as Parent);
+    if (isQrLeaf(child)) literalQrLabel(child, source);
+    else if ('children' in child && Array.isArray((child as Parent).children)) {
+      walk(child as Parent, source);
+    }
   }
   if (node.children.some((child) => child.type === 'text' || child.type === 'image')) {
     transformPhrasing(node);
   }
 }
 
-/** The remark plugin that reads the Pandoc spellings and image attributes. */
-export const remarkFoldmarkSyntax: Plugin<[], Root> = () => (tree) => {
-  walk(tree);
+/** The remark plugin that reads the Pandoc spellings, image attributes and literal QR labels. */
+export const remarkFoldmarkSyntax: Plugin<[], Root> = () => (tree, file) => {
+  const source = file?.value;
+  walk(tree, typeof source === 'string' ? source : undefined);
 };
 
 /**
@@ -187,5 +222,6 @@ let shared: Processor<Root, Root, Root, undefined, undefined> | null = null;
  */
 export function parseToMdast(source: string): Root {
   shared ??= createMarkdownProcessor();
-  return shared.runSync(shared.parse(source)) as Root;
+  // The source travels as the file so the QR transform can read a label as typed.
+  return shared.runSync(shared.parse(source), source) as Root;
 }

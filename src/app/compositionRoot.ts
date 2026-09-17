@@ -9,6 +9,8 @@ import { TemplateService } from '@/application/usecases/TemplateService';
 import { HistoryService } from '@/application/usecases/HistoryService';
 import { EntitlementService } from '@/application/usecases/EntitlementService';
 import { PrintProfileService } from '@/application/usecases/PrintProfileService';
+import { QrCodeService } from '@/application/usecases/QrCodeService';
+import type { FeatureUsageStore } from '@/application/ports/FeatureUsageStore';
 import type { RichTextEditorFactory } from '@/application/ports/RichTextEditorPort';
 import { BrowserImageProbe } from '@/infrastructure/assets/BrowserImageProbe';
 import { MarkdownDocumentCodecImpl } from '@/infrastructure/codec/MarkdownDocumentCodecImpl';
@@ -71,6 +73,21 @@ const entitlementCache = {
 };
 
 /**
+ * Premium usage counters, backed by the settings registry (change 0040).
+ * The same reasoning as the entitlement cache: the service takes a port,
+ * the browser storage stays here.
+ */
+const featureUsage: FeatureUsageStore = {
+  read: (feature) => readSetting(appSettings.premiumUsage)[feature] ?? 0,
+  increment: (feature) => {
+    const usage = readSetting(appSettings.premiumUsage);
+    const next = (usage[feature] ?? 0) + 1;
+    writeSetting(appSettings.premiumUsage, { ...usage, [feature]: next });
+    return next;
+  },
+};
+
+/**
  * The rich-text editor, loaded on first use.
  *
  * Milkdown and ProseMirror are the largest dependency Foldmark has; the
@@ -90,6 +107,7 @@ export const services = {
   documents: new DocumentService(documentRepository, codec),
   folders: new FolderService(folderRepository, documentRepository),
   templates: new TemplateService(templateRepository),
+  qrCodes: new QrCodeService(featureUsage),
   history: new HistoryService(
     documentRepository,
     checkpointRepository,

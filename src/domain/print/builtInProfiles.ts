@@ -286,6 +286,51 @@ const photo10x15: PrintProfile = {
   standardsStatus: 'not-applicable',
 };
 
+/** A4 turned sideways — tables, certificates, notices — with the plain margins of A4 blank. */
+const a4Landscape: PrintProfile = {
+  id: 'a4-landscape',
+  version: 1,
+  name: { de: 'A4 quer', en: 'A4 landscape' },
+  category: 'letter',
+  builtIn: true,
+  page: { widthMm: 297, heightMm: 210, orientation: 'landscape' },
+  margins: { topMm: 20, rightMm: 20, bottomMm: 20, leftMm: 20 },
+  capabilities: { foldMarks: false, addressWindow: false, duplex: false, bleed: false },
+  markers: [],
+  regions: { body: area(20, 20, 257, 170) },
+  standardsStatus: 'not-applicable',
+};
+
+/** A5 turned sideways, with the margins of the A5 letter. */
+const a5Landscape: PrintProfile = {
+  id: 'a5-landscape',
+  version: 1,
+  name: { de: 'A5 quer', en: 'A5 landscape' },
+  category: 'letter',
+  builtIn: true,
+  page: { widthMm: 210, heightMm: 148, orientation: 'landscape' },
+  margins: { topMm: 15, rightMm: 15, bottomMm: 15, leftMm: 15 },
+  capabilities: { foldMarks: false, addressWindow: false, duplex: false, bleed: false },
+  markers: [],
+  regions: { body: area(15, 15, 180, 118) },
+  standardsStatus: 'not-applicable',
+};
+
+/** US Letter turned sideways, with its one-inch margins. */
+const usLetterLandscape: PrintProfile = {
+  id: 'us-letter-landscape',
+  version: 1,
+  name: { de: 'US Letter quer', en: 'US Letter landscape' },
+  category: 'letter',
+  builtIn: true,
+  page: { widthMm: 279.4, heightMm: 215.9, orientation: 'landscape' },
+  margins: { topMm: 25.4, rightMm: 25.4, bottomMm: 25.4, leftMm: 25.4 },
+  capabilities: { foldMarks: false, addressWindow: false, duplex: false, bleed: false },
+  markers: [],
+  regions: { body: area(25.4, 25.4, 228.6, 165.1) },
+  standardsStatus: 'not-applicable',
+};
+
 /** A5 portrait letter for short notes, with the same plain margins as A4 blank. */
 const a5Letter: PrintProfile = {
   id: 'a5-letter',
@@ -445,6 +490,9 @@ export const BUILT_IN_PROFILES: readonly PrintProfile[] = Object.freeze(
     a4Letterhead,
     a5Letter,
     usLetter,
+    a4Landscape,
+    a5Landscape,
+    usLetterLandscape,
     postcardA6,
     a5Card,
     a6Card,

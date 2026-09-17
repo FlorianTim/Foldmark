@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { services } from '@/app/compositionRoot';
 import type { DecodeResult } from '@/application/ports/MarkdownDocumentCodec';
@@ -25,13 +25,20 @@ import ConfirmDialog from '@/presentation/components/ConfirmDialog.vue';
 import PromptDialog from '@/presentation/components/PromptDialog.vue';
 import type { IconName } from '@/presentation/icons/iconNames.generated';
 import AppMenu, { type Menu } from '@/presentation/components/foldmark/AppMenu.vue';
+import ContactDialog, {
+  type ContactPayload,
+} from '@/presentation/components/foldmark/ContactDialog.vue';
 import ImportPreviewDialog from '@/presentation/components/foldmark/ImportPreviewDialog.vue';
 import MoveDialog from '@/presentation/components/foldmark/MoveDialog.vue';
 import TemplatesDialog from '@/presentation/components/foldmark/TemplatesDialog.vue';
 import { downloadText, safeFilename } from '@/presentation/download';
-import { appSettings, readSetting } from '@/presentation/settings/settingsRegistry';
+import { hasRole } from '@/domain/address/Address';
+import { appSettings, readSetting, writeSetting } from '@/presentation/settings/settingsRegistry';
 import { useLibraryStore } from '@/presentation/stores/libraryStore';
 import { useWorkspaceStore } from '@/presentation/stores/workspaceStore';
+
+/** "Later" for the sender offer, kept for the whole session (change 0044). */
+const senderOnboardingSkipped = ref(false);
 
 /**
  * The workspace start view as a file manager (R13-024, R13-025).
@@ -81,6 +88,66 @@ const query = ref('');
 const importIssues = ref<readonly ValidationIssue[]>([]);
 const rejectedSource = ref<string | null>(null);
 const busy = ref(false);
+
+// --- own sender onboarding (R15-006, change 0044) ------------------------------
+/**
+ * "Later" hides the offer until the next start; it lives outside the component
+ * so leaving the file manager and coming back does not ask again. "Don't ask
+ * again" writes the setting.
+ */
+const libraryLoaded = ref(false);
+const senderOnboardingOpen = ref(false);
+const senderOnboardingDismissed = ref(readSetting(appSettings.senderOnboardingDismissed));
+const senderSavedNotice = ref(false);
+
+const offerSenderSetup = computed(
+  () =>
+    libraryLoaded.value &&
+    !senderOnboardingDismissed.value &&
+    !senderOnboardingSkipped.value &&
+    !library.addresses.some((address) => hasRole(address, 'primary')),
+);
+
+function skipSenderSetup(): void {
+  senderOnboardingSkipped.value = true;
+}
+
+function dismissSenderSetup(): void {
+  writeSetting(appSettings.senderOnboardingDismissed, true);
+  senderOnboardingDismissed.value = true;
+}
+
+/**
+ * The new contact becomes the primary sender: `add` moves the role from any
+ * previous holder, and the sender role brings the stationery a letter needs.
+ * Nothing here requires an e-mail address.
+ */
+async function saveOwnSender(payload: ContactPayload): Promise<void> {
+  const { footerLines } = payload;
+  const result = await library.run(
+    () =>
+      services.addressBook.add({
+        firstName: payload.firstName,
+        lastName: payload.lastName,
+        displayName: payload.displayName,
+        addresses: payload.addresses,
+        emails: payload.emails,
+        phones: payload.phones,
+        websites: payload.websites,
+        contactVisibility: payload.contactVisibility,
+        notes: payload.notes,
+        tags: payload.tags,
+        roles: ['primary', 'sender', ...payload.roles],
+        stationery: { footerLines, letterhead: [] },
+      }),
+    'errors.invalidInput',
+  );
+  if (!result) return;
+  senderOnboardingOpen.value = false;
+  senderSavedNotice.value = true;
+  await library.refreshAddresses();
+  await library.refreshSenders();
+}
 const fileInput = ref<HTMLInputElement | null>(null);
 
 // dialogs
@@ -97,7 +164,10 @@ const menuFor = ref<string | null>(null);
  * and a scrolling box clips anything hanging out of it — so the menu is fixed
  * to the viewport next to its button instead of flowing inside the row.
  */
-const menuStyle = ref<{ top: string; right: string }>({ top: '0px', right: '0px' });
+const menuStyle = ref<{ top?: string; bottom?: string; right: string }>({
+  top: '0px',
+  right: '0px',
+});
 
 function toggleMenu(id: string, event: MouseEvent): void {
   if (menuFor.value === id) {
@@ -106,11 +176,19 @@ function toggleMenu(id: string, event: MouseEvent): void {
   }
   const button = event.currentTarget as HTMLElement;
   const rect = button.getBoundingClientRect();
-  menuStyle.value = {
-    top: `${Math.round(rect.bottom + 4)}px`,
-    right: `${Math.round(globalThis.innerWidth - rect.right)}px`,
-  };
+  const right = `${Math.round(globalThis.innerWidth - rect.right)}px`;
+  menuStyle.value = { top: `${Math.round(rect.bottom + 4)}px`, right };
   menuFor.value = id;
+  // A row near the bottom edge opens its menu upward once the menu's height
+  // is known; a menu that hangs below the viewport cannot be clicked.
+  void nextTick(() => {
+    const menu = globalThis.document.querySelector<HTMLElement>('.file-menu');
+    const height = menu?.offsetHeight ?? 0;
+    const overflows = rect.bottom + 4 + height > globalThis.innerHeight;
+    if (overflows && rect.top - 4 - height >= 0) {
+      menuStyle.value = { bottom: `${Math.round(globalThis.innerHeight - rect.top + 4)}px`, right };
+    }
+  });
 }
 
 function closeMenu(): void {
@@ -125,7 +203,9 @@ function onDocumentPointerDown(event: Event): void {
 }
 
 onMounted(() => {
-  void library.loadAll();
+  void library.loadAll().then(() => {
+    libraryLoaded.value = true;
+  });
   globalThis.document.addEventListener('pointerdown', onDocumentPointerDown);
   globalThis.addEventListener('scroll', closeMenu, true);
   globalThis.addEventListener('resize', closeMenu);
@@ -517,6 +597,63 @@ const SORT_COLUMNS: readonly { key: DocumentSortKey; label: string }[] = [
         t('documents.count', { count: library.documents.length })
       }}</span>
     </div>
+
+    <!-- The offer to set up the own sender (R15-006): once, while no primary
+         contact exists; "later" is for this session, "don't ask again" for good. -->
+    <section
+      v-if="offerSenderSetup"
+      class="sender-onboarding"
+      role="region"
+      :aria-label="t('documents.senderOnboarding.title')"
+      data-testid="sender-onboarding"
+    >
+      <div class="sender-onboarding-text">
+        <h2>{{ t('documents.senderOnboarding.title') }}</h2>
+        <p>{{ t('documents.senderOnboarding.text') }}</p>
+      </div>
+      <div class="sender-onboarding-actions">
+        <button
+          type="button"
+          class="btn btn-primary btn-sm"
+          data-testid="sender-onboarding-setup"
+          @click="senderOnboardingOpen = true"
+        >
+          {{ t('documents.senderOnboarding.setup') }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-ghost btn-sm"
+          data-testid="sender-onboarding-later"
+          @click="skipSenderSetup"
+        >
+          {{ t('documents.senderOnboarding.later') }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-link btn-sm"
+          data-testid="sender-onboarding-never"
+          @click="dismissSenderSetup"
+        >
+          {{ t('documents.senderOnboarding.never') }}
+        </button>
+      </div>
+    </section>
+    <p
+      v-else-if="senderSavedNotice"
+      class="alert alert-success"
+      role="status"
+      data-testid="sender-onboarding-done"
+    >
+      {{ t('documents.senderOnboarding.done') }}
+    </p>
+
+    <ContactDialog
+      :open="senderOnboardingOpen"
+      :contact="null"
+      preset-sender
+      @close="senderOnboardingOpen = false"
+      @save="saveOwnSender"
+    />
 
     <!-- The toolbar: New, Import, Export / Backup, Archive. -->
     <div class="file-toolbar" role="toolbar" :aria-label="t('documents.toolbar')">

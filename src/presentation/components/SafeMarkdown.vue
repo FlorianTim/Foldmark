@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import QrCodeFigure from '@/presentation/components/QrCodeFigure.vue';
 import { SafeInline } from '@/presentation/components/SafeInline';
 import { parseMarkdown, type MarkdownBlock } from '@/presentation/markdown/parseMarkdown';
 
@@ -132,6 +133,15 @@ function directiveData(block: Extract<MarkdownBlock, { kind: 'directive' }>): st
 
       <!-- A page break is a layout instruction; the render plan already acted on it. -->
       <div v-else-if="block.kind === 'pageBreak'" class="md-page-break" aria-hidden="true" />
+
+      <!-- A QR code is encoded from its payload every time it is drawn (change 0040). -->
+      <QrCodeFigure
+        v-else-if="block.kind === 'qr'"
+        :payload="block.payload"
+        :size-mm="block.sizeMm"
+        :align="block.align"
+        :error-correction="block.errorCorrection"
+      />
 
       <div
         v-else-if="block.kind === 'directive'"

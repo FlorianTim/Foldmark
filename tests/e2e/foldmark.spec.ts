@@ -923,6 +923,64 @@ test.describe('Foldmark', () => {
     await expect(page.locator('.document-open')).toHaveCount(2);
   });
 
+  test('inserts a QR code that the editor, the preview and the print copy draw alike (change 0040)', async ({
+    page,
+  }) => {
+    await newLetter(page);
+    await mode(page, 'write');
+    await editorView(page, 'visual');
+    const editor = page.locator('.rich-host .ProseMirror');
+    await editor.click();
+    await page.keyboard.type('Scannen Sie den Code:');
+
+    // The dialog: a web address, centred, with a live preview and the free allowance.
+    await page.getByTestId('editor-qr').click();
+    const dialog = page.getByRole('dialog', { name: /qr-code einfügen|insert qr code/i });
+    await expect(dialog.getByTestId('qr-insert')).toBeDisabled();
+    await expect(dialog.getByTestId('qr-premium')).toContainText(/5 (von|of) 5/);
+    await dialog.getByTestId('qr-content').fill('example.org/foldmark');
+    await dialog.getByTestId('qr-align-center').check();
+    await expect(dialog.getByTestId('qr-preview').locator('svg.md-qr')).toHaveAttribute(
+      'width',
+      '30mm',
+    );
+    await expect(dialog.getByTestId('qr-facts')).toContainText(/version 3/i);
+    await dialog.getByTestId('qr-insert').click();
+
+    // Drawn in all three places as an SVG path in millimetres — never an image, never HTML.
+    const drawn = editor.locator('.md-qr svg');
+    await expect(drawn).toHaveAttribute('width', '30mm');
+    await expect(drawn.locator('path')).toHaveAttribute('d', /^M4 4h7v1h-7z/);
+    const previewed = page.locator('.preview-sheet svg.md-qr').first();
+    await expect(previewed).toHaveClass(/md-qr-align-center/);
+    await expect(previewed).toHaveAttribute('data-qr-payload', 'https://example.org/foldmark');
+    await expect(page.locator('.print-root svg.md-qr')).toHaveCount(1);
+
+    // A click selects the code; the strip realigns it; the file spells the directive.
+    await editor.locator('.md-qr').click();
+    await expect(page.getByTestId('qr-toolbar-summary')).toContainText('example.org/foldmark');
+    await page.getByTestId('qr-align-toolbar-right').click();
+    await expect(previewed).toHaveClass(/md-qr-align-right/);
+    await editorView(page, 'source');
+    await expect(page.getByLabel(/brieftext in markdown|letter body in markdown/i)).toHaveValue(
+      /::qr\[https:\/\/example\.org\/foldmark\]\{align="right"\}/,
+    );
+
+    // Editing from the source view works too, and the code follows the file.
+    await page
+      .getByLabel(/brieftext in markdown|letter body in markdown/i)
+      .fill('Anrufen:\n\n::qr[tel:+4923112345]{size=45mm}');
+    await expect(previewed).toHaveAttribute('width', '45mm');
+    await expect(previewed).toHaveAttribute('data-qr-payload', 'tel:+4923112345');
+
+    // One code was generated: the allowance counts it, and only it.
+    await editorView(page, 'visual');
+    await editor.click();
+    await page.getByTestId('editor-qr').click();
+    await expect(dialog.getByTestId('qr-premium')).toContainText(/4 (von|of) 5/);
+    await dialog.getByRole('button', { name: /abbrechen|cancel/i }).click();
+  });
+
   test('hands back the original text when an imported file cannot be parsed', async ({ page }) => {
     const broken = '---\ntitle: A\nalias: *nope\n---\n\nMein wichtiger Brief.\n';
     await page.getByLabel(/markdown importieren|import markdown/i).setInputFiles({
@@ -1391,4 +1449,210 @@ test('keeps the first-run notice usable on a small viewport', async ({ page }) =
   await expect(page.getByRole('dialog')).toBeVisible();
   await page.getByRole('button', { name: /einstellungen öffnen|open settings/i }).click();
   await expect(page.getByRole('heading', { name: /einstellungen|settings/i })).toBeVisible();
+});
+
+test('offers to set up the own sender once, and a letter starts with it (change 0044)', async ({
+  page,
+}) => {
+  await page.goto('./');
+  await dismissIntro(page);
+  const offer = page.getByTestId('sender-onboarding');
+  await expect(offer).toBeVisible();
+
+  // "Later" is for this session: leaving and coming back does not ask again …
+  await page.getByTestId('sender-onboarding-later').click();
+  await expect(offer).toBeHidden();
+  await page.getByRole('button', { name: /kontaktverzeichnis|contact directory/i }).click();
+  await page.getByRole('button', { name: /^dokumente$|^documents$/i }).click();
+  await expect(offer).toBeHidden();
+  // … a reload does.
+  await page.reload();
+  await dismissIntro(page);
+  await expect(offer).toBeVisible();
+
+  // Setting up: the dialog starts as a sender; no e-mail is required.
+  await page.getByTestId('sender-onboarding-setup').click();
+  const dialog = page.getByRole('dialog', { name: /neuer kontakt|new contact/i });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByLabel(/absender|sender/i).first()).toBeChecked();
+  await dialog.getByTestId('contact-first-name').fill('Erika');
+  await dialog.getByTestId('contact-last-name').fill('Mustermann');
+  await dialog.getByLabel(/straße und hausnummer|street and number/i).fill('Heidestraße 17');
+  await dialog.getByLabel(/^ort$|^city$/i).fill('Köln');
+  await dialog.getByTestId('contact-save').click();
+  await expect(dialog).toBeHidden();
+  await expect(page.getByTestId('sender-onboarding-done')).toBeVisible();
+  await expect(offer).toBeHidden();
+
+  // The contact is the primary sender: a new letter starts with it.
+  await newLetter(page);
+  await expect(page.getByRole('combobox', { name: /^absender$|^sender$/i })).toHaveValue(
+    /Erika Mustermann/,
+  );
+  await expect(page.locator('.preview-pages')).toContainText('Heidestraße 17');
+});
+
+test('lets the own-sender offer be declined for good (change 0044)', async ({ page }) => {
+  await page.goto('./');
+  await dismissIntro(page);
+  await expect(page.getByTestId('sender-onboarding')).toBeVisible();
+  await page.getByTestId('sender-onboarding-never').click();
+  await expect(page.getByTestId('sender-onboarding')).toBeHidden();
+  await page.reload();
+  await dismissIntro(page);
+  await expect(page.getByText(/noch keine dokumente|no documents yet/i)).toBeVisible();
+  await expect(page.getByTestId('sender-onboarding')).toHaveCount(0);
+});
+
+test('draws a signature on the pad and stores it as a signature image (change 0046)', async ({
+  page,
+}) => {
+  await page.goto('./');
+  await dismissIntro(page);
+  await page.getByRole('button', { name: /^bilder$|^images$/i }).click();
+  await page.getByTestId('draw-signature').click();
+  const dialog = page.getByRole('dialog', { name: /unterschrift zeichnen|draw a signature/i });
+  await expect(dialog).toBeVisible();
+  await expect(page.getByTestId('signature-save')).toBeDisabled();
+
+  // Two strokes with the mouse, then one taken back.
+  const pad = page.getByTestId('signature-pad');
+  const box = (await pad.boundingBox())!;
+  const at = (fx: number, fy: number) => [box.x + box.width * fx, box.y + box.height * fy] as const;
+  await page.mouse.move(...at(0.1, 0.6));
+  await page.mouse.down();
+  for (let step = 1; step <= 20; step += 1) {
+    await page.mouse.move(...at(0.1 + step * 0.03, 0.6 + Math.sin(step / 2) * 0.2));
+  }
+  await page.mouse.up();
+  await page.mouse.move(...at(0.8, 0.3));
+  await page.mouse.down();
+  await page.mouse.move(...at(0.85, 0.7));
+  await page.mouse.up();
+  await expect(page.getByTestId('signature-save')).toBeEnabled();
+  await page.getByTestId('signature-undo').click();
+
+  await page.getByTestId('signature-title').fill('Erika');
+  await page.getByTestId('signature-save').click();
+  await expect(dialog).toBeHidden();
+  await expect(page.getByTestId('signature-saved')).toBeVisible();
+
+  // A signature asset, cropped to the ink: wide and low, not the whole pad.
+  const card = page.locator('.asset-card');
+  await expect(card).toHaveCount(1);
+  await expect(card).toContainText('Erika');
+  await expect(card.locator('select')).toHaveValue('signature');
+  const size = await card.innerText();
+  const match = /(\d+)\s*×\s*(\d+)\s*px/u.exec(size);
+  expect(match).not.toBeNull();
+  const [width, height] = [Number(match![1]), Number(match![2])];
+  expect(width).toBeGreaterThan(height);
+  expect(height).toBeLessThan(400);
+});
+
+test('edits the marks of an own profile by number and sees them on the sheet (change 0047)', async ({
+  page,
+}) => {
+  await page.goto('./');
+  await dismissIntro(page);
+  await page.getByRole('button', { name: /druckprofile|print profiles/i }).click();
+
+  // A built-in only lists its marks; a copy edits them.
+  await page.getByTestId('profile-din5008-b').click();
+  await expect(page.getByTestId('marker-editor')).toHaveCount(0);
+  await page.getByTestId('profile-clone-name').fill('Mein Brief');
+  await page.getByTestId('profile-clone').click();
+  const editor = page.getByTestId('marker-editor');
+  await expect(editor).toBeVisible();
+  await expect(editor.locator('.marker-editor-row')).toHaveCount(3);
+  await expect(page.getByTestId('marker-save')).toBeDisabled();
+
+  // Move the punch mark, add a cut mark, take the top fold away, reorder.
+  const punch = page.getByTestId('marker-punch');
+  await punch.getByTestId('marker-y').fill('150');
+  await punch.getByTestId('marker-y').press('Tab');
+  await page.getByTestId('marker-new-kind').selectOption('cut');
+  await page.getByTestId('marker-add').click();
+  await expect(editor.locator('.marker-editor-row')).toHaveCount(4);
+  await page.getByTestId('marker-fold-top').getByTestId('marker-remove').click();
+  await expect(editor.locator('.marker-editor-row')).toHaveCount(3);
+  await page.getByTestId('marker-cut-1').getByTestId('marker-up').click();
+  await expect(editor.locator('.marker-editor-row').nth(1)).toHaveAttribute(
+    'data-testid',
+    'marker-cut-1',
+  );
+
+  // A mark outside the sheet blocks saving until it is back.
+  await punch.getByTestId('marker-x').fill('500');
+  await punch.getByTestId('marker-x').press('Tab');
+  await expect(page.getByTestId('marker-issues')).toContainText(/außerhalb|outside/i);
+  await expect(page.getByTestId('marker-save')).toBeDisabled();
+  await punch.getByTestId('marker-x').fill('5');
+  await punch.getByTestId('marker-x').press('Tab');
+  await expect(page.getByTestId('marker-save')).toBeEnabled();
+  await page.getByTestId('marker-save').click();
+  await expect(page.getByText(/marken gespeichert|marks saved/i)).toBeVisible();
+
+  // The stored profile draws the moved punch mark at 150 mm on a letter.
+  await page.getByRole('button', { name: /^dokumente$|^documents$/i }).click();
+  await newLetter(page);
+  await mode(page, 'document');
+  await page.getByTestId('print-profile').selectOption({ label: 'Mein Brief' });
+  await expect.poll(() => markerOffsets(page)).toEqual(expect.arrayContaining(['150mm', '210mm']));
+  expect(await markerOffsets(page)).not.toContain('105mm');
+});
+
+test('finds and replaces in the visual editor and in the Markdown source (change 0048)', async ({
+  page,
+}) => {
+  await page.goto('./');
+  await dismissIntro(page);
+  await newLetter(page);
+  await mode(page, 'write');
+  await editorView(page, 'visual');
+  const editor = page.locator('.rich-host .ProseMirror');
+  await editor.click();
+  await page.keyboard.type('Der Vertrag endet. Ein Vertrag beginnt, vertraglich.');
+
+  // Edit → Find and replace… opens the bar; the query counts and selects.
+  await page.getByRole('menuitem', { name: /^bearbeiten$|^edit$/i }).click();
+  await page.getByRole('menuitem', { name: /suchen und ersetzen|find and replace/i }).click();
+  const bar = page.getByTestId('find-bar');
+  await expect(bar).toBeVisible();
+  await page.getByTestId('find-query').fill('vertrag');
+  await expect(page.getByTestId('find-count')).toHaveText(/1 (von|of) 3/);
+  await page.getByTestId('find-next').click();
+  await expect(page.getByTestId('find-count')).toHaveText(/2 (von|of) 3/);
+  // The match is marked in the text while the bar keeps the keyboard focus.
+  await expect(editor.locator('.find-match')).toHaveText('Vertrag');
+
+  // Whole word leaves "vertraglich" out; Replace takes the selected one.
+  await bar.getByText(/ganzes wort|whole word/i).click();
+  await expect(page.getByTestId('find-count')).toHaveText(/(von|of) 2/);
+  await page.getByTestId('find-replacement').fill('Abo');
+  // A changed option searches again from the current match onward and wraps
+  // to the first, so Replace takes "Der Vertrag" and leaves the second one.
+  await page.getByTestId('find-replace').click();
+  await expect(editor).toContainText('Der Abo endet');
+  await expect(editor).toContainText('Ein Vertrag beginnt');
+  await page.getByTestId('find-replace-all').click();
+  await expect(editor).toContainText('Ein Abo beginnt');
+  await expect(editor).toContainText('vertraglich');
+  await expect(page.getByTestId('find-count')).toHaveText(/kein treffer|no match/i);
+
+  // The same bar over the Markdown source, and Escape closes it.
+  await editorView(page, 'source');
+  const textarea = page.getByLabel(/brieftext in markdown|letter body in markdown/i);
+  await page.getByTestId('find-query').fill('Abo');
+  await expect(page.getByTestId('find-count')).toHaveText(/1 (von|of) 2/);
+  await page.getByTestId('find-replacement').fill('Vertrag');
+  await page.getByTestId('find-replace-all').click();
+  await expect(textarea).toHaveValue(/Der Vertrag endet\. Ein Vertrag beginnt/);
+  await page.getByTestId('find-query').press('Escape');
+  await expect(bar).toBeHidden();
+
+  // Ctrl+H inside the editor brings it back.
+  await textarea.click();
+  await page.keyboard.press('Control+h');
+  await expect(bar).toBeVisible();
 });

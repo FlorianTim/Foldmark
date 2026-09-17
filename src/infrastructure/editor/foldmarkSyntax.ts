@@ -14,6 +14,7 @@ import {
   IMAGE_WIDTH_BOUNDS,
   INLINE_DIRECTIVES,
   ISO_DATE,
+  QR_SIZE_MM,
   parseImageLayout,
   resolveBlockAttributes,
   serializeImageLayout,
@@ -23,6 +24,13 @@ import {
 import { formatIsoDate } from '@/domain/markdown/dateToken';
 import { plainText } from '@/domain/markdown/parseMarkdown';
 import { remarkFoldmarkSyntax } from '@/domain/markdown/remarkPipeline';
+import {
+  encodeQrMatrix,
+  isQrErrorCorrection,
+  qrModulePath,
+  qrViewBoxSize,
+  type QrCodeSpec,
+} from '@/domain/qr/qrCode';
 
 /**
  * Foldmark's syntax in the editor (change 0017): the directive catalogue, the
@@ -57,8 +65,13 @@ export interface EditorEnvironment {
   readonly locale: string;
   /** Object URL for a local asset, or `null` when it does not exist. */
   readonly resolveAssetUrl: (assetId: string) => Promise<string | null>;
-  /** Wording for the page-break marker and a missing image. */
-  readonly labels: { readonly pageBreak: string; readonly missingAsset: string };
+  /** Wording for the page-break marker, a missing image and a QR code that cannot be drawn. */
+  readonly labels: {
+    readonly pageBreak: string;
+    readonly missingAsset: string;
+    readonly qrCode?: string;
+    readonly qrEmpty?: string;
+  };
 }
 
 /** The environment as a Milkdown context slice, set by the adapter before the editor is created. */
@@ -479,7 +492,8 @@ export const leafDirectiveNode = $node('fmLeaf', (ctx) => ({
     ];
   },
   parseMarkdown: {
-    match: (node: DirectiveMdast) => node.type === 'leafDirective' || isEmptyLeafContainer(node),
+    match: (node: DirectiveMdast) =>
+      (node.type === 'leafDirective' && node.name !== 'qr') || isEmptyLeafContainer(node),
     runner: (state, node: DirectiveMdast, type) => {
       state.addNode(type, {
         name: node.name ?? 'unknown',
@@ -497,6 +511,150 @@ export const leafDirectiveNode = $node('fmLeaf', (ctx) => ({
     },
   },
 }));
+
+/** The spec a QR node's attributes describe, validated the way the renderer validates the file. */
+export function qrSpecOf(attrs: Readonly<Record<string, unknown>>): QrCodeSpec {
+  const resolved = resolveBlockAttributes('qr', {
+    size: String(attrs.size ?? ''),
+    align: String(attrs.align ?? ''),
+    ec: String(attrs.ec ?? ''),
+  });
+  return {
+    payload: String(attrs.payload ?? ''),
+    sizeMm: Number(resolved.size),
+    align: resolved.align as ImageAlignment,
+    errorCorrection: isQrErrorCorrection(resolved.ec) ? resolved.ec : 'M',
+  };
+}
+
+/**
+ * `::qr[payload]{size=30mm align=center ec=M}` (change 0040): a block atom
+ * that carries the payload and its layout. The label arrives as one text
+ * node — the remark plugin made it literal — and is written back as one, so
+ * `mdast-util-to-markdown` escapes what needs escaping and the reader takes
+ * it as typed.
+ */
+export const qrNode = $node('fmQr', () => ({
+  group: 'block',
+  atom: true,
+  selectable: true,
+  draggable: true,
+  attrs: {
+    payload: { default: '', validate: 'string' },
+    size: { default: '30', validate: 'string' },
+    align: { default: 'left', validate: 'string' },
+    ec: { default: 'M', validate: 'string' },
+  },
+  parseDOM: [
+    {
+      tag: 'div[data-qr-payload]',
+      getAttrs: (dom: HTMLElement) => ({
+        payload: dom.dataset.qrPayload ?? '',
+        size: dom.dataset.size ?? '30',
+        align: dom.dataset.align ?? 'left',
+        ec: dom.dataset.ec ?? 'M',
+      }),
+    },
+  ],
+  toDOM: (node: ProseNode) => {
+    const spec = qrSpecOf(node.attrs);
+    return [
+      'div',
+      {
+        class: `md-qr md-qr-align-${spec.align}`,
+        'data-qr-payload': spec.payload,
+        'data-size': String(spec.sizeMm),
+        'data-align': spec.align,
+        'data-ec': spec.errorCorrection,
+        contenteditable: 'false',
+      },
+    ];
+  },
+  parseMarkdown: {
+    match: (node: DirectiveMdast) => node.type === 'leafDirective' && node.name === 'qr',
+    runner: (state, node: DirectiveMdast, type) => {
+      const attributes = resolveBlockAttributes('qr', node.attributes ?? {});
+      state.addNode(type, {
+        payload: plainText(node as { value?: string }).trim(),
+        size: attributes.size,
+        align: attributes.align,
+        ec: attributes.ec,
+      });
+    },
+  },
+  toMarkdown: {
+    match: (node: ProseNode) => node.type.name === 'fmQr',
+    runner: (state, node: ProseNode) => {
+      const spec = qrSpecOf(node.attrs);
+      const attributes: Record<string, string> = {};
+      if (spec.sizeMm !== QR_SIZE_MM.fallback) attributes.size = `${spec.sizeMm}mm`;
+      if (spec.align !== 'left') attributes.align = spec.align;
+      if (spec.errorCorrection !== 'M') attributes.ec = spec.errorCorrection;
+      // The serializer escapes the brackets and the backslashes the reader resolves.
+      const label = spec.payload;
+      state.addNode('leafDirective', label ? [{ type: 'text', value: label }] : [], undefined, {
+        name: 'qr',
+        attributes,
+      });
+    },
+  },
+}));
+
+/**
+ * Draws a QR node: the modules as one SVG path in a box of the requested
+ * millimetres, the way the preview draws it. Built with `createElementNS`
+ * and attributes only — the path string is digits and letters from the
+ * encoder, the payload itself reaches no attribute but its own `data-` copy.
+ */
+export const qrView = $view(qrNode, (ctx) => (node: ProseNode) => {
+  const labels = ctx.get(editorEnvironmentCtx.key).labels;
+  const dom = document.createElement('div');
+  const draw = (current: ProseNode): void => {
+    const spec = qrSpecOf(current.attrs);
+    dom.className = `md-qr md-qr-align-${spec.align}`;
+    dom.dataset.qrPayload = spec.payload;
+    dom.dataset.size = String(spec.sizeMm);
+    dom.dataset.align = spec.align;
+    dom.dataset.ec = spec.errorCorrection;
+    dom.contentEditable = 'false';
+    dom.replaceChildren();
+    const matrix = encodeQrMatrix(spec.payload, spec.errorCorrection);
+    if (!matrix) {
+      const missing = document.createElement('span');
+      missing.className = 'md-qr-missing';
+      missing.textContent = labels.qrEmpty ?? 'QR code without content';
+      dom.append(missing);
+      return;
+    }
+    const svgNs = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(svgNs, 'svg');
+    const side = qrViewBoxSize(matrix);
+    svg.setAttribute('viewBox', `0 0 ${side} ${side}`);
+    svg.setAttribute('width', `${spec.sizeMm}mm`);
+    svg.setAttribute('height', `${spec.sizeMm}mm`);
+    svg.setAttribute('shape-rendering', 'crispEdges');
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-label', `${labels.qrCode ?? 'QR code'}: ${spec.payload}`);
+    const background = document.createElementNS(svgNs, 'rect');
+    background.setAttribute('width', String(side));
+    background.setAttribute('height', String(side));
+    background.setAttribute('fill', '#fff');
+    const path = document.createElementNS(svgNs, 'path');
+    path.setAttribute('d', qrModulePath(matrix));
+    path.setAttribute('fill', '#000');
+    svg.append(background, path);
+    dom.append(svg);
+  };
+  draw(node);
+  return {
+    dom,
+    update: (updated: ProseNode) => {
+      if (updated.type !== node.type) return false;
+      draw(updated);
+      return true;
+    },
+  };
+});
 
 /** The layout an image node carries, from its attributes. */
 export function imageLayoutOf(attrs: Readonly<Record<string, unknown>>): ImageLayout {
@@ -914,6 +1072,64 @@ export const insertPageBreakCommand = $command('InsertPageBreak', (ctx) => () =>
   };
 });
 
+/**
+ * Inserts a QR code after the current top-level block (change 0040) and puts
+ * the cursor after it, the way the page break does, so the writer keeps typing.
+ */
+export const insertQrCommand = $command(
+  'InsertQr',
+  (ctx) =>
+    (spec: QrCodeSpec = { payload: '', sizeMm: 30, align: 'left', errorCorrection: 'M' }) => {
+      return (state, dispatch) => {
+        if (!spec.payload) return false;
+        if (dispatch) {
+          const node = qrNode.type(ctx).create({
+            payload: spec.payload,
+            size: String(spec.sizeMm),
+            align: spec.align,
+            ec: spec.errorCorrection,
+          });
+          const position = insideSelection(state).$to.after(1);
+          const tr = state.tr.insert(position, node);
+          const after = position + node.nodeSize;
+          if (after >= tr.doc.content.size) {
+            const paragraph = state.schema.nodes.paragraph?.createAndFill();
+            if (paragraph) tr.insert(after, paragraph);
+          }
+          dispatch(
+            tr.setSelection(TextSelection.near(tr.doc.resolve(after + 1), 1)).scrollIntoView(),
+          );
+        }
+        return true;
+      };
+    },
+);
+
+/** Replaces the selected QR code's payload and layout; nothing happens unless one is selected. */
+export const setQrCommand = $command(
+  'SetQr',
+  (ctx) =>
+    (spec: QrCodeSpec = { payload: '', sizeMm: 30, align: 'left', errorCorrection: 'M' }) => {
+      return (state, dispatch) => {
+        const selection = state.selection;
+        if (!(selection instanceof NodeSelection) || selection.node.type !== qrNode.type(ctx)) {
+          return false;
+        }
+        if (!spec.payload) return false;
+        if (dispatch) {
+          const tr = state.tr.setNodeMarkup(selection.from, undefined, {
+            payload: spec.payload,
+            size: String(spec.sizeMm),
+            align: spec.align,
+            ec: spec.errorCorrection,
+          });
+          dispatch(tr.setSelection(NodeSelection.create(tr.doc, selection.from)).scrollIntoView());
+        }
+        return true;
+      };
+    },
+);
+
 /** Every plugin of the syntax, in the order Milkdown must see them: nodes, marks, views, commands. */
 /**
  * Clears every character mark from the selection (R14-005): bold, italic,
@@ -943,6 +1159,7 @@ export const foldmarkSyntax = [
   imageNode,
   foreignImageText,
   directiveBlockNode,
+  qrNode,
   leafDirectiveNode,
   colorMark,
   highlightMark,
@@ -953,6 +1170,7 @@ export const foldmarkSyntax = [
   unknownInlineMark,
   colorView,
   imageView,
+  qrView,
   setColorCommand,
   toggleInlineCommand,
   insertDateCommand,
@@ -961,6 +1179,8 @@ export const foldmarkSyntax = [
   setImageLayoutCommand,
   toggleBlockDirectiveCommand,
   insertPageBreakCommand,
+  insertQrCommand,
+  setQrCommand,
   clearFormattingCommand,
 ].flat();
 

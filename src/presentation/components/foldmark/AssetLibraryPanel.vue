@@ -16,6 +16,7 @@ import {
 } from '@/domain/asset/DocumentAsset';
 import { roundMm } from '@/domain/common/Units';
 import ConfirmDialog from '@/presentation/components/ConfirmDialog.vue';
+import SignatureDialog from '@/presentation/components/foldmark/SignatureDialog.vue';
 import { useAssetUrls } from '@/presentation/composables/useAssetUrls';
 import { useLibraryStore } from '@/presentation/stores/libraryStore';
 
@@ -67,6 +68,34 @@ async function onFileSelected(event: Event): Promise<void> {
   try {
     await services.assets.import(file, { kind: kind.value, filename: file.name });
     await library.refreshAssets();
+  } catch (error) {
+    rejection.value =
+      error instanceof AssetRejectedError
+        ? `assets.rejected.${error.params?.reason ?? 'unknown'}`
+        : 'errors.unexpected';
+  } finally {
+    busy.value = false;
+  }
+}
+
+// --- drawn signature (R02-003, change 0046) -----------------------------------
+const signatureOpen = ref(false);
+const signatureNotice = ref(false);
+
+/** The pad's PNG goes through the same import rules as a file. */
+async function onSignatureDrawn(payload: { blob: Blob; title: string }): Promise<void> {
+  busy.value = true;
+  rejection.value = null;
+  signatureNotice.value = false;
+  try {
+    await services.assets.import(payload.blob, {
+      kind: 'signature',
+      filename: `${payload.title}.png`,
+      title: payload.title,
+    });
+    await library.refreshAssets();
+    signatureOpen.value = false;
+    signatureNotice.value = true;
   } catch (error) {
     rejection.value =
       error instanceof AssetRejectedError
@@ -187,8 +216,31 @@ function importedAt(iso: string): string {
         :aria-label="t('assets.import')"
         @change="onFileSelected"
       />
+      <button
+        class="btn btn-outline"
+        type="button"
+        :disabled="busy"
+        data-testid="draw-signature"
+        @click="signatureOpen = true"
+      >
+        {{ t('assets.signaturePad.open') }}
+      </button>
       <p class="asset-rules">{{ t('assets.rules', { max: maxMegabytes }) }}</p>
     </div>
+
+    <SignatureDialog
+      :open="signatureOpen"
+      @close="signatureOpen = false"
+      @save="onSignatureDrawn"
+    />
+    <p
+      v-if="signatureNotice"
+      class="alert alert-success"
+      role="status"
+      data-testid="signature-saved"
+    >
+      {{ t('assets.signaturePad.saved') }}
+    </p>
 
     <p v-if="rejection" class="alert alert-error" role="alert">{{ t(rejection) }}</p>
     <p v-if="library.error" class="alert alert-error" role="alert">{{ t(library.error) }}</p>

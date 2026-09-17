@@ -144,6 +144,59 @@ export function cloneProfile(
   };
 }
 
+/**
+ * Whether the body region is exactly the margin box — a plain profile whose
+ * body may follow the margins and the orientation, as opposed to a structured
+ * body (the DIN letter's, below the address field) that stays where it is.
+ */
+export function bodyFollowsMargins(profile: PrintProfile): boolean {
+  const body = profile.regions.body;
+  if (!body) return false;
+  // Inch-based sheets (US Letter) make the subtraction drift by a float ulp.
+  const same = (left: number, right: number) => Math.abs(left - right) < 0.01;
+  const { page, margins } = profile;
+  return (
+    same(body.xMm, margins.leftMm) &&
+    same(body.yMm, margins.topMm) &&
+    same(body.widthMm, page.widthMm - margins.leftMm - margins.rightMm) &&
+    same(body.heightMm, page.heightMm - margins.topMm - margins.bottomMm)
+  );
+}
+
+/**
+ * The same profile turned to the other orientation (change 0045, R16-001):
+ * width and height swap, a body that was the margin box follows, everything
+ * else — other regions, markers, margins — keeps its millimetres. A marker
+ * that no longer fits the turned sheet is the caller's problem to validate:
+ * turning a DIN letter sideways is refused by the geometry check, not guessed.
+ * Pure: the same orientation returns the profile unchanged.
+ */
+export function turnProfile(
+  profile: PrintProfile,
+  orientation: PageSizeMm['orientation'],
+  now = new Date(),
+): PrintProfile {
+  if (profile.page.orientation === orientation) return profile;
+  const page: PageSizeMm = {
+    widthMm: profile.page.heightMm,
+    heightMm: profile.page.widthMm,
+    orientation,
+  };
+  const { margins } = profile;
+  const regions =
+    profile.regions.body && bodyFollowsMargins(profile)
+      ? {
+          ...profile.regions,
+          body: {
+            ...profile.regions.body,
+            widthMm: page.widthMm - margins.leftMm - margins.rightMm,
+            heightMm: page.heightMm - margins.topMm - margins.bottomMm,
+          },
+        }
+      : profile.regions;
+  return { ...profile, page, regions, updatedAt: now.toISOString() };
+}
+
 /** The largest page dimension Foldmark accepts, in millimetres. */
 export const MAX_PAGE_MM: Millimetres = 1_000;
 

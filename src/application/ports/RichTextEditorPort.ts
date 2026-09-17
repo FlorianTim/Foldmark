@@ -13,6 +13,8 @@
  */
 
 import type { ImageAlignment, ImageLayout } from '@/domain/markdown/directives';
+import type { TextSearchOptions } from '@/domain/markdown/textSearch';
+import type { QrCodeSpec } from '@/domain/qr/qrCode';
 
 /**
  * Block and inline formatting the toolbar can ask for. The directive commands
@@ -57,7 +59,11 @@ export type EditorCommand =
   /** Removes every character mark from the selection (R14-005). */
   | 'clearFormatting'
   /** Sets the selected image's width and alignment (R14-015). */
-  | 'imageLayout';
+  | 'imageLayout'
+  /** Inserts a QR code after the current block (change 0040); the argument is its spec. */
+  | 'qr'
+  /** Replaces the selected QR code's payload and layout. */
+  | 'qrUpdate';
 
 /**
  * A command's argument: a name, a level, an ISO date — or, for an image, the
@@ -74,7 +80,8 @@ export type EditorCommandArgument =
     }
   | { readonly rows: number; readonly cols: number }
   | { readonly href: string; readonly text: string }
-  | ImageLayoutChange;
+  | ImageLayoutChange
+  | QrCodeSpec;
 
 /**
  * A change to the selected image's layout (R14-015): every field given is
@@ -115,6 +122,8 @@ export interface EditorSelectionState {
   readonly linkHref: string | null;
   /** The selected image and its layout, when an image node is selected (R14-015). */
   readonly image: (ImageLayout & { readonly assetId: string }) | null;
+  /** The selected QR code, when one is selected (change 0040). */
+  readonly qr: QrCodeSpec | null;
 }
 
 /** A mounted rich-text editor over one Markdown body. */
@@ -135,8 +144,27 @@ export interface RichTextEditorPort {
   selectAll(): void;
   /** Selects the first image of this asset, as a click on it would; `false` when there is none. */
   selectImage(assetId: string): boolean;
+  /** Selects the first QR code with this payload, as a click on it would; `false` when there is none. */
+  selectQr(payload: string): boolean;
   /** Formatting under the cursor, for toolbar highlighting. */
   selectionState(): EditorSelectionState;
+  /** How many places the query occurs in the body (change 0048). */
+  countMatches(query: string, options?: TextSearchOptions): number;
+  /**
+   * Selects the next (or previous) occurrence relative to the current
+   * selection, wrapping around; `null` without a match.
+   */
+  selectMatch(
+    query: string,
+    options: TextSearchOptions | undefined,
+    direction: 1 | -1,
+  ): { readonly index: number; readonly total: number } | null;
+  /** Replaces the selected occurrence, if the selection is one; then selects the next. */
+  replaceMatch(query: string, replacement: string, options?: TextSearchOptions): boolean;
+  /** Replaces every occurrence in one step and reports how many. */
+  replaceAllMatches(query: string, replacement: string, options?: TextSearchOptions): number;
+  /** Takes the find highlight off, when the find bar closes. */
+  clearMatchHighlight(): void;
   focus(): void;
   /** Unmounts the editor and releases every listener. */
   destroy(): Promise<void>;
@@ -156,7 +184,12 @@ export interface RichTextEditorOptions {
   /** Object URL for a local asset the body references, or `null` when it is missing. */
   readonly resolveAssetUrl?: (assetId: string) => Promise<string | null>;
   /** Wording the editor shows for a page break and a missing image. */
-  readonly labels?: { readonly pageBreak: string; readonly missingAsset: string };
+  readonly labels?: {
+    readonly pageBreak: string;
+    readonly missingAsset: string;
+    readonly qrCode?: string;
+    readonly qrEmpty?: string;
+  };
 }
 
 /** Creates editors; the composition root decides which implementation. */

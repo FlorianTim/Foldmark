@@ -14,11 +14,19 @@ import {
   type Address,
   type AddressRole,
 } from '@/domain/address/Address';
+import {
+  CONTACT_EXPORT_FILE,
+  CONTACT_EXPORT_FORMATS,
+  serializeContacts,
+  type ContactExportFormat,
+} from '@/domain/address/export/contactExport';
 import AppIcon from '@/presentation/components/AppIcon.vue';
+import AppMenu, { type Menu } from '@/presentation/components/foldmark/AppMenu.vue';
 import ContactDialog, {
   type ContactPayload,
 } from '@/presentation/components/foldmark/ContactDialog.vue';
 import ContactImportDialog from '@/presentation/components/foldmark/ContactImportDialog.vue';
+import { downloadText, safeFilename } from '@/presentation/download';
 import { useLibraryStore } from '@/presentation/stores/libraryStore';
 import { useWorkspaceStore } from '@/presentation/stores/workspaceStore';
 
@@ -97,6 +105,34 @@ function onDrop(event: DragEvent): void {
 const library = useLibraryStore();
 const workspace = useWorkspaceStore();
 const { t, locale } = useI18n();
+
+// --- export (R03-004, change 0042) --------------------------------------------
+/** The whole directory, alphabetically, never the current page or search. */
+const exportMenu = computed<readonly Menu[]>(() => [
+  {
+    id: 'export',
+    label: t('addresses.export.button'),
+    items: CONTACT_EXPORT_FORMATS.map((format) => ({
+      id: `export:${format}`,
+      label: t(`addresses.export.${format}`),
+      icon: 'export' as const,
+      disabled: library.addresses.length === 0,
+    })),
+  },
+]);
+
+function onExportCommand(id: string): void {
+  const format = id.replace(/^export:/u, '') as ContactExportFormat;
+  if (!CONTACT_EXPORT_FORMATS.includes(format)) return;
+  const contacts = [...library.addresses].sort(compareByDisplayName(locale.value));
+  const file = CONTACT_EXPORT_FILE[format];
+  const stamp = new Date().toISOString().slice(0, 10);
+  downloadText(
+    serializeContacts(contacts, format),
+    safeFilename(`${t('addresses.export.filename')}-${stamp}`, file.extension),
+    file.mimeType,
+  );
+}
 
 const query = ref(props.initialQuery ?? '');
 const page = ref(1);
@@ -323,6 +359,12 @@ watch(dialogOpen, () => {
           accept=".vcf,.csv,text/vcard,text/x-vcard,text/csv"
           :aria-label="t('addresses.import.button')"
           @change="onImportFileSelected"
+        />
+        <AppMenu
+          :menus="exportMenu"
+          :label="t('addresses.export.button')"
+          data-testid="export-contacts"
+          @command="onExportCommand"
         />
         <button type="button" class="btn btn-primary" data-testid="new-contact" @click="startNew">
           {{ t('addresses.new') }}

@@ -19,15 +19,16 @@ so the numbers a user sees are measured rather than remembered.
 
 ## Preferences, in localStorage, namespaced `foldmark:ui:`
 
-| Key                                     | Purpose                                                                                       | Deletion                                |
-| --------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------- |
-| `locale`                                | German or English interface                                                                   | "Reset settings", or site-data clearing |
-| `theme`                                 | Colour theme                                                                                  | As above                                |
-| `privacy-notice-v1`                     | Whether the first-visit intro was completed                                                   | As above                                |
-| `entitlement`, `entitlement-checked-at` | Cached entitlement level from the template's purchase seam; no purchase channel is configured | As above                                |
-| `default-sender-profile`                | Sender for new documents                                                                      | As above                                |
-| `default-print-profile`                 | Profile for new documents                                                                     | As above                                |
-| `preview-zoom`, `preview-guides`        | How the preview is displayed                                                                  | As above                                |
+| Key                                     | Purpose                                                                                           | Deletion                                |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| `locale`                                | German or English interface                                                                       | "Reset settings", or site-data clearing |
+| `theme`                                 | Colour theme                                                                                      | As above                                |
+| `privacy-notice-v1`                     | Whether the first-visit intro was completed                                                       | As above                                |
+| `entitlement`, `entitlement-checked-at` | Cached entitlement level from the template's purchase seam; no purchase channel is configured     | As above                                |
+| `premium-usage`                         | Counters of premium features with a free allowance (`qr.generate=3`); a preference, not a licence | As above                                |
+| `default-sender-profile`                | Sender for new documents                                                                          | As above                                |
+| `default-print-profile`                 | Profile for new documents                                                                         | As above                                |
+| `preview-zoom`, `preview-guides`        | How the preview is displayed                                                                      | As above                                |
 
 ## Two deletions, deliberately separate
 
@@ -50,4 +51,7 @@ cryptographic meaning.
 
 "Export all data" writes one JSON file containing every table above plus the preferences, with image
 bytes base64-encoded. It restores completely. Individual documents also export as Markdown with YAML
-front matter, readable without Foldmark.
+front matter, readable without Foldmark. The contact directory exports as vCard 4.0 or CSV
+(change 0042) with the person's data — names, organisation, addresses, e-mails, phones, websites,
+notes, tags — and the entry's id as UID; roles, stationery, visibility and provenance are not
+written. The export is a download the person triggers; nothing is sent anywhere.

@@ -37,6 +37,16 @@ new; a probable duplicate is skipped unless the person decides otherwise; a merg
 addresses not there yet, new e-mails, phones, websites, tags, a missing name or note — and never
 overwrites. Imported contacts carry provenance `imported-file` with the file's id.
 
+Contacts export to files (change 0042, R03-004): the whole directory, alphabetically, as vCard 4.0
+(one card per contact, lines folded at 75 characters) or as a CSV in Google Contacts column spelling
+(UTF-8 with byte-order mark, every cell quoted, as many address/e-mail/phone/website column groups
+as the widest contact needs), from an Export menu next to the import. What travels is who the person
+is — names, organisation, every postal address, e-mail, phone and website with its label and the
+primary marked, notes, tags, last change — plus the contact's id as `UID:urn:foldmark:contact:<id>`;
+roles, stationery, visibility and provenance stay. Foldmark's own import reads both files back and
+recognises a UID that names an existing entry as "probably existing". A CSV cell that a spreadsheet
+would read as a formula gets a leading space, which every reader trims.
+
 **Templates** (database version 5, change 0039) live in their own table, travel in the backup as
 `templates` (absent in older backups, ignored by older importers), are counted in the inventory and
 deleted on their own under Data & backup or with everything. Every record is re-validated on read.

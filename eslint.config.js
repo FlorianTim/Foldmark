@@ -68,6 +68,9 @@ export default tseslint.config(
         fetch: 'readonly',
         // Pane resizing and the popovers of the editor toolbar (changes 0020, 0022).
         PointerEvent: 'readonly',
+        // The signature pad draws on a canvas (change 0046).
+        HTMLCanvasElement: 'readonly',
+        CanvasRenderingContext2D: 'readonly',
         MouseEvent: 'readonly',
         FocusEvent: 'readonly',
         HTMLButtonElement: 'readonly',

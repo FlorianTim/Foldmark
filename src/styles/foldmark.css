@@ -807,6 +807,28 @@ main.wide {
   list-style: disc outside;
 }
 
+/* The calibration sheet's on-screen preview (R02-002): the sheet at a fixed
+   fraction of its size, scaled by transform so the millimetres stay honest. */
+.calibration-preview {
+  --calibration-scale: 0.3;
+  width: calc(var(--calibration-width) * var(--calibration-scale));
+  height: calc(var(--calibration-height) * var(--calibration-scale));
+  max-width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--app-border);
+  border-radius: var(--radius-box, 0.5rem);
+  background: var(--fm-paper, #fff);
+}
+.calibration-preview-stage {
+  transform: scale(var(--calibration-scale));
+  transform-origin: top left;
+}
+.profile-subhead {
+  margin: 1.5rem 0 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
 /* The file manager's drop zone (R14-014). */
 .file-manager {
   position: relative;
@@ -1287,6 +1309,63 @@ main.wide {
   grid-column: 2;
   max-width: 10rem;
 }
+/* The QR dialog (change 0040): fields on the left, the code as it prints on the right. */
+.qr-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(12rem, 16rem);
+  gap: 1rem 1.5rem;
+  align-items: start;
+}
+@media (max-width: 40rem) {
+  .qr-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.qr-fields {
+  display: grid;
+  gap: 0.75rem;
+}
+.qr-layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+.qr-layout .image-width {
+  grid-column: auto;
+}
+.qr-hint,
+.qr-facts {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--app-muted);
+}
+.qr-preview {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: start;
+}
+.qr-preview-sheet {
+  display: grid;
+  place-items: center;
+  min-width: 10rem;
+  min-height: 10rem;
+  padding: 0.5rem;
+  background: #fff;
+  border: 1px solid var(--app-border);
+  border-radius: 0.5rem;
+}
+.qr-preview-sheet .md-qr {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.qr-preview-empty {
+  font-size: 0.85rem;
+  color: var(--app-muted);
+}
+.qr-warning {
+  font-size: 0.85rem;
+}
 .rich-color-wrap {
   flex-wrap: wrap;
   max-width: 14rem;
@@ -1630,6 +1709,36 @@ main.wide {
   min-height: 3rem;
   background: color-mix(in srgb, var(--app-accent) 8%, transparent);
   border: 1px dashed var(--app-border);
+}
+/* A QR code in the editor (change 0040): drawn at its paper size, selectable as a block. */
+.rich-host .ProseMirror .md-qr {
+  display: flex;
+  margin: 0.5rem 0;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  width: fit-content;
+  max-width: 100%;
+}
+.rich-host .ProseMirror .md-qr svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.rich-host .ProseMirror .md-qr.ProseMirror-selectednode {
+  border-color: var(--app-accent);
+  outline: none;
+}
+.rich-host .ProseMirror .md-qr-align-center {
+  margin-inline: auto;
+}
+.rich-host .ProseMirror .md-qr-align-right {
+  margin-inline-start: auto;
+}
+.rich-host .ProseMirror .md-qr-missing {
+  padding: 0.25rem 0.5rem;
+  border: 1px dashed var(--app-muted);
+  color: var(--app-muted);
+  font-size: 0.85rem;
 }
 
 /* --- History dialog ------------------------------------------------------ */
@@ -2059,6 +2168,163 @@ main.wide {
   margin: 0;
   color: var(--app-muted);
   font-size: 0.85rem;
+}
+
+/* Find and replace above the writing area (change 0048). */
+.rich-host .find-match {
+  background: color-mix(in srgb, var(--fm-fold, #c58f00) 35%, transparent);
+  border-radius: 2px;
+  outline: 1px solid var(--fm-fold, #c58f00);
+}
+.find-bar {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--app-border);
+  border-radius: var(--radius-box, 0.5rem);
+  background: var(--app-surface);
+  margin-bottom: 0.5rem;
+}
+.find-bar-row {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.find-bar-field {
+  flex: 1 1 12rem;
+  min-width: 8rem;
+}
+.find-bar-field .input {
+  width: 100%;
+}
+.find-bar-count {
+  min-width: 5.5rem;
+  font-size: 0.8rem;
+  color: var(--app-muted);
+  font-variant-numeric: tabular-nums;
+}
+.find-bar-option {
+  font-size: 0.8rem;
+}
+.find-bar-close {
+  margin-left: auto;
+}
+
+/* The marker editor of an own profile (R02-001). */
+.marker-editor-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+.marker-editor-row {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--app-border);
+  border-radius: var(--radius-box, 0.5rem);
+}
+.marker-editor-head {
+  display: flex;
+  gap: 0.75rem;
+  align-items: end;
+  flex-wrap: wrap;
+}
+.marker-editor-index {
+  min-width: 1.5rem;
+  padding-bottom: 0.45rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--app-muted);
+}
+.marker-editor-label {
+  flex: 1 1 10rem;
+}
+.marker-editor-actions {
+  display: flex;
+  gap: 0.15rem;
+  padding-bottom: 0.2rem;
+  margin-left: auto;
+}
+.marker-editor-geometry {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr));
+  gap: 0.5rem;
+}
+.marker-editor-flags {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.marker-editor-add {
+  display: flex;
+  gap: 0.5rem;
+  align-items: end;
+  flex-wrap: wrap;
+  margin: 0.75rem 0;
+}
+.marker-editor-issues {
+  margin-bottom: 0.75rem;
+}
+
+/* The signature pad (R02-003): a pad that fills the dialog's width and keeps
+   its proportions; the canvas is sized in pixels by the component. */
+.signature-pad-frame {
+  border: 1px solid var(--app-border);
+  border-radius: var(--radius-box, 0.5rem);
+  background: #fff;
+  overflow: hidden;
+}
+.signature-pad {
+  display: block;
+  width: 100%;
+  height: auto;
+  cursor: crosshair;
+  touch-action: none;
+  user-select: none;
+}
+.signature-hint {
+  margin: 0 0 0.5rem;
+  color: var(--app-muted);
+  font-size: 0.9rem;
+}
+.signature-tools {
+  display: flex;
+  gap: 0.35rem;
+  margin: 0.5rem 0 0.75rem;
+}
+
+/* The own-sender offer on the start view (R15-006). */
+.sender-onboarding {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin: 1rem 0 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--app-border);
+  border-left: 4px solid var(--app-accent);
+  border-radius: var(--radius-box, 0.5rem);
+  background: var(--app-surface, transparent);
+}
+.sender-onboarding-text h2 {
+  margin: 0 0 0.15rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.sender-onboarding-text p {
+  margin: 0;
+  color: var(--app-muted);
+  font-size: 0.9rem;
+}
+.sender-onboarding-actions {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 /* --- File manager (change 0024) ------------------------------------------ */

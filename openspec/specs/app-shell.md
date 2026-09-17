@@ -41,6 +41,12 @@ folder moves its content up one level. Archived documents and folders leave the 
 appear in the archive view. Opening stamps `lastOpenedAt` without counting as an edit. Folder,
 archive and opening stamps are local organisation and never enter the portable Markdown file.
 
+While no contact carries the `primary` role the file manager offers, once the directory is loaded,
+to store the own sender details (change 0044, R15-006): "Set up now" opens the contact dialog with
+the sender switch on and stores the contact as `primary` and `sender`; "Later" hides the offer for
+the session; "Don't ask again" writes the preference `sender-onboarding-v1`. The offer blocks
+nothing and requires no e-mail address.
+
 The document workspace occupies the full window width and names its three areas **Document
 settings**, **Writing area** and **Preview** (change 0020). Above 1180 px all three stand side by
 side, between 980 px and 1180 px two, below one as a tablist; a layout preference (automatic, any
@@ -69,6 +75,13 @@ editor stays the browser's. Browser and window keys (`Ctrl+N`, `O`, `W`, `T`, `R
 claimed. Inside the rich editor the keys are caught before ProseMirror's own keymap, so a key fires
 once.
 
+Find and replace (change 0048, R12-002): Edit → "Find and replace…" (`Ctrl+H` inside an editing
+surface) opens a bar above the writing area with find, previous/next, a counter, Match case, Whole
+word, Replace and Replace all. Matching is plain text, never a pattern, and the same in the visual
+editor — where a match may span marks and is marked with a highlight while the bar has the focus —
+and in the Markdown source. Replace acts on the selected match and steps on; Replace all is one undo
+step.
+
 The Visual / Markdown views are one labelled switch (`role="switch"`, change 0031) with undo and
 redo in the same row; the view's explanation is its tooltip. Toolbar controls share one size (38 px
 hit area, 20 px icon) with the workspace bar and the preview controls; every icon-only control has a
@@ -96,7 +109,10 @@ Premium appears here for the first time, in **beta-free** mode (C10–C12): the 
 free, every further one is marked "Premium — free during the test phase" in the save dialog. The
 state comes from the domain registry `premiumFeatures.ts` and is asked in the use case
 (`TemplateService.saveFromDocument`), not only in the dialog; no purchase button exists, and the
-local counters are what they are — this browser's, editable by its owner.
+local counters are what they are — this browser's, editable by its owner. The second gate is the QR
+code (change 0040, Insert → QR code and the toolbar): five codes are free, further ones are marked
+in the dialog; `QrCodeService.generate` decides and counts, and a counter with a free allowance is a
+`FeatureUsageStore` port backed by the `premium-usage` preference.
 
 The file manager imports Markdown through its button and by dropping files on it (change 0035): both
 paths decode the file and show a preview — title, kind, profile, unknown front-matter keys kept,

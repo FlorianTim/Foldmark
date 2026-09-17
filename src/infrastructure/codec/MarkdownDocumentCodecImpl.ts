@@ -12,7 +12,9 @@ import {
   DATE_FORMATS,
   DEFAULT_PRINT_OPTIONS,
   DOCUMENT_SCHEMA_VERSION,
+  PAGE_NUMBER_START_MAX,
   PRESERVED_KEYS_MAX_COUNT,
+  isValidPageNumberPattern,
   type DateFormat,
   type DocumentKind,
   type ExportPreferences,
@@ -221,7 +223,7 @@ export class MarkdownDocumentCodecImpl implements MarkdownDocumentCodec {
     }
 
     if (document.printOptions.pageNumbers.format !== 'none') {
-      front.pageNumbers = { ...document.printOptions.pageNumbers };
+      front.pageNumbers = writePageNumbers(document.printOptions.pageNumbers);
     }
     const hidden: Record<string, FrontMatterValue> = {};
     if (document.printOptions.showSubject === false) hidden.subject = false;
@@ -450,7 +452,7 @@ function readTags(value: FrontMatterValue | undefined): readonly string[] {
     .slice(0, 24);
 }
 
-const PAGE_NUMBER_FORMATS = new Set(['none', 'number', 'page', 'page-of', 'slash', 'of']);
+const PAGE_NUMBER_FORMATS = new Set(['none', 'number', 'page', 'page-of', 'slash', 'of', 'custom']);
 const PAGE_NUMBER_POSITIONS = new Set([
   'top-left',
   'top-center',
@@ -501,7 +503,34 @@ function readPageNumbers(value: FrontMatterValue | undefined): PageNumberOptions
       ? (position as PageNumberOptions['position'])
       : DEFAULT_PRINT_OPTIONS.pageNumbers.position,
     hideOnFirstPage: source.hideOnFirstPage === true,
+    ...readPageNumberExtensions(source),
   };
+}
+
+/**
+ * Start number, mirroring and own wording (R12-003): each is taken only when
+ * it is well-formed, and only a value that differs from the default is kept,
+ * so a file without them decodes to the same options it was encoded from.
+ */
+function readPageNumberExtensions(
+  source: Record<string, FrontMatterValue>,
+): Pick<PageNumberOptions, 'startAt' | 'mirrorOnEvenPages' | 'pattern'> {
+  const extensions: {
+    -readonly [K in 'startAt' | 'mirrorOnEvenPages' | 'pattern']?: PageNumberOptions[K];
+  } = {};
+  const startAt = source.startAt;
+  if (
+    typeof startAt === 'number' &&
+    Number.isInteger(startAt) &&
+    startAt > 1 &&
+    startAt <= PAGE_NUMBER_START_MAX
+  ) {
+    extensions.startAt = startAt;
+  }
+  if (source.mirrorOnEvenPages === true) extensions.mirrorOnEvenPages = true;
+  const pattern = asText(source.pattern);
+  if (pattern && isValidPageNumberPattern(pattern)) extensions.pattern = pattern;
+  return extensions;
 }
 
 /**
@@ -700,6 +729,19 @@ function stripUndefined<T extends object>(value: T): T {
 }
 
 /** Drops absent and empty fields so the emitted front matter has no blank keys. */
+/** Format, position and first-page switch always; the extensions only when set (R12-003). */
+function writePageNumbers(options: PageNumberOptions): Record<string, FrontMatterValue> {
+  const result: Record<string, FrontMatterValue> = {
+    format: options.format,
+    position: options.position,
+    hideOnFirstPage: options.hideOnFirstPage,
+  };
+  if (options.startAt !== undefined && options.startAt > 1) result.startAt = options.startAt;
+  if (options.mirrorOnEvenPages) result.mirrorOnEvenPages = true;
+  if (options.format === 'custom' && options.pattern) result.pattern = options.pattern;
+  return result;
+}
+
 function omitEmpty(value: object): Record<string, FrontMatterValue> {
   const result: Record<string, FrontMatterValue> = {};
   for (const [key, entry] of Object.entries(value)) {

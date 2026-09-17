@@ -20,6 +20,7 @@ import {
   type ImageAlignment,
 } from '@/domain/markdown/directives';
 import type { ImageDirectiveData, TextDirectiveNode } from '@/domain/markdown/remarkPipeline';
+import { isQrErrorCorrection, type QrErrorCorrection } from '@/domain/qr/qrCode';
 
 /**
  * mdast → Foldmark's bounded block model (change 0016).
@@ -129,7 +130,19 @@ export type MarkdownBlock =
       readonly attributes: Readonly<Record<string, string>>;
       readonly blocks: readonly MarkdownBlock[];
     }
-  | { readonly kind: 'pageBreak' };
+  | { readonly kind: 'pageBreak' }
+  | {
+      /**
+       * A QR code (change 0040): the payload as text, the drawn size in
+       * millimetres with the quiet zone, and where it sits in the text box.
+       * The renderer encodes it; an empty payload is drawn as a placeholder.
+       */
+      readonly kind: 'qr';
+      readonly payload: string;
+      readonly sizeMm: number;
+      readonly align: ImageAlignment;
+      readonly errorCorrection: QrErrorCorrection;
+    };
 
 /** What the adapter needs to know about the dialect it serves. */
 export interface AdapterConfig {
@@ -376,6 +389,18 @@ function blockDirective(
     definition?.form === form ||
     (definition?.form === 'leaf' && form === 'container' && node.children.length === 0);
   if (known && name === 'page-break') return [{ kind: 'pageBreak' }];
+  if (known && name === 'qr') {
+    const attributes = resolveBlockAttributes(name, node.attributes ?? {});
+    return [
+      {
+        kind: 'qr',
+        payload: plainText(node as { value?: string }).trim(),
+        sizeMm: Number(attributes.size),
+        align: attributes.align as ImageAlignment,
+        errorCorrection: isQrErrorCorrection(attributes.ec) ? attributes.ec : 'M',
+      },
+    ];
+  }
 
   const inner =
     depths.directive < MAX_DIRECTIVE_DEPTH

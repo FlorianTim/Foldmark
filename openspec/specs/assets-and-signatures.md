@@ -17,6 +17,12 @@ a silent one.
 A stored signature is an **image of a signature**. It carries no cryptographic or legal meaning, and
 the UI says so wherever it appears.
 
+A signature can also be **drawn** (change 0046, R02-003): Images → "Draw signature" opens a pad that
+takes pen, finger and mouse through pointer events; the strokes are kept as geometry (undo drops the
+last stroke), cropped to the ink with a margin, drawn at three times the pad scale into a PNG with a
+transparent background and imported through the same rules as a file, with kind `signature`. The
+writing line on the pad is not part of the image.
+
 ### Metadata
 
 An asset carries a **title** independent of its filename and a **description** (change 0027), both
@@ -29,3 +35,5 @@ dimensions and size before inserting.
 
 - `tests/services.test.ts` covers every import rule through a stubbed image probe.
 - `tests/security/untrustedInput.test.ts` covers the records that must be refused.
+- `tests/signatureStrokes.test.ts` covers the stroke geometry; the e2e suite draws on the pad and
+  checks the stored asset's kind and cropped size.

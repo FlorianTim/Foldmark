@@ -5,6 +5,7 @@ import {
   type ContactPoint,
   type PostalEntry,
 } from '@/domain/address/Address';
+import { contactIdFromUid } from '@/domain/address/export/contactExport';
 import type { ImportedContact } from '@/domain/address/import/contactImport';
 import type { PostalAddress } from '@/domain/document/FoldmarkDocument';
 
@@ -104,6 +105,9 @@ function postalCodesOf(address: Address): readonly string[] {
 /** The strongest signal between one imported contact and one directory entry. */
 export function matchSignal(contact: ImportedContact, existing: Address): ImportSignal | null {
   if (contact.externalId && existing.provenance.origin === contact.externalId) return 'external-id';
+  // A file Foldmark wrote itself (change 0042) names the entry it came from.
+  if (contact.externalId && contactIdFromUid(contact.externalId) === existing.id)
+    return 'external-id';
   const emails = new Set(emailsOf(existing));
   if (contact.emails.some((email) => emails.has(normalizeEmail(email)))) return 'email';
   const phones = new Set(phonesOf(existing));

@@ -34,6 +34,14 @@ export const DOCUMENT_LOCALES = ['de-DE', 'de-AT', 'de-CH', 'en-GB', 'en-US'] as
 /** One of the offered document languages. */
 export type DocumentLocale = (typeof DOCUMENT_LOCALES)[number];
 
+/**
+ * The formats a global default may take: an own wording (`custom`) belongs to
+ * one document, because the wording itself is stored there (R12-003).
+ */
+export const DEFAULT_PAGE_NUMBER_FORMATS: readonly PageNumberFormat[] = PAGE_NUMBER_FORMATS.filter(
+  (format) => format !== 'custom',
+);
+
 /** What a new document starts with. */
 export interface DocumentDefaults {
   readonly locale: DocumentLocale;
@@ -100,7 +108,11 @@ export function decodeDocumentDefaults(raw: string): DocumentDefaults | null {
       THEME_BOUNDS.paragraphSpacing,
       factory.paragraphSpacing,
     ),
-    pageNumberFormat: pick('pageNumberFormat', PAGE_NUMBER_FORMATS, factory.pageNumberFormat),
+    pageNumberFormat: pick(
+      'pageNumberFormat',
+      DEFAULT_PAGE_NUMBER_FORMATS,
+      factory.pageNumberFormat,
+    ),
     pageNumberPosition: pick(
       'pageNumberPosition',
       PAGE_NUMBER_POSITIONS,

@@ -20,6 +20,26 @@ Status is `shipped` unless the version is still in progress.
 
 ---
 
+## Unreleased
+
+### Iteration 1.5 — premium features
+
+| Type | Area     | What                                                                                                                                                                                                                  | Reference                     |
+| ---- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| ✨   | Editor   | QR codes in the body: Insert → QR code or the toolbar; web address, e-mail, phone or text; size, alignment, error correction; live preview with the module size and print check                                       | R15-011, change 0040          |
+| 🧱   | Format   | `::qr[payload]{size=30mm align=center ec=M}` in the directive catalogue; the label is read literally from the source, so a payload is never re-read as Markdown                                                       | R15-011, change 0040          |
+| 🧱   | Premium  | Second gate, with the first counter: `qr.generate` (five free, then beta-free) counted in the use case behind a `FeatureUsageStore` port and the `premium-usage` preference                                           | R15-007, R15-011, change 0040 |
+| ✨   | Print    | Page numbers: a first page number for a letter that continues another, left/right swapped on even sheets for double-sided printing, and an own wording with `{page}` and `{pages}`                                    | R12-003, change 0041          |
+| ✨   | Contacts | Export the directory as vCard 4.0 or Google-compatible CSV from an Export menu; both read back through the import, which recognises the entries by their UID                                                          | R03-004, change 0042          |
+| ✨   | Profiles | Calibration sheet per print profile: a frame 10 mm from every edge, ticks every 10 mm, a centre cross and the profile's printed marks, with instructions — printed through the same print copy as a letter            | R02-002, change 0043          |
+| ✨   | Contacts | Own-sender onboarding: while no primary contact exists the file manager offers to store the sender details once — set up now, later, or never again; no e-mail required                                               | R15-006, change 0044          |
+| 🐛   | Files    | A row menu near the bottom edge of the window opens upward; before, it hung below the viewport and could not be clicked                                                                                               | R13-024, change 0044          |
+| ✨   | Profiles | Landscape: A4, A5 and US Letter landscape ship as profiles; an own profile turns between portrait and landscape in the editor, refused when a mark would leave the sheet                                              | R16-001, change 0045          |
+| 🐛   | Profiles | A copy of US Letter never let its body follow the margins because of float drift in the margin box check; the check now tolerates 0.01 mm                                                                             | R13-031, change 0045          |
+| ✨   | Images   | Draw a signature: a pad under Images takes pen, finger or mouse; the drawing is cropped to the ink and stored as a transparent signature image through the ordinary import rules                                      | R02-003, change 0046          |
+| ✨   | Profiles | Marker editor: the marks of an own profile are edited by number — kind, label, position, length or size, direction, line, stroke, printed/preview — added, reordered and removed, with the checks shown while editing | R02-001, change 0047          |
+| ✨   | Editor   | Find and replace: a bar above the writing area (Edit menu, `Ctrl+H`) with previous/next, counter, match case, whole word, replace and replace all — in the visual editor and the Markdown source alike                | R12-002, change 0048          |
+
 ## Foldmark 1.0.0 — released 2026-09-17
 
 Everything below, from the MVP to iteration 1.4, ships as `1.0.0`; the iteration headings are the

@@ -17,11 +17,18 @@ it onto the sheet it is actually going on. Everything stays in this browser.
 - **Contact directory** — people and organisations with all their addresses and contact details;
   recipients and senders come from here.
 - **Print profiles** — the paper geometry: size, margins, regions and helper marks.
-- **Images** — logos, photographs, letterheads and signature images.
+- **Images** — logos, photographs, letterheads and signature images; a signature can also be drawn
+  there with a pen, a finger or the mouse — it is cropped to the ink and stored with a transparent
+  background.
 - **Settings** — in categories: language, document defaults, appearance, fonts, storage, privacy,
   data & backup.
 
 ## Writing your first letter
+
+On first start Foldmark asks once whether you want to store your sender details. **Set up now**
+opens the contact form as a sender; the contact becomes the primary sender every new letter starts
+with. **Later** asks again on the next start, **Don't ask again** never. No e-mail address is needed
+for this.
 
 1. **Documents → New letter.**
 2. Fill in recipient, subject and date on the left.
@@ -42,7 +49,9 @@ text width or the full width, smaller and larger, original size. In the file all
 — `:red[word]`, `:::note{type="warning"}`, `::page-break`,
 `![Logo](asset:…){width=50% align=center}` — so the document stays readable anywhere; a spelling
 Foldmark does not know is kept as it is and shown as its text. **Clear formatting** (`Tx`, `Ctrl+\`)
-takes every character format off a selection again.
+takes every character format off a selection again. **Edit → Find and replace** (`Ctrl+H` in the
+writing area) shows a bar above the text: previous and next match, match case, whole word, Replace
+and Replace all — in the visual view and in the Markdown alike.
 
 Menu, toolbar and keyboard shortcuts do the same thing. Whatever has no place right now — bold with
 no text field active, say — is greyed out in the menu; with the cursor in the subject, **Format →
@@ -56,6 +65,16 @@ subject if you like. Recipient and date stay with the letter. Your templates are
 → + New**; a new document from one is independent of the template afterwards. **Manage templates …**
 renames and deletes. The first template is free; further ones are premium and free during the test
 phase — the app says so right there, nothing more.
+
+### QR codes
+
+**Insert → QR code** (or the toolbar icon) puts a QR code into the text: a web address, an e-mail
+address with a subject, a phone number or a line of text. You choose the size in millimetres — the
+white quiet zone is part of it — and the alignment; the preview shows the code as it prints and
+warns when the modules get too small for a printer. The file holds only the text, such as
+`::qr[https://example.org]{size=40mm align=center}`; the code is generated from it whenever it is
+shown and never leaves the browser. A click on the code shows the alignment and **Edit …**. Five
+codes are free; further ones are premium and free during the test phase.
 
 ### Keyboard shortcuts
 
@@ -92,16 +111,34 @@ Foldmark says this on every print, because it is the one step the application ca
 A print profile describes the paper, not the content. That is why the same letter can go onto a DIN
 A4 letter profile, onto A4 blank or onto US Letter without being rewritten.
 
-Fourteen profiles ship with the app, in four groups — Letters (DIN A4 letter Form B and Form A, A4
-blank, A4 with letterhead, A5 letter, US Letter), Cards (A6 landscape postcard, A5 card, A6 card),
-Photos (10 × 15, 13 × 18 and 15 × 20 cm) and Other (DL envelope, A7 index card). Under **Print
-profiles** every marker is listed with its coordinate in millimetres; that is the number you can
-check with a ruler.
+Seventeen profiles ship with the app, in four groups — Letters (DIN A4 letter Form B and Form A, A4
+blank, A4 with letterhead, A5 letter, US Letter, plus A4, A5 and US Letter landscape), Cards (A6
+landscape postcard, A5 card, A6 card), Photos (10 × 15, 13 × 18 and 15 × 20 cm) and Other (DL
+envelope, A7 index card). Under **Print profiles** every marker is listed with its coordinate in
+millimetres; that is the number you can check with a ruler.
 
 {{screenshot:05-profiles}}
 
 Built-in profiles are immutable and cannot be deleted. **Create a copy** gives you one of your own,
-which you can rename, whose margins you can set in millimetres, and which you can delete again.
+which you can rename, whose margins you can set in millimetres, which you can turn to landscape, and
+which you can delete again. Turning swaps width and height and leaves margins and marks where they
+are; if a mark would no longer fit the sheet, the orientation stays locked — turn a copy of a blank
+profile instead.
+
+The **helper marks** of your own copy are edited by number: kind, label, x and y in millimetres,
+length and direction (width and height for an area), line, stroke, printed or preview-only. **Add
+mark** starts a new one at the left edge halfway down, the arrows reorder, the bin removes. What the
+checks have to say about the list appears below it while you type; **Save marks** waits until no
+mark lies outside the sheet.
+
+### Calibration sheet
+
+Whether a fold mark really lands at 105 mm is up to your printer. **Print calibration sheet** under
+the selected profile prints known distances on exactly that paper: a frame 10 mm from every edge,
+ticks every 10 mm, a cross at the centre of the sheet and the profile's marks where a letter prints
+them. Print at 100 % (not "fit to page") and measure with a ruler: the distance from the paper edge
+to the frame is your printer's offset, the size of the frame shows a scale error. Both are set in
+the printer driver.
 
 ### About the DIN profiles
 
@@ -140,6 +177,14 @@ directory. Before anything is stored you see what was recognised: new, probably 
 e-mail, phone number or identifier, same name with postal code) and needs review (only the name
 matches). Per row you decide: skip, merge or import as new. Merging only adds what is missing —
 addresses, e-mails, phone numbers — and never overwrites.
+
+### Exporting contacts
+
+**Export** in the contact directory writes the whole directory as a **vCard** file (`.vcf`, for a
+phone, Outlook or Apple Contacts) or as a **CSV** in Google Contacts columns. What travels is who
+the person is — names, organisation, every address, e-mail, phone number, website, notes and tags.
+Roles such as "sender" or "favourite" stay in Foldmark. Import the file later and Foldmark
+recognises every entry instead of doubling it.
 
 ## File format
 

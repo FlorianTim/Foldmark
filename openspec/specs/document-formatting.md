@@ -8,7 +8,7 @@ stays readable without Foldmark:
 
 - inline `:name[text]`, e.g. `:red[Wort]`, `:u[Wort]`, `:date[2026-09-11]`;
 - block `:::name{key=value}` … `:::`, e.g. `:::note{type="warning"}`;
-- leaf `::page-break`.
+- leaf `::page-break`, `::qr[payload]{size=30mm align=center}`.
 
 The parser also **reads** the Pandoc spellings `[text]{.name}`, `^x^`, `~x~`, a fence with a space
 (`::: name`) and a closed empty `:::page-break` container, and the long colour spelling
@@ -28,6 +28,7 @@ plus a security fixture.
 | `small`      | `:::small`                                  | small print at the theme's small size                          |
 | `note`       | `:::note{type=info\|warning}`               | bordered box, printable in greyscale (warning: heavier border) |
 | `signature`  | `:::signature{lines=1..6}`                  | free space above a rule, then the name; default 3 lines        |
+| `qr`         | `::qr[payload]{size=15..80mm align ec}`     | a QR code encoded from its label when drawn; see below         |
 
 | Inline       | Form                                       | Effect                                                       |
 | ------------ | ------------------------------------------ | ------------------------------------------------------------ |
@@ -80,6 +81,34 @@ editor offers the layout on the selected image — alignment, 25/50/75 % and ful
 smaller/larger steps, original size — and in the image dialog; preview, print copy and the editor
 draw the same, the height estimate follows.
 
+### QR codes
+
+`::qr[payload]{size=30mm align=center ec=M}` (R15-011, change 0040) draws a QR code of its label.
+The file carries **text only**: the code is encoded locally every time the block is drawn — editor,
+preview, print copy — so nothing is stored, nothing goes stale and nothing leaves the browser. The
+label is the payload **as typed**: the reader takes it from the source, backslash escapes resolved,
+and neither a directive (`mailto:info@…`), an emphasis (`a*b*`) nor a link inside it is read; the
+writers escape brackets and backslashes and nothing else. A payload is one line, at most 1000
+characters, without control characters; the dialog composes it from a web address, an e-mail address
+with an optional subject (`mailto:…?subject=`), a phone number (`tel:` with digits and a leading
+`+`) or a line of text, and takes an existing payload apart into the same fields.
+
+`size` is the drawn side in millimetres, **quiet zone included** (four modules on every side; 15–80,
+default 30); `align` is `left` (default), `center` or `right`; `ec` is the error-correction level
+`L`, `M` (default), `Q` or `H`. Attributes at their defaults are not written. The code is black on
+white regardless of theme, drawn as one SVG path in module units (`shape-rendering: crispEdges`),
+never wider than the text box, and the height estimate counts its size. The dialog shows the module
+size and warns below 0.5 mm; an empty or unencodable payload is a labelled placeholder, never an
+error. The editor selects a code on click, offers alignment and "Edit…" in a strip under it, and the
+Markdown view writes the same directive. Plain-text mail carries the payload, HTML mail the payload
+as escaped text. A three-colon `:::qr` with content is an unknown container, shown as its content.
+
+Generating a **new** code is a premium feature with a free allowance (`qr.generate`, five, then
+beta-free during the test phase): the use case `QrCodeService.generate` asks the gate and counts a
+successful insertion; a preview, an edit of an existing code, a refused payload and reopening a
+document count nothing. The counter is a preference of this browser (`premium-usage`), reset with
+the settings.
+
 ### Highlight and the colour alias
 
 `:highlight[…]` is the highlight mark. The palette also has a semantic colour alias `highlight`; its
@@ -100,13 +129,15 @@ untouched; a paragraph reset is a later command (change 0031).
 No directive, attribute, colour name or image source ever becomes markup or CSS: colours reach the
 DOM as `var(--md-color-<name>)` references set through CSSOM (the strict `style-src` stays intact),
 the mail renderer emits only palette hex values it looked up itself, images carry only object URLs
-the app resolved for a local id.
+the app resolved for a local id. A QR payload reaches the DOM as an SVG path of digits and four
+letters from the encoder, plus its own `data-` copy and the accessible name; it is never markup.
 
 ## Verification
 
 - `tests/markdown.test.ts` (parser), `tests/editor/roundtrip.test.ts` (editor round trip and
   commands), `tests/email.test.ts` (both mail renderers), `tests/documentTheme.test.ts` (palette,
-  theme, heights), `tests/security/untrustedInput.test.ts` (hostile directives, colours, images).
+  theme, heights), `tests/security/untrustedInput.test.ts` (hostile directives, colours, images),
+  `tests/qrCode.test.ts` (QR directive, literal label, encoder, gate and counter).
 - `tests/e2e/foldmark.spec.ts`: colour, note box and page break end to end; the print copy uses the
   print value; the theme re-paginates; the highlight chain editor → Markdown → editor → preview →
   print copy; clear formatting; the image toolbar's alignment and size in editor, file and print

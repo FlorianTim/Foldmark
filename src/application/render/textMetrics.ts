@@ -207,6 +207,9 @@ function blockHeightMm(
       return lines(1);
     case 'pageBreak':
       return 0;
+    case 'qr':
+      // Drawn square at its size, quiet zone included, never wider than the box.
+      return Math.min(block.sizeMm, widthMm);
     case 'directive': {
       if (!block.known) return blocksHeightMm(block.blocks, style, widthMm, context);
       switch (block.name) {

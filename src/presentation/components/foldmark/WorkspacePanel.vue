@@ -421,6 +421,13 @@ const menus = computed<readonly Menu[]>(() => {
           disabled: !canEdit,
           dividerBefore: true,
         },
+        {
+          id: 'editor:find',
+          label: t('editor.find.menu'),
+          icon: 'search',
+          shortcut: keys('editor:find'),
+          disabled: !canEdit,
+        },
         { id: 'check', label: t('workspace.check'), icon: 'validation', dividerBefore: true },
       ],
     },
@@ -449,7 +456,7 @@ const menus = computed<readonly Menu[]>(() => {
           disabled: !canEdit,
           dividerBefore: true,
         },
-        { id: 'editor:qr', label: t('menu.qrCodeLater'), icon: 'qr-code', disabled: true },
+        { id: 'editor:qr', label: t('editor.qr'), icon: 'qr-code', disabled: !canEdit },
       ],
     },
     {

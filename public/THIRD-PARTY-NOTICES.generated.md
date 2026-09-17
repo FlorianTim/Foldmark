@@ -396,6 +396,7 @@ Generated from package metadata in the installed lockfile-based dependency tree.
 - **[unist-util-stringify-position](syntax-tree/unist-util-stringify-position)@4.0.0** — MIT
 - **[unist-util-visit-parents](syntax-tree/unist-util-visit-parents)@6.0.2** — MIT
 - **[unist-util-visit](syntax-tree/unist-util-visit)@5.1.0** — MIT
+- **[uqr](https://github.com/unjs/uqr#readme)@0.1.3** — MIT
 - **[uri-js](https://github.com/garycourt/uri-js)@4.4.1** — BSD-2-Clause
 - **[util-deprecate](https://github.com/TooTallNate/util-deprecate)@1.0.2** — MIT
 - **[vfile-message](vfile/vfile-message)@4.0.3** — MIT

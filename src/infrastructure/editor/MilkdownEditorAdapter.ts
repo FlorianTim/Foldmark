@@ -28,10 +28,11 @@ import {
   toggleStrikethroughCommand,
 } from '@milkdown/kit/preset/gfm';
 import { selectAll } from '@milkdown/kit/prose/commands';
-import { NodeSelection } from '@milkdown/kit/prose/state';
+import { NodeSelection, Plugin, PluginKey, TextSelection } from '@milkdown/kit/prose/state';
+import { Decoration, DecorationSet } from '@milkdown/kit/prose/view';
 import { redoDepth, undoDepth } from '@milkdown/kit/prose/history';
-import type { MarkType } from '@milkdown/kit/prose/model';
-import { callCommand, getMarkdown, replaceAll } from '@milkdown/kit/utils';
+import type { MarkType, Node as ProseNode } from '@milkdown/kit/prose/model';
+import { $prose, callCommand, getMarkdown, replaceAll } from '@milkdown/kit/utils';
 import type {
   EditorCommand,
   EditorCommandArgument,
@@ -41,6 +42,13 @@ import type {
   RichTextEditorPort,
 } from '@/application/ports/RichTextEditorPort';
 import { normalizeSource } from '@/domain/markdown/parseMarkdown';
+import {
+  findInText,
+  nextMatchIndex,
+  selectedMatchIndex,
+  type TextMatch,
+  type TextSearchOptions,
+} from '@/domain/markdown/textSearch';
 import {
   clearFormattingCommand,
   colorMark,
@@ -53,8 +61,11 @@ import {
   insertDateCommand,
   insertLinkCommand,
   insertPageBreakCommand,
+  insertQrCommand,
+  qrSpecOf,
   setColorCommand,
   setImageLayoutCommand,
+  setQrCommand,
   smallMark,
   subMark,
   supMark,
@@ -76,6 +87,73 @@ import {
  * Everything the workspace needs is expressed through commands, so a later
  * library swap is a new adapter, not a new toolbar.
  */
+/**
+ * Marks the current find match (change 0048) with a decoration, because the
+ * editor's own selection is invisible while the find bar has the focus. The
+ * range follows document changes and clears on the next edit that is not a
+ * find step.
+ */
+const findHighlightKey = new PluginKey<{ from: number; to: number } | null>('fmFindHighlight');
+const findHighlight = $prose(
+  () =>
+    new Plugin<{ from: number; to: number } | null>({
+      key: findHighlightKey,
+      state: {
+        init: () => null,
+        apply(tr, current) {
+          const meta = tr.getMeta(findHighlightKey) as
+            { from: number; to: number } | null | undefined;
+          if (meta !== undefined) return meta;
+          if (!current) return null;
+          if (!tr.docChanged) return current;
+          const from = tr.mapping.map(current.from);
+          const to = tr.mapping.map(current.to);
+          return from < to ? { from, to } : null;
+        },
+      },
+      props: {
+        decorations(state) {
+          const range = findHighlightKey.getState(state);
+          return range
+            ? DecorationSet.create(state.doc, [
+                Decoration.inline(range.from, range.to, { class: 'find-match' }),
+              ])
+            : DecorationSet.empty;
+        },
+      },
+    }),
+);
+
+/** A stand-in for an inline leaf (an image, a break) in a block's text; one character, one position. */
+const INLINE_LEAF_STAND_IN = String.fromCodePoint(0xfffc);
+
+/**
+ * Every occurrence of the query as document positions. Each text block is
+ * searched as one string — a match may span marks — where every character is
+ * one position and an inline leaf one stand-in character, so block text
+ * offsets map onto positions by adding the block's content start.
+ */
+function collectMatches(
+  doc: ProseNode,
+  query: string,
+  options: TextSearchOptions | undefined,
+): readonly TextMatch[] {
+  const matches: TextMatch[] = [];
+  if (!query) return matches;
+  doc.descendants((node, pos) => {
+    if (!node.isTextblock) return true;
+    let text = '';
+    node.forEach((child) => {
+      text += child.isText ? (child.text ?? '') : INLINE_LEAF_STAND_IN.repeat(child.nodeSize);
+    });
+    for (const match of findInText(text, query, options)) {
+      matches.push({ from: pos + 1 + match.from, to: pos + 1 + match.to });
+    }
+    return false;
+  });
+  return matches;
+}
+
 class MilkdownEditor implements RichTextEditorPort {
   private constructor(
     private readonly editor: Editor,
@@ -117,6 +195,7 @@ class MilkdownEditor implements RichTextEditorPort {
       .use(history)
       .use(listener)
       .use(clipboard)
+      .use(findHighlight)
       .create();
     instance = new MilkdownEditor(editor, options.onStateChange);
     instance.lastKnown = await instance.getMarkdown();
@@ -285,6 +364,16 @@ class MilkdownEditor implements RichTextEditorPort {
           this.editor.action(callCommand(setImageLayoutCommand.key, argument.layout));
         }
         break;
+      case 'qr':
+        if (typeof argument === 'object' && 'payload' in argument) {
+          this.editor.action(callCommand(insertQrCommand.key, argument));
+        }
+        break;
+      case 'qrUpdate':
+        if (typeof argument === 'object' && 'payload' in argument) {
+          this.editor.action(callCommand(setQrCommand.key, argument));
+        }
+        break;
       default:
         break;
     }
@@ -310,14 +399,106 @@ class MilkdownEditor implements RichTextEditorPort {
   }
 
   public selectImage(assetId: string): boolean {
+    return this.selectNode(
+      (node) => node.type.name === 'image' && String(node.attrs.src) === `asset:${assetId}`,
+    );
+  }
+
+  public selectQr(payload: string): boolean {
+    return this.selectNode(
+      (node) => node.type.name === 'fmQr' && String(node.attrs.payload) === payload,
+    );
+  }
+
+  // --- find and replace (change 0048) -------------------------------------
+
+  public clearMatchHighlight(): void {
+    this.editor.action((ctx) => {
+      const view = ctx.get(editorViewCtx);
+      view.dispatch(view.state.tr.setMeta(findHighlightKey, null));
+    });
+  }
+
+  public countMatches(query: string, options?: TextSearchOptions): number {
+    return this.editor.action((ctx) => {
+      const view = ctx.get(editorViewCtx);
+      return collectMatches(view.state.doc, query, options).length;
+    });
+  }
+
+  public selectMatch(
+    query: string,
+    options: TextSearchOptions | undefined,
+    direction: 1 | -1,
+  ): { readonly index: number; readonly total: number } | null {
+    const result = this.editor.action((ctx) => {
+      const view = ctx.get(editorViewCtx);
+      const matches = collectMatches(view.state.doc, query, options);
+      const index = nextMatchIndex(matches, view.state.selection, direction);
+      if (index < 0) return null;
+      const match = matches[index]!;
+      view.dispatch(
+        view.state.tr
+          .setSelection(TextSelection.create(view.state.doc, match.from, match.to))
+          .setMeta(findHighlightKey, { from: match.from, to: match.to })
+          .scrollIntoView(),
+      );
+      return { index, total: matches.length };
+    });
+    this.onStateChange?.();
+    return result;
+  }
+
+  public replaceMatch(query: string, replacement: string, options?: TextSearchOptions): boolean {
+    const replaced = this.editor.action((ctx) => {
+      const view = ctx.get(editorViewCtx);
+      const matches = collectMatches(view.state.doc, query, options);
+      const index = selectedMatchIndex(matches, view.state.selection);
+      if (index < 0) return false;
+      const match = matches[index]!;
+      view.dispatch(
+        view.state.tr
+          .insertText(replacement, match.from, match.to)
+          .setMeta(findHighlightKey, null)
+          .scrollIntoView(),
+      );
+      return true;
+    });
+    if (replaced) this.selectMatch(query, options, 1);
+    this.onStateChange?.();
+    return replaced;
+  }
+
+  public replaceAllMatches(
+    query: string,
+    replacement: string,
+    options?: TextSearchOptions,
+  ): number {
+    const count = this.editor.action((ctx) => {
+      const view = ctx.get(editorViewCtx);
+      const matches = collectMatches(view.state.doc, query, options);
+      if (!matches.length) return 0;
+      // From the end, so the positions of the earlier matches stay valid.
+      const tr = view.state.tr;
+      for (let index = matches.length - 1; index >= 0; index -= 1) {
+        const match = matches[index]!;
+        tr.insertText(replacement, match.from, match.to);
+      }
+      view.dispatch(tr.setMeta(findHighlightKey, null).scrollIntoView());
+      return matches.length;
+    });
+    this.onStateChange?.();
+    return count;
+  }
+
+  /** Puts a node selection on the first node the predicate accepts. */
+  private selectNode(accept: (node: ProseNode) => boolean): boolean {
     return this.editor.action((ctx) => {
       const view = ctx.get(editorViewCtx);
       let position = -1;
       view.state.doc.descendants((node, pos) => {
         if (position >= 0) return false;
-        if (node.type.name === 'image' && String(node.attrs.src) === `asset:${assetId}`) {
-          position = pos;
-        }
+        if (accept(node)) position = pos;
         return position < 0;
       });
       if (position < 0) return false;
@@ -367,11 +548,13 @@ class MilkdownEditor implements RichTextEditorPort {
               ...imageLayoutOf(selectedNode.attrs),
             }
           : null;
+      const qr = selectedNode?.type.name === 'fmQr' ? qrSpecOf(selectedNode.attrs) : null;
       return {
         heading,
         inTable,
         inList,
         image,
+        qr,
         selectedText: empty ? '' : state.doc.textBetween(from, to, ' '),
         linkHref: linkHere ? String(linkHere.attrs.href ?? '') : null,
         bold: active(strongSchema.type(ctx)),

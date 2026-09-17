@@ -124,6 +124,40 @@ describe('PrintProfileService', () => {
     await expect(profiles.remove('din5008-b')).rejects.toThrowError(ImmutableRecordError);
   });
 
+  it('turns a plain copy sideways and back, the body following the margins (change 0045)', async () => {
+    const { service: profiles } = service();
+    const copy = await profiles.clone('a4-blank', { de: 'Quer', en: 'Wide' });
+    const wide = await profiles.update(copy.id, { orientation: 'landscape' });
+    expect(wide.page).toEqual({ widthMm: 297, heightMm: 210, orientation: 'landscape' });
+    expect(wide.regions.body).toEqual({
+      xMm: 20,
+      yMm: 20,
+      widthMm: 257,
+      heightMm: 170,
+      surface: 'all',
+    });
+    // Margins and the turn in one update: the body follows both.
+    const narrow = await profiles.update(copy.id, {
+      orientation: 'portrait',
+      margins: { topMm: 10, rightMm: 10, bottomMm: 10, leftMm: 10 },
+    });
+    expect(narrow.page.orientation).toBe('portrait');
+    expect(narrow.regions.body).toMatchObject({ xMm: 10, yMm: 10, widthMm: 190, heightMm: 277 });
+    // The same orientation is a no-op for the page.
+    const same = await profiles.update(copy.id, { orientation: 'portrait' });
+    expect(same.page).toEqual(narrow.page);
+  });
+
+  it('refuses to turn a copy whose marks would leave the sheet', async () => {
+    const { service: profiles } = service();
+    const copy = await profiles.clone('din5008-b', { de: 'DIN quer', en: 'DIN wide' });
+    await expect(profiles.update(copy.id, { orientation: 'landscape' })).rejects.toThrowError(
+      InvalidInputError,
+    );
+    const stored = await profiles.get(copy.id);
+    expect(stored?.page.orientation).toBe('portrait');
+  });
+
   it('clones into a free identifier and stores the copy', async () => {
     const { service: profiles, repository } = service();
     const copy = await profiles.clone('din5008-b', { de: 'Mein Brief', en: 'My letter' });

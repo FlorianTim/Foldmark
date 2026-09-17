@@ -151,6 +151,7 @@
 .paper-block .safe-markdown .md-note,
 .paper-block .safe-markdown .md-small,
 .paper-block .safe-markdown .md-signature,
+.paper-block .safe-markdown .md-qr,
 .paper-block .safe-markdown .md-unknown-block {
   margin: 0 0 var(--md-paragraph-gap, 0.6em);
 }
@@ -232,6 +233,24 @@
 }
 .paper-block .safe-markdown .md-image-missing {
   display: inline-block;
+  border: 0.25mm dashed currentColor;
+  padding: 0.2em 0.5em;
+  font-size: 0.85em;
+}
+/* A QR code (change 0040): a block of its own size, aligned like an image; the
+   quiet zone is inside the box, so no margin is needed around it. */
+.paper-block .safe-markdown .md-qr {
+  display: block;
+  max-width: 100%;
+}
+.paper-block .safe-markdown .md-qr-align-center {
+  margin-inline: auto;
+}
+.paper-block .safe-markdown .md-qr-align-right {
+  margin-inline-start: auto;
+}
+.paper-block .safe-markdown .md-qr-missing {
+  width: fit-content;
   border: 0.25mm dashed currentColor;
   padding: 0.2em 0.5em;
   font-size: 0.85em;

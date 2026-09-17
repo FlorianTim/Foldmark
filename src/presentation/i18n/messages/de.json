@@ -334,7 +334,15 @@
     "importAssets": "Bilder",
     "importAssetsMissing": "{count} referenzierte(s) Bild(er) sind nicht in der Bibliothek.",
     "importConfirm": "Importieren",
-    "importSkip": "Überspringen"
+    "importSkip": "Überspringen",
+    "senderOnboarding": {
+      "title": "Möchtest du deine Absenderdaten hinterlegen?",
+      "text": "Name und Postanschrift stehen als Absender auf jedem Brief. Eine E-Mail-Adresse ist optional. Du kannst das jederzeit im Kontaktverzeichnis ändern.",
+      "setup": "Jetzt einrichten",
+      "later": "Später",
+      "never": "Nicht mehr fragen",
+      "done": "Deine Absenderdaten sind hinterlegt; neue Briefe beginnen damit."
+    }
   },
   "workspace": {
     "title": "Dokument bearbeiten",
@@ -428,7 +436,8 @@
         "page": "Seite X",
         "page-of": "Seite X von Y",
         "slash": "1 / 4",
-        "of": "1 von 4"
+        "of": "1 von 4",
+        "custom": "eigener Wortlaut"
       },
       "position": "Position",
       "positions": {
@@ -439,7 +448,14 @@
         "bottom-center": "unten Mitte",
         "bottom-right": "unten rechts"
       },
-      "hideOnFirstPage": "Auf der ersten Seite ausblenden"
+      "hideOnFirstPage": "Auf der ersten Seite ausblenden",
+      "pattern": "Eigener Wortlaut",
+      "patternPlaceholder": "Blatt {'{page}'} von {'{pages}'}",
+      "patternHint": "{'{page}'} wird zur Seitenzahl, {'{pages}'} zur letzten; alles andere wird so gedruckt.",
+      "patternInvalid": "Der Wortlaut braucht {'{page}'}; bis dahin wird „Seite X von Y“ gedruckt.",
+      "startAt": "Erste Seitenzahl",
+      "startAtHint": "Für einen Brief, der einen früheren fortsetzt. „von Y“ zählt bis zum letzten Blatt.",
+      "mirrorOnEvenPages": "Links und rechts auf geraden Seiten tauschen (beidseitiger Druck)"
     },
     "theme": {
       "title": "Schrift und Abstände",
@@ -606,7 +622,61 @@
     "imageSmaller": "Verkleinern",
     "imageLarger": "Vergrößern",
     "imageSizeOriginal": "Originalgröße",
-    "imageSizeOriginalHint": "Keine Breite festlegen; das Bild wird in seiner eigenen Größe gezeigt, höchstens so breit wie der Text."
+    "imageSizeOriginalHint": "Keine Breite festlegen; das Bild wird in seiner eigenen Größe gezeigt, höchstens so breit wie der Text.",
+    "qr": "QR-Code",
+    "qrTitle": "QR-Code einfügen",
+    "qrEditTitle": "QR-Code bearbeiten",
+    "qrKind": "Inhalt",
+    "qrKinds": {
+      "url": "Webadresse",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "text": "Text"
+    },
+    "qrContent": {
+      "url": "Webadresse (https://…)",
+      "email": "E-Mail-Adresse",
+      "phone": "Telefonnummer",
+      "text": "Text (eine Zeile)"
+    },
+    "qrEmailSubject": "Betreff (optional)",
+    "qrSize": "Größe in mm",
+    "qrAlign": "Ausrichtung",
+    "qrErrorCorrection": "Fehlerkorrektur",
+    "qrEc": {
+      "L": "L – 7 % wiederherstellbar",
+      "M": "M – 15 % (Standard)",
+      "Q": "Q – 25 %",
+      "H": "H – 30 %"
+    },
+    "qrPreview": "Vorschau",
+    "qrModule": "Modulgröße {size} mm · Version {version}",
+    "qrSmall": "Die Module sind kleiner als 0,5 mm – ein Drucker oder Scanner löst sie eventuell nicht auf. Größer wählen oder den Inhalt kürzen.",
+    "qrInsert": "QR-Code einfügen",
+    "qrUpdate": "Übernehmen",
+    "qrEdit": "Bearbeiten …",
+    "qrEmpty": "QR-Code ohne Inhalt",
+    "qrHint": "Der Code wird beim Anzeigen aus seinem Inhalt erzeugt; die Datei enthält nur den Text. Die Ruhezone gehört zur Größe.",
+    "qrInvalid": {
+      "empty": "Bitte einen Inhalt eingeben.",
+      "too-long": "Der Inhalt ist zu lang für einen QR-Code.",
+      "line-breaks": "Zeilenumbrüche sind hier nicht möglich – ein QR-Code trägt eine Zeile.",
+      "control-characters": "Steuerzeichen sind nicht erlaubt."
+    },
+    "find": {
+      "menu": "Suchen und ersetzen…",
+      "title": "Suchen und ersetzen",
+      "query": "Suchen",
+      "replacement": "Ersetzen durch",
+      "count": "{index} von {total}",
+      "none": "Kein Treffer",
+      "previous": "Vorheriger Treffer",
+      "next": "Nächster Treffer",
+      "caseSensitive": "Groß-/Kleinschreibung",
+      "wholeWord": "Ganzes Wort",
+      "replace": "Ersetzen",
+      "replaceAll": "Alle ersetzen"
+    }
   },
   "surface": {
     "sides": "Seiten",
@@ -672,7 +742,8 @@
       "pageOf": "Seite {page} von {total}",
       "of": "{page} von {total}"
     },
-    "assetMissingInline": "Bild fehlt"
+    "assetMissingInline": "Bild fehlt",
+    "qrCode": "QR-Code"
   },
   "validation": {
     "blocked": "Nicht ausgabefähig",
@@ -899,6 +970,12 @@
       "plan": "{add} neu, {merge} zusammengeführt",
       "confirm": "Importieren",
       "done": "{added} Kontakte importiert, {merged} zusammengeführt."
+    },
+    "export": {
+      "button": "Exportieren",
+      "vcard": "Als vCard (.vcf)",
+      "csv": "Als CSV (Google-Kontakte-Spalten)",
+      "filename": "foldmark-kontakte"
     }
   },
   "profiles": {
@@ -952,7 +1029,55 @@
     "save": "Profil speichern",
     "saved": "Profil gespeichert.",
     "deleteTitle": "Profil löschen?",
-    "deleteText": "„{name}“ wird gelöscht. Dokumente, die es verwenden, fallen auf das Standardprofil zurück."
+    "deleteText": "„{name}“ wird gelöscht. Dokumente, die es verwenden, fallen auf das Standardprofil zurück.",
+    "calibration": {
+      "title": "Kalibrierbogen",
+      "description": "Druckt bekannte Abstände auf dieses Papier, damit du Versatz und Skalierung deines Druckers mit dem Lineal messen kannst.",
+      "print": "Kalibrierbogen drucken",
+      "instructions": "1. Drucke diesen Bogen mit **100 %** — ohne „An Seite anpassen“, ohne Skalierung.\n\n2. Miss von jeder Papierkante bis zum Rahmen: es sollten auf jeder Seite **{inset} mm** sein. Eine Abweichung ist der Versatz deines Druckers auf dieser Seite.\n\n3. Miss den Rahmen selbst: er sollte **{width} × {height} mm** groß sein. Eine Abweichung ist ein Skalierungsfehler; prüfe die Skalierungseinstellung des Druckers.\n\n4. Die Striche am Rahmen liegen 10 mm auseinander, alle 50 mm länger. Das Kreuz markiert die Blattmitte.",
+      "marksHeading": "Die gedruckten Marken dieses Profils, wie ein Brief sie druckt:"
+    },
+    "orientation": {
+      "label": "Ausrichtung",
+      "portrait": "Hochformat",
+      "landscape": "Querformat",
+      "blocked": "Beim Drehen läge eine Marke oder ein Bereich außerhalb des Papiers. Drehe stattdessen eine Kopie eines freien Profils."
+    },
+    "markerEditor": {
+      "hint": "Alle Werte in Millimetern von der linken oberen Ecke des Blatts. Gedruckte Marken kommen aufs Papier; reine Vorschaumarken sind Gestaltungshilfen.",
+      "kind": "Art",
+      "label": "Bezeichnung",
+      "length": "Länge (mm)",
+      "width": "Breite (mm)",
+      "height": "Höhe (mm)",
+      "orientation": "Richtung",
+      "horizontal": "waagerecht",
+      "vertical": "senkrecht",
+      "lineStyle": "Linie",
+      "lineStyles": {
+        "solid": "durchgezogen",
+        "dashed": "gestrichelt",
+        "dotted": "gepunktet"
+      },
+      "stroke": "Strichstärke (mm)",
+      "print": "Gedruckt",
+      "preview": "In der Vorschau",
+      "surface": "Seite",
+      "surfaces": {
+        "all": "beide",
+        "front": "Vorderseite",
+        "back": "Rückseite"
+      },
+      "moveUp": "Nach oben",
+      "moveDown": "Nach unten",
+      "remove": "Marke entfernen",
+      "empty": "Noch keine Marken.",
+      "newKind": "Neue Marke",
+      "add": "Marke hinzufügen",
+      "save": "Marken speichern",
+      "discard": "Änderungen verwerfen",
+      "saved": "Marken gespeichert."
+    }
   },
   "assets": {
     "eyebrow": "Medien",
@@ -996,6 +1121,19 @@
       "filename": "Dateiname",
       "mimeType": "Typ",
       "created": "Importiert"
+    },
+    "signaturePad": {
+      "open": "Unterschrift zeichnen",
+      "title": "Unterschrift zeichnen",
+      "hint": "Unterschreibe auf dem Feld mit Stift, Finger oder Maus. Das Bild wird auf deine Unterschrift zugeschnitten und mit transparentem Hintergrund gespeichert.",
+      "padLabel": "Unterschriftenfeld",
+      "undo": "Strich zurück",
+      "clear": "Leeren",
+      "name": "Name",
+      "defaultTitle": "Unterschrift",
+      "save": "Unterschrift speichern",
+      "saved": "Die Unterschrift liegt in der Bibliothek; füge sie über Einfügen → Bild in einen Brief ein.",
+      "notEncodable": "Dieser Browser konnte aus der Zeichnung kein Bild machen."
     }
   },
   "backup": {
@@ -1080,7 +1218,6 @@
     "open": "Öffnen …",
     "selectAll": "Alles auswählen",
     "shortcuts": "Tastenkürzel",
-    "qrCodeLater": "QR-Code (später)",
     "documentFont": "Schrift und Abstände …"
   },
   "shortcuts": {
@@ -1110,7 +1247,8 @@
     "heading6": "Überschrift 6",
     "escape": "Dialog oder Fokusmodus verlassen",
     "splitter": "Trennbalken verschieben (wenn fokussiert)",
-    "menu": "Menü öffnen und navigieren"
+    "menu": "Menü öffnen und navigieren",
+    "find": "Suchen und ersetzen"
   },
   "print": {
     "title": "Drucken",
@@ -1207,6 +1345,13 @@
   "premium": {
     "mode": {
       "beta-free": "Premium – während der Testphase kostenlos. Die erste Vorlage bleibt immer frei.",
+      "quota": "Noch {limit} kostenlos.",
+      "licensed": "Premium – lizenziert.",
+      "locked": "Premium – nicht freigeschaltet."
+    },
+    "qr": {
+      "free": "Noch {remaining} von {limit} QR-Codes kostenlos.",
+      "beta-free": "Premium – während der Testphase kostenlos. Die ersten {limit} QR-Codes bleiben immer frei.",
       "quota": "Noch {limit} kostenlos.",
       "licensed": "Premium – lizenziert.",
       "locked": "Premium – nicht freigeschaltet."

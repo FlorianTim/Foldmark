@@ -48,8 +48,12 @@ what still waits. Notes are non-normative input; the specs win.
 | … Teil C, C9 (sender onboarding) | idea | Roadmap R15-006 | in spec |
 | … Teil C, C10–C16, C24, C25 (premium, licences, commerce) | research | Roadmap R15-007, R15-008, R15-014, research change 0038 | in spec |
 | … Teil C, C17–C23 (templates, packs, QR, DOCX/ODT/XLSX, themes) | idea | Roadmap R15-009…R15-013 | in spec |
+| … Teil C, C19 (QR Basis), C11–C12 (gate and counter) | feature | Roadmap R15-011a, change 0040; `uqr` instead of `qrcode` (see the change's proposal) | done |
 | … Teil C, C26–C27 (change list, ordering) | plan | Folded into changes 0029–0038 (one folder per topic group, as with 0018–0028); ordering is Phase 1 first | done |
 | Owner request 2026-09-16: landscape documents for 1.6 | idea | Roadmap R16-001 (planned only) | in spec |
+| Owner request 2026-09-18: document types (invoice with IBAN/BIC and payment QR, cancellation, authority numbers), type-switch warning, bank details in the directory | feature | Roadmap R17-001…R17-006, change 0049; "kind" stays the paper, "type" is the purpose | in spec |
+| Owner request 2026-09-18: Save as, duplicate from the workspace, back-gesture safety, right-click menu | feature | Roadmap R17-007…R17-010, change 0050; duplicate already existed in the file manager (0024) | in spec |
+| Owner request 2026-09-18: desktop app feasibility, local Windows build, signing/stores, updates for a private repo, migration paths, file-system save | research | Roadmap R20-001…R20-008, research change 0051; the untracked `build.yml` moved into the change as a draft (no `src-tauri/` exists yet) | in spec |
 | `2026-08-24-lumbrecode-engineering-baseline-feedback.md` | feedback | Not reviewed in this pass                                                                                                            | open    |
 | `new-feature-ideas.md`                              | inbox    | Contains the template's own 1.1/1.2 ideas, not Foldmark's; kept as the inbox format                                                  | open    |
 

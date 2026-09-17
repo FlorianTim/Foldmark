@@ -334,7 +334,15 @@
     "importAssets": "Images",
     "importAssetsMissing": "{count} referenced image(s) are not in the library.",
     "importConfirm": "Import",
-    "importSkip": "Skip"
+    "importSkip": "Skip",
+    "senderOnboarding": {
+      "title": "Would you like to store your sender details?",
+      "text": "Your name and postal address go onto every letter as the sender. An e-mail address is optional. You can change this any time in the contact directory.",
+      "setup": "Set up now",
+      "later": "Later",
+      "never": "Don’t ask again",
+      "done": "Your sender details are stored; new letters start with them."
+    }
   },
   "workspace": {
     "title": "Edit document",
@@ -428,7 +436,8 @@
         "page": "Page X",
         "page-of": "Page X of Y",
         "slash": "1 / 4",
-        "of": "1 of 4"
+        "of": "1 of 4",
+        "custom": "own wording"
       },
       "position": "Position",
       "positions": {
@@ -439,7 +448,14 @@
         "bottom-center": "bottom centre",
         "bottom-right": "bottom right"
       },
-      "hideOnFirstPage": "Hide on the first page"
+      "hideOnFirstPage": "Hide on the first page",
+      "pattern": "Own wording",
+      "patternPlaceholder": "Sheet {'{page}'} of {'{pages}'}",
+      "patternHint": "{'{page}'} becomes the page number, {'{pages}'} the last one; everything else prints as typed.",
+      "patternInvalid": "The wording needs {'{page}'}; until then “Page X of Y” is printed.",
+      "startAt": "First page number",
+      "startAtHint": "For a letter that continues an earlier one. “of Y” counts up to the last sheet.",
+      "mirrorOnEvenPages": "Swap left and right on even pages (double-sided printing)"
     },
     "theme": {
       "title": "Typeface and spacing",
@@ -606,7 +622,61 @@
     "imageSmaller": "Smaller",
     "imageLarger": "Larger",
     "imageSizeOriginal": "Original size",
-    "imageSizeOriginalHint": "Set no width; the image is shown at its own size, at most as wide as the text."
+    "imageSizeOriginalHint": "Set no width; the image is shown at its own size, at most as wide as the text.",
+    "qr": "QR code",
+    "qrTitle": "Insert QR code",
+    "qrEditTitle": "Edit QR code",
+    "qrKind": "Content",
+    "qrKinds": {
+      "url": "Web address",
+      "email": "E-mail",
+      "phone": "Phone",
+      "text": "Text"
+    },
+    "qrContent": {
+      "url": "Web address (https://…)",
+      "email": "E-mail address",
+      "phone": "Phone number",
+      "text": "Text (one line)"
+    },
+    "qrEmailSubject": "Subject (optional)",
+    "qrSize": "Size in mm",
+    "qrAlign": "Alignment",
+    "qrErrorCorrection": "Error correction",
+    "qrEc": {
+      "L": "L – 7 % recoverable",
+      "M": "M – 15 % (default)",
+      "Q": "Q – 25 %",
+      "H": "H – 30 %"
+    },
+    "qrPreview": "Preview",
+    "qrModule": "Module size {size} mm · version {version}",
+    "qrSmall": "The modules are smaller than 0.5 mm – a printer or a scanner may not resolve them. Choose a larger size or shorten the content.",
+    "qrInsert": "Insert QR code",
+    "qrUpdate": "Apply",
+    "qrEdit": "Edit…",
+    "qrEmpty": "QR code without content",
+    "qrHint": "The code is generated from its content whenever it is shown; the file holds only the text. The quiet zone is part of the size.",
+    "qrInvalid": {
+      "empty": "Please enter some content.",
+      "too-long": "The content is too long for a QR code.",
+      "line-breaks": "Line breaks are not possible here – a QR code carries one line.",
+      "control-characters": "Control characters are not allowed."
+    },
+    "find": {
+      "menu": "Find and replace…",
+      "title": "Find and replace",
+      "query": "Find",
+      "replacement": "Replace with",
+      "count": "{index} of {total}",
+      "none": "No match",
+      "previous": "Previous match",
+      "next": "Next match",
+      "caseSensitive": "Match case",
+      "wholeWord": "Whole word",
+      "replace": "Replace",
+      "replaceAll": "Replace all"
+    }
   },
   "surface": {
     "sides": "Sides",
@@ -672,7 +742,8 @@
       "pageOf": "Page {page} of {total}",
       "of": "{page} of {total}"
     },
-    "assetMissingInline": "Image missing"
+    "assetMissingInline": "Image missing",
+    "qrCode": "QR code"
   },
   "validation": {
     "blocked": "Not ready for output",
@@ -899,6 +970,12 @@
       "plan": "{add} new, {merge} merged",
       "confirm": "Import",
       "done": "{added} contacts imported, {merged} merged."
+    },
+    "export": {
+      "button": "Export",
+      "vcard": "As vCard (.vcf)",
+      "csv": "As CSV (Google Contacts columns)",
+      "filename": "foldmark-contacts"
     }
   },
   "profiles": {
@@ -952,7 +1029,55 @@
     "save": "Save profile",
     "saved": "Profile saved.",
     "deleteTitle": "Delete profile?",
-    "deleteText": "“{name}” will be deleted. Documents using it fall back to the default profile."
+    "deleteText": "“{name}” will be deleted. Documents using it fall back to the default profile.",
+    "calibration": {
+      "title": "Calibration sheet",
+      "description": "Prints known distances on this paper so you can measure your printer’s offset and scale with a ruler.",
+      "print": "Print calibration sheet",
+      "instructions": "1. Print this sheet at **100 %** — no “fit to page”, no scaling.\n\n2. Measure from each paper edge to the frame: it should be **{inset} mm** on every side. A difference is your printer’s offset on that side.\n\n3. Measure the frame itself: it should be **{width} × {height} mm**. A difference is a scale error; check the printer’s scaling setting.\n\n4. The ticks along the frame are 10 mm apart, longer every 50 mm. The cross marks the centre of the sheet.",
+      "marksHeading": "This profile’s printed marks, as a letter prints them:"
+    },
+    "orientation": {
+      "label": "Orientation",
+      "portrait": "Portrait",
+      "landscape": "Landscape",
+      "blocked": "Turning this profile would put a mark or a region outside the paper. Turn a copy of a blank profile instead."
+    },
+    "markerEditor": {
+      "hint": "Every value is millimetres from the top-left corner of the sheet. Printed marks reach the paper; preview-only marks are design aids.",
+      "kind": "Kind",
+      "label": "Label",
+      "length": "Length (mm)",
+      "width": "Width (mm)",
+      "height": "Height (mm)",
+      "orientation": "Direction",
+      "horizontal": "horizontal",
+      "vertical": "vertical",
+      "lineStyle": "Line",
+      "lineStyles": {
+        "solid": "solid",
+        "dashed": "dashed",
+        "dotted": "dotted"
+      },
+      "stroke": "Stroke (mm)",
+      "print": "Printed",
+      "preview": "In the preview",
+      "surface": "Side",
+      "surfaces": {
+        "all": "both",
+        "front": "front",
+        "back": "back"
+      },
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "remove": "Remove mark",
+      "empty": "No marks yet.",
+      "newKind": "New mark",
+      "add": "Add mark",
+      "save": "Save marks",
+      "discard": "Discard changes",
+      "saved": "Marks saved."
+    }
   },
   "assets": {
     "eyebrow": "Media",
@@ -996,6 +1121,19 @@
       "filename": "Filename",
       "mimeType": "Type",
       "created": "Imported"
+    },
+    "signaturePad": {
+      "open": "Draw signature",
+      "title": "Draw a signature",
+      "hint": "Sign on the pad with a pen, a finger or the mouse. The image is cropped to your signature and stored with a transparent background.",
+      "padLabel": "Signature pad",
+      "undo": "Undo stroke",
+      "clear": "Clear",
+      "name": "Name",
+      "defaultTitle": "Signature",
+      "save": "Save signature",
+      "saved": "The signature is stored in the library; place it in a letter through Insert → Image.",
+      "notEncodable": "This browser could not turn the drawing into an image."
     }
   },
   "backup": {
@@ -1080,7 +1218,6 @@
     "open": "Open …",
     "selectAll": "Select all",
     "shortcuts": "Keyboard shortcuts",
-    "qrCodeLater": "QR code (later)",
     "documentFont": "Typeface and spacing …"
   },
   "shortcuts": {
@@ -1110,7 +1247,8 @@
     "heading6": "Heading 6",
     "escape": "Leave a dialog or focus mode",
     "splitter": "Move a splitter (when focused)",
-    "menu": "Open and navigate the menu"
+    "menu": "Open and navigate the menu",
+    "find": "Find and replace"
   },
   "print": {
     "title": "Print",
@@ -1210,6 +1348,13 @@
       "quota": "{limit} still free.",
       "licensed": "Premium — licensed.",
       "locked": "Premium — not unlocked."
+    },
+    "qr": {
+      "free": "{remaining} of {limit} QR codes still free.",
+      "beta-free": "Premium – free during the test phase. The first {limit} QR codes always stay free.",
+      "quota": "{limit} still free.",
+      "licensed": "Premium – licensed.",
+      "locked": "Premium – not unlocked."
     }
   }
 }

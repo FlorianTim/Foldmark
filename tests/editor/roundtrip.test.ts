@@ -104,6 +104,21 @@ const FIXTURES: readonly { name: string; input: string; expected?: string }[] = 
     expected: '![Logo](asset:a1b2c3){width=100% align=right}',
   },
   { name: 'remote image stays text', input: '![Tracker](https://example.org/x.png)' },
+  // Change 0040: a QR code is a leaf directive whose label is the payload, taken
+  // literally on both sides: what Markdown would read as emphasis or a
+  // directive is neither read nor escaped. Accepted normalisations: attribute
+  // values are quoted; brackets and backslashes are escaped and resolved again.
+  {
+    name: 'qr code with layout',
+    input: 'Scan:\n\n::qr[https://example.org]{size=40mm align=center ec=H}\n\nDanke.',
+    expected: 'Scan:\n\n::qr[https://example.org]{size="40mm" align="center" ec="H"}\n\nDanke.',
+  },
+  { name: 'qr payload is literal', input: '::qr[mailto:info@example.org?subject=Hi&body=a*b*_c_]' },
+  {
+    name: 'qr payload with brackets and backslashes',
+    input: '::qr[x \\[1\\] y a\\\\*b c:\\dir]{size=25mm}',
+    expected: '::qr[x \\[1\\] y a\\\\*b c:\\dir]{size="25mm"}',
+  },
 ];
 
 describe('rich editor round trip', () => {
@@ -162,6 +177,52 @@ describe('rich editor round trip', () => {
       expect(changes).toEqual([]);
     });
   }
+
+  it('inserts, selects and updates a QR code (change 0040)', async () => {
+    const port = await mount('Text.');
+    port.run('qr', {
+      payload: 'https://example.org',
+      sizeMm: 30,
+      align: 'left',
+      errorCorrection: 'M',
+    });
+    expect(normalize(await port.getMarkdown())).toBe(
+      normalize('Text.\n\n::qr[https://example.org]'),
+    );
+    // Drawn as an SVG path whose data is digits and letters, never the payload.
+    const svg = element.querySelector('.md-qr svg');
+    expect(svg?.getAttribute('width')).toBe('30mm');
+    // Linear: every run is `M`, digits, `h`, digits, `v1h-`, digits, `z`; nothing overlaps.
+    // eslint-disable-next-line security/detect-unsafe-regex
+    expect(svg?.querySelector('path')?.getAttribute('d')).toMatch(/^(M\d+ \d+h\d+v1h-\d+z)+$/u);
+    expect(element.querySelector('.md-qr')?.getAttribute('data-qr-payload')).toBe(
+      'https://example.org',
+    );
+    // An update needs the node selected; the toolbar reports it once it is.
+    port.run('qrUpdate', { payload: 'tel:+49', sizeMm: 45, align: 'right', errorCorrection: 'Q' });
+    expect(normalize(await port.getMarkdown())).toBe(
+      normalize('Text.\n\n::qr[https://example.org]'),
+    );
+    expect(port.selectionState().qr).toBeNull();
+    expect(port.selectQr('https://example.org')).toBe(true);
+    expect(port.selectQr('nope')).toBe(false);
+    expect(port.selectionState().qr).toEqual({
+      payload: 'https://example.org',
+      sizeMm: 30,
+      align: 'left',
+      errorCorrection: 'M',
+    });
+    port.run('qrUpdate', { payload: 'tel:+49', sizeMm: 45, align: 'right', errorCorrection: 'Q' });
+    expect(normalize(await port.getMarkdown())).toBe(
+      normalize('Text.\n\n::qr[tel:+49]{size="45mm" align="right" ec="Q"}'),
+    );
+    expect(element.querySelector('.md-qr svg')?.getAttribute('width')).toBe('45mm');
+    // A code without a payload is refused by the command, not written.
+    port.run('qr', { payload: '', sizeMm: 30, align: 'left', errorCorrection: 'M' });
+    expect(normalize(await port.getMarkdown())).toBe(
+      normalize('Text.\n\n::qr[tel:+49]{size="45mm" align="right" ec="Q"}'),
+    );
+  });
 
   it('reads :highlight[…] back as the highlight mark, not the colour alias (R14-004)', async () => {
     const port = await mount('Ein :highlight[markiertes] Wort.');

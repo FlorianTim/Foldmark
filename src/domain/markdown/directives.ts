@@ -27,6 +27,13 @@ export type DirectiveAttribute =
       readonly min: number;
       readonly max: number;
       readonly fallback: number;
+    }
+  | {
+      /** A length in millimetres, written `30mm` or `30`; resolved to the number alone. */
+      readonly kind: 'length';
+      readonly min: number;
+      readonly max: number;
+      readonly fallback: number;
     };
 
 /** One block-level directive: a container (`:::name` … `:::`) or a leaf (`::name` alone). */
@@ -34,6 +41,9 @@ export interface BlockDirectiveDefinition {
   readonly form: 'container' | 'leaf';
   readonly attributes: Readonly<Record<string, DirectiveAttribute>>;
 }
+
+/** The drawn size of a QR code, quiet zone included, in millimetres (change 0040). */
+export const QR_SIZE_MM = Object.freeze({ min: 15, max: 80, fallback: 30 });
 
 /** The block directives, by name. */
 export const BLOCK_DIRECTIVES: Readonly<Record<string, BlockDirectiveDefinition>> = Object.freeze({
@@ -65,6 +75,19 @@ export const BLOCK_DIRECTIVES: Readonly<Record<string, BlockDirectiveDefinition>
    */
   salutation: { form: 'container', attributes: {} },
   closing: { form: 'container', attributes: {} },
+  /**
+   * A QR code (R15-011, change 0040): `::qr[https://example.org]{size=30mm align=center}`.
+   * The label is the payload, encoded locally when the block is drawn — the
+   * file carries text, never an image. A foreign reader shows the payload.
+   */
+  qr: {
+    form: 'leaf',
+    attributes: {
+      size: { kind: 'length', ...QR_SIZE_MM },
+      align: { kind: 'enum', values: ['left', 'center', 'right'], fallback: 'left' },
+      ec: { kind: 'enum', values: ['L', 'M', 'Q', 'H'], fallback: 'M' },
+    },
+  },
 });
 
 /** The two letter blocks the document settings manage. */
@@ -102,6 +125,12 @@ export function resolveBlockAttributes(
     const value = raw[key];
     if (rule.kind === 'enum') {
       result[key] = value && rule.values.includes(value) ? value : rule.fallback;
+    } else if (rule.kind === 'length') {
+      const length = parseLengthMm(value);
+      result[key] =
+        length !== null && length >= rule.min && length <= rule.max
+          ? String(length)
+          : String(rule.fallback);
     } else {
       const number = value === undefined || value === null ? Number.NaN : Number(value);
       result[key] =
@@ -120,21 +149,36 @@ const DIRECTIVE_NAME_PATTERN = /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/u;
 /** Directive names are lowercase words joined by hyphens. Anything else is text. */
 export const DIRECTIVE_NAME = DIRECTIVE_NAME_PATTERN;
 
+/**
+ * The label of a leaf directive as it was typed, backslash escapes resolved.
+ * Markdown's escape rule: a backslash before ASCII punctuation is dropped,
+ * anywhere else it is a backslash.
+ */
+export function unescapeDirectiveLabel(raw: string): string {
+  return raw.replaceAll(/\\([!-/:-@[-`{-~])/gu, '$1');
+}
+
 /** ISO calendar date, the only content a `:date[…]` directive accepts. */
 export const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/u;
 
 /** Widths for `![…](asset:…){width=60mm}`, in millimetres, bounded to a sheet. */
 export const IMAGE_WIDTH_BOUNDS = Object.freeze({ min: 5, max: 400 });
 
-/** Parses an image width attribute such as `60mm` or `60`; `null` when it is not usable. */
-export function parseImageWidth(value: string | null | undefined): number | null {
+/** Parses a length such as `60mm` or `60` into millimetres; `null` when it is not one. */
+export function parseLengthMm(value: string | null | undefined): number | null {
   if (!value) return null;
   // Linear — the optional fraction cannot overlap the integer part.
   // eslint-disable-next-line security/detect-unsafe-regex
   const match = /^(\d+(?:\.\d+)?)\s*(mm)?$/u.exec(value.trim());
-  if (!match) return null;
-  const width = Number(match[1]);
-  if (width < IMAGE_WIDTH_BOUNDS.min || width > IMAGE_WIDTH_BOUNDS.max) return null;
+  return match ? Number(match[1]) : null;
+}
+
+/** Parses an image width attribute such as `60mm` or `60`; `null` when it is not usable. */
+export function parseImageWidth(value: string | null | undefined): number | null {
+  const width = parseLengthMm(value);
+  if (width === null || width < IMAGE_WIDTH_BOUNDS.min || width > IMAGE_WIDTH_BOUNDS.max) {
+    return null;
+  }
   return width;
 }
 

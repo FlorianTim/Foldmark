@@ -237,6 +237,9 @@ function blockToText(block: MarkdownBlock, context: RenderContext): string {
         .join('\n');
     case 'pageBreak':
       return '';
+    case 'qr':
+      // A mail carries no image of the code; what it encodes is the useful part.
+      return block.payload;
     case 'directive': {
       const inner = block.blocks
         .map((child) => blockToText(child, context))
@@ -297,6 +300,8 @@ function blockToHtml(block: MarkdownBlock, context: RenderContext): string {
         .join('')}</tbody></table>`;
     case 'pageBreak':
       return '';
+    case 'qr':
+      return `<p>${escapeHtml(block.payload)}</p>`;
     case 'directive': {
       const inner = blocksToHtml(block.blocks, context);
       if (!block.known) return inner;

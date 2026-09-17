@@ -35,6 +35,8 @@ const props = defineProps<{
   open: boolean;
   /** The contact to edit, or `null` for a new one. */
   contact: Address | null;
+  /** A new contact starts as a sender (change 0044: the own sender). */
+  presetSender?: boolean;
 }>();
 const emit = defineEmits<{
   close: [];
@@ -215,7 +217,9 @@ watch(
   () => props.open,
   (open) => {
     if (!open) return;
-    draft.value = props.contact ? draftFrom(props.contact) : emptyDraft();
+    draft.value = props.contact
+      ? draftFrom(props.contact)
+      : { ...emptyDraft(), sender: props.presetSender === true };
     opened = JSON.stringify(draft.value);
     discardAsk.value = false;
     deleteAsk.value = false;

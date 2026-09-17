@@ -78,8 +78,11 @@ export interface ExportPreferences {
   readonly emailIncludesSignature: boolean;
 }
 
-/** How page numbers read: nothing, `2`, `Page 2`, `Page 2 of 5`, `2 / 5`, `2 of 5` (R13-020). */
-export type PageNumberFormat = 'none' | 'number' | 'page' | 'page-of' | 'slash' | 'of';
+/**
+ * How page numbers read: nothing, `2`, `Page 2`, `Page 2 of 5`, `2 / 5`, `2 of 5`
+ * (R13-020), or the writer's own wording from `pattern` (R12-003).
+ */
+export type PageNumberFormat = 'none' | 'number' | 'page' | 'page-of' | 'slash' | 'of' | 'custom';
 
 /** Every page-number format, in the order the settings offer them. */
 export const PAGE_NUMBER_FORMATS: readonly PageNumberFormat[] = [
@@ -89,7 +92,41 @@ export const PAGE_NUMBER_FORMATS: readonly PageNumberFormat[] = [
   'page-of',
   'slash',
   'of',
+  'custom',
 ];
+
+/** Longest own wording a page number accepts. */
+export const PAGE_NUMBER_PATTERN_MAX_LENGTH = 40;
+
+/** The first page may carry any number up to this one. */
+export const PAGE_NUMBER_START_MAX = 9999;
+
+/** The placeholder for the current page in an own wording. */
+export const PAGE_NUMBER_PAGE_TOKEN = '{page}';
+
+/** The placeholder for the last page's number in an own wording. */
+export const PAGE_NUMBER_TOTAL_TOKEN = '{pages}';
+
+/**
+ * Whether an own wording can be used: bounded, on one line, and naming the
+ * page at least once — a wording without `{page}` would print the same text
+ * on every sheet.
+ */
+export function isValidPageNumberPattern(pattern: string): boolean {
+  return (
+    pattern.trim().length > 0 &&
+    pattern.length <= PAGE_NUMBER_PATTERN_MAX_LENGTH &&
+    !/[\r\n]/u.test(pattern) &&
+    pattern.includes(PAGE_NUMBER_PAGE_TOKEN)
+  );
+}
+
+/** Fills `{page}` and `{pages}` in an own wording; anything else is kept as typed. */
+export function applyPageNumberPattern(pattern: string, page: number, total: number): string {
+  return pattern
+    .replaceAll(PAGE_NUMBER_PAGE_TOKEN, String(page))
+    .replaceAll(PAGE_NUMBER_TOTAL_TOKEN, String(total));
+}
 
 /** Where the page number sits, in the top or bottom margin. */
 export type PageNumberPosition =
@@ -126,6 +163,24 @@ export interface PageNumberOptions {
   readonly format: PageNumberFormat;
   readonly position: PageNumberPosition;
   readonly hideOnFirstPage: boolean;
+  /**
+   * The number the first sheet carries (R12-003); absent means 1. A letter
+   * that continues an earlier one starts where that one ended, and "of Y"
+   * counts up to the last sheet's number, not the sheet count.
+   */
+  readonly startAt?: number;
+  /**
+   * Whether left and right swap on even sheets (R12-003), so a document
+   * printed on both sides keeps the number on the outer edge. Centred numbers
+   * are not affected.
+   */
+  readonly mirrorOnEvenPages?: boolean;
+  /**
+   * The writer's own wording for format `custom`: `{page}` and `{pages}` are
+   * replaced, everything else prints as typed. An invalid wording falls back
+   * to "Page X of Y".
+   */
+  readonly pattern?: string;
 }
 
 /** Options that shape the printed pages without belonging to the profile. */

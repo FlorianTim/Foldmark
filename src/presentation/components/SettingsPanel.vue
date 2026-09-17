@@ -14,15 +14,12 @@ import {
   type ColorAlias,
   type ColorTone,
 } from '@/domain/document/DocumentTheme';
-import {
-  DATE_FORMATS,
-  PAGE_NUMBER_FORMATS,
-  PAGE_NUMBER_POSITIONS,
-} from '@/domain/document/FoldmarkDocument';
+import { DATE_FORMATS, PAGE_NUMBER_POSITIONS } from '@/domain/document/FoldmarkDocument';
 import { groupProfiles } from '@/domain/print/builtInProfiles';
 import ConfirmDialog from '@/presentation/components/ConfirmDialog.vue';
 import { THEME_IDS, useTheme, type ThemeId } from '@/presentation/composables/useTheme';
 import {
+  DEFAULT_PAGE_NUMBER_FORMATS,
   DOCUMENT_LOCALES,
   FACTORY_DOCUMENT_DEFAULTS,
   type DocumentDefaults,
@@ -379,7 +376,7 @@ onMounted(() => {
                   )
                 "
               >
-                <option v-for="entry in PAGE_NUMBER_FORMATS" :key="entry" :value="entry">
+                <option v-for="entry in DEFAULT_PAGE_NUMBER_FORMATS" :key="entry" :value="entry">
                   {{ t(`metadata.pageNumbers.formats.${entry}`) }}
                 </option>
               </select>

@@ -239,6 +239,37 @@ export const appSettings = {
   } satisfies SettingDefinition<string>,
 
   /**
+   * Successful uses of premium features with a free allowance (change 0040),
+   * as `feature=count` pairs: `qr.generate=3`. A counter, not a licence —
+   * it lives here with the other preferences, and "Reset settings" resets it.
+   * An unreadable pair is dropped, never the whole map.
+   */
+  premiumUsage: {
+    key: 'premium-usage',
+    defaultValue: {},
+    decode: (raw: string) => {
+      const usage: Record<string, number> = {};
+      for (const pair of raw.split(';')) {
+        const [feature, count] = pair.split('=');
+        const number = Number(count);
+        if (
+          feature &&
+          /^[a-z][a-z.-]*$/u.test(feature) &&
+          Number.isInteger(number) &&
+          number >= 0
+        ) {
+          usage[feature] = number;
+        }
+      }
+      return usage;
+    },
+    encode: (value: Readonly<Record<string, number>>) =>
+      Object.entries(value)
+        .map(([feature, count]) => `${feature}=${count}`)
+        .join(';'),
+  } satisfies SettingDefinition<Readonly<Record<string, number>>>,
+
+  /**
    * The sender identity new documents start with, `''` = none chosen.
    *
    * Stored as an id and resolved when a document is opened, not copied into the
@@ -284,6 +315,18 @@ export const appSettings = {
     decode: oneOf(PREVIEW_ZOOM_IDS),
     encode: identity,
   } satisfies SettingDefinition<PreviewZoom>,
+
+  /**
+   * Whether the offer to set up the own sender (R15-006, change 0044) was
+   * declined for good. Only "don't ask again" writes it; "later" is for the
+   * session. Setting up a primary contact makes the offer moot without it.
+   */
+  senderOnboardingDismissed: {
+    key: 'sender-onboarding-v1',
+    defaultValue: false,
+    decode: decodeBoolean,
+    encode: encodeBoolean,
+  } satisfies SettingDefinition<boolean>,
 
   /** Whether preview-only guides — safe areas, stamp boxes — are drawn on screen. */
   showPreviewGuides: {
@@ -398,8 +441,10 @@ export const allSettings: readonly SettingDescriptor[] = [
   describe(appSettings.locale),
   describe(appSettings.theme),
   describe(appSettings.introCompleted),
+  describe(appSettings.senderOnboardingDismissed),
   describe(appSettings.entitlement),
   describe(appSettings.entitlementCheckedAt),
+  describe(appSettings.premiumUsage),
   describe(appSettings.defaultSenderProfileId),
   describe(appSettings.defaultPrintProfileId),
   describe(appSettings.documentDefaults),
